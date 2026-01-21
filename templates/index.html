@@ -454,7 +454,9 @@
         <div class="about-us-container grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <!-- Left Image -->
           <div class="about-us-img-container box flex justify-center" data-aos="zoom-in" data-aos-duration="1000">
+            {% if choose.image %}
             <img src="{{ choose.image.url }}" alt="Why Chose Us" class="max-w-md" loading="lazy" />
+            {% endif %}
           </div>
 
           <!-- Right Cards -->
@@ -579,7 +581,7 @@
     <section class="max-width-site-1 mt-60 category-section" data-aos="fade-up">
       <div class="container-fluid">
         <div class="service-header font-poppins" data-aos="fade-down">
-          <h1>সর্বশেষ নোটিশ ও ব্লগ</h1>
+          <h1>Latest Notices and Blogs</h1>
           <img class="service-title-image d-none d-sm-inline" src="{% static 'assets/section/latest-section.png' %}" alt="latest news" />
         </div>
 

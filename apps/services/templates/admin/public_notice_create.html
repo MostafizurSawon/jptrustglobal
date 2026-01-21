@@ -56,7 +56,7 @@
 
   <div class="card shadow-sm border rounded">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="card-title mb-0">নোটিশ {{ edit_mode|yesno:"আপডেট করুন,তৈরি করুন" }}</h4>
+      <h4 class="card-title mb-0">Notice {{ edit_mode|yesno:"Update,Create" }}</h4>
     </div>
 
     <div class="card-body">
@@ -64,13 +64,13 @@
       {% csrf_token %}
 
       <div class="col-md-6">
-        <label for="id_title" class="form-label">শিরোনাম</label>
+        <label for="id_title" class="form-label">Title</label>
         <input type="text" name="title" id="id_title" class="form-control"
-              placeholder="নোটিশের শিরোনাম লিখুন"
+              placeholder="Notice Title"
               value="{{ form.title.value|default_if_none:'' }}">
       </div>
       <div class="col-md-6">
-        <label for="id_status" class="form-label">স্ট্যাটাস</label>
+        <label for="id_status" class="form-label">Status</label>
         <select name="status" id="id_status" class="form-select">
           <option value="active" {% if form.status.value == "active" %}selected{% endif %}>Active</option>
           <option value="inactive" {% if form.status.value == "inactive" %}selected{% endif %}>Inactive</option>
@@ -80,18 +80,18 @@
 
 
       <div class="col-md-12">
-        <label for="id_message" class="form-label">বার্তা</label>
+        <label for="id_message" class="form-label">Message</label>
         <textarea name="message" id="id_message" rows="4" class="form-control"
-                  placeholder="এখানে বার্তা লিখুন">{{ form.message.value|default_if_none:"" }}</textarea>
+                  placeholder="Write your message">{{ form.message.value|default_if_none:"" }}</textarea>
       </div>
 
       <div class="col-md-6">
-        <label for="id_file" class="form-label">ফাইল</label>
+        <label for="id_file" class="form-label">File</label>
         <input type="file" name="file" id="id_file" class="form-control">
       </div>
 
       <div class="col-md-6">
-        <label for="id_image" class="form-label">ছবি</label>
+        <label for="id_image" class="form-label">Photo</label>
         <input type="file" name="image" id="id_image" class="form-control">
       </div>
 
@@ -99,9 +99,9 @@
 
       <div class="col-12 d-flex justify-content-end mt-3">
         <button type="submit" class="btn btn-primary me-2">
-          {{ edit_mode|yesno:"আপডেট করুন,সংরক্ষণ করুন" }}
+          {{ edit_mode|yesno:"Update,Save" }}
         </button>
-        <a href="{% url 'public_notice_create' %}" class="btn btn-secondary">বাতিল</a>
+        <a href="{% url 'public_notice_create' %}" class="btn btn-secondary">Cancel</a>
       </div>
     </form>
 
@@ -113,7 +113,7 @@
 <div class="mt-4">
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="card-title mb-0">নোটিশ তালিকা</h4>
+      <h4 class="card-title mb-0">Notice List</h4>
     </div>
     <div class="table-responsive p-5">
       <table class="table table-bordered table-hover datatables-notice w-100">
@@ -152,7 +152,7 @@
               <form method="post" action="{% url 'public_notice_delete' notice.id %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-danger"
-                        onclick="return confirm('আপনি কি এই নোটিশটি ডিলিট করতে চান?');">
+                        onclick="return confirm('Do you want to delete the notice?');">
                   <i class="bx bx-trash"></i> Delete
                 </button>
               </form>

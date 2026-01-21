@@ -3,134 +3,134 @@
     {
       "url": "index",
       "icon": "menu-icon tf-icons ti ti-layout-dashboard",
-      "name": "ড্যাশবোর্ড",
+      "name": "Dashboard",
       "slug": "index"
     },
     {
-      "name": "সিভি বিল্ড সেকশন",
+      "name": "CV Build Section",
       "icon": "menu-icon tf-icons ti ti-file-text",
       "slug": "guest-cv",
       "submenu": [
         {
           "url": "guest_cv_list",
-          "name": "অতিথি সিভি তালিকা",
+          "name": "Guest CV List",
           "slug": "guest_cv_list"
         }
       ]
     },
     {
-      "name": "ক্লায়েন্ট পোর্টাল",
+      "name": "Client Portal",
       "icon": "menu-icon tf-icons ti ti-user-circle",
       "slug": "client-portal",
       "submenu": [
         {
           "url": "client_cv_list",
-          "name": "ক্লায়েন্ট সিভি তালিকা",
+          "name": "Client CV List",
           "slug": "client_cv_list"
         },
         {
           "url": "client_passport_list",
-          "name": "ক্লায়েন্ট পাসপোর্ট তালিকা",
+          "name": "Client Passport List",
           "slug": "client_passport_list"
         },
         {
           "url": "admin_support_list",
-          "name": "ক্লায়েন্ট সাপোর্ট তালিকা",
+          "name": "Client Support List",
           "slug": "admin_support_list"
         }
       ]
     },
     {
-      "name": "সকল সার্ভিস",
+      "name": "All Services",
       "icon": "menu-icon tf-icons ti ti-briefcase",
       "slug": "services",
       "submenu": [
         {
           "url": "service_application_list",
-          "name": "সকল সার্ভিস আবেদন",
+          "name": "All Service Applications",
           "slug": "service_application_list"
         },
         {
           "url": "client_services_list",
-          "name": "সকল সার্ভিস ",
+          "name": "All Services",
           "slug": "client_services_list"
         }
       ]
     },
     {
-      "name": "অ্যাকাউন্ট ব্যবস্থাপনা",
+      "name": "Account Management",
       "icon": "menu-icon tf-icons ti ti-cash",
       "slug": "account-management",
       "submenu": [
         {
           "url": "admin_client_payment_list",
-          "name": "ক্লায়েন্ট পেমেন্ট",
+          "name": "Client Payments",
           "slug": "admin_client_payment_list"
         }
       ]
     },
     {
-      "name": "খরচ",
+      "name": "Expenses",
       "icon": "menu-icon tf-icons ti ti-receipt-2",
       "slug": "account-management",
       "submenu": [
         {
           "url": "expense_list",
-          "name": "খরচের তালিকা",
+          "name": "Expense List",
           "slug": "expense_list"
         },
         {
           "url": "create_expense",
-          "name": "খরচ যোগ করুন",
+          "name": "Add Expense",
           "slug": "create_expense"
         },
         {
           "url": "expense_category_list",
-          "name": "খরচের শ্রেণী",
+          "name": "Expense Categories",
           "slug": "expense_category_list"
         }
       ]
     },
     {
-      "name": "ভিজিটরের তথ্য",
+      "name": "Visitor Information",
       "icon": "menu-icon tf-icons ti ti-address-book",
       "slug": "visitors-informations",
       "submenu": [
         {
           "url": "contact_dashboard",
-          "name": "কন্টাক্ট ফর্ম ডেটা",
+          "name": "Contact Form Data",
           "slug": "contact_dashboard"
         },
         {
           "url": "contact",
-          "name": "ভিজিটর অফিস এন্ট্রি",
+          "name": "Visitor Office Entry",
           "slug": "contact"
         }
       ]
     },
     {
-      "name": "এসএমএস মার্কেটিং",
+      "name": "SMS Marketing",
       "icon": "menu-icon tf-icons ti ti-mail",
       "slug": "sms-marketing",
       "submenu": [
         {
           "url": "sms-guest",
-          "name": "অতিথির মাধ্যমে এসএমএস",
+          "name": "SMS via Guests",
           "slug": "sms-guest"
         },
         {
           "url": "sms-client",
-          "name": "ক্লায়েন্টের মাধ্যমে এসএমএস",
+          "name": "SMS via Clients",
           "slug": "sms-client"
         },
         {
           "url": "sms-visitor",
-          "name": "ভিজিটরের মাধ্যমে এসএমএস",
+          "name": "SMS via Visitors",
           "slug": "sms-visitor"
         },
         {
           "url": "sms-send",
-          "name": "এসএমএস পাঠান",
+          "name": "Send SMS",
           "slug": "sms-send"
         }
       ]
@@ -138,85 +138,85 @@
     {
       "url": "notice_create",
       "icon": "menu-icon tf-icons ti ti-bell",
-      "name": "নোটিশ",
+      "name": "Notice",
       "slug": "notice_create"
     },
     {
-      "name": "এজেন্ট তথ্য",
+      "name": "Agent Information",
       "icon": "menu-icon tf-icons ti ti-user-shield",
       "slug": "agent-informations",
       "submenu": [
         {
           "url": "agent_list",
-          "name": "এজেন্ট তালিকা",
+          "name": "Agent List",
           "slug": "agent_list"
         },
         {
           "url": "service_application_admin_list",
-          "name": "এজেন্টের ক্লায়েন্ট",
+          "name": "Agent Clients",
           "slug": "service_application_admin_list"
         }
       ]
     },
     {
-      "name": "ওয়েবসাইট সেটিংস",
+      "name": "Website Settings",
       "icon": "menu-icon tf-icons ti ti-settings",
       "slug": "mater-settings",
       "submenu": [
         {
           "url": "site_settings",
-          "name": "সাইট সেটিংস",
+          "name": "Site Settings",
           "slug": "site_settings"
         },
         {
           "url": "slider_update",
-          "name": "স্লাইডার সেটিংস",
+          "name": "Slider Settings",
           "slug": "slider_update"
         },
         {
           "url": "trending_dashboard",
-          "name": "ট্রেন্ডিং ভিডিও",
+          "name": "Trending Videos",
           "slug": "trending_dashboard"
         },
         {
           "url": "service_dashboard",
-          "name": "সার্ভিস সমূহ",
+          "name": "Services",
           "slug": "service_dashboard"
         },
         {
           "url": "cv_settings",
-          "name": "সিভি সেকশন",
+          "name": "CV Section",
           "slug": "cv_settings"
         },
         {
           "url": "choose_settings",
-          "name": "চুজ আস সেকশন",
+          "name": "Choose Us Section",
           "slug": "choose_settings"
         },
         {
           "url": "our_team",
-          "name": "আমাদের টিম",
+          "name": "Our Team",
           "slug": "our_team"
         },
         {
           "url": "testimonial_create",
-          "name": "টেস্টিমোনিয়াল সেটিংস",
+          "name": "Testimonial Settings",
           "slug": "testimonial_create"
         },
         {
           "url": "public_notice_create",
           "icon": "menu-icon tf-icons ti ti-news",
-          "name": "সর্বশেষ নোটিশ ও ব্লগ",
+          "name": "Latest Notices & Blog",
           "slug": "public_notice_create"
         },
         {
           "url": "appointment_dashboard",
-          "name": "এপয়েন্টমেন্ট",
+          "name": "Appointments",
           "slug": "appointment_dashboard"
         },
         {
           "url": "appointment_notice_settings",
-          "name": "এপয়েন্টমেন্ট নোটিশ",
+          "name": "Appointment Notice",
           "slug": "appointment_notice_settings"
         }
       ]

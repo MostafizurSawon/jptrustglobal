@@ -1,7 +1,7 @@
 {% extends layout_path %}
 {% load static %}
 {% load i18n %}
-{% block title %} OTP যাচাই - Go on TravelDesk {% endblock title %}
+{% block title %} OTP Verify - {{site_settings.name|default:""}} {% endblock title %}
 
 {% block vendor_css %}
   {{ block.super }}
@@ -63,8 +63,8 @@
     <!-- OTP Verification -->
     <div class="d-flex col-12 col-lg-4 align-items-center authentication-bg p-sm-12 p-6">
       <div class="w-px-400 mx-auto mt-12 pt-5">
-        <h4 class="mb-1">আপনার ফোনে পাঠানো OTP দিন! 👋</h4>
-        <p class="mb-6">OTP দিয়ে আপনার অ্যাকাউন্টটি যাচাই করুন।</p>
+        <h4 class="mb-1">Give OTP! 👋</h4>
+        <p class="mb-6">Verify your account via OTP</p>
 
 
         <form id="formOtpVerification" class="mb-6" method="POST" action="{% url 'guest_otp_verify' %}">
@@ -83,13 +83,13 @@
             />
           </div>
 
-          <button class="btn btn-success d-grid w-100">OTP যাচাই করুন</button>
+          <button class="btn btn-success d-grid w-100">Verify OTP</button>
         </form>
 
         <p class="text-center">
-          <span>OTP পাননি?</span>
+          <span>Did not get OTP?</span>
             <a href="{% url 'guest_register' %}">
-              <span>নতুন OTP অনুরোধ করুন</span>
+              <span>Request new OTP</span>
           </a>
 
         </p>

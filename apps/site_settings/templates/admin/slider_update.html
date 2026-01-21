@@ -7,7 +7,7 @@ Sliders
 
 {% block content %}
 <div class="">
-  <h4 class="mb-4">স্লাইডার কনফিগারেশন</h4>
+  <h4 class="mb-4">Slider Configuration</h4>
 
   {% if messages %}
     {% for message in messages %}
@@ -23,10 +23,10 @@ Sliders
     {{ form.non_field_errors }}
 
     <!-- Slide 1 -->
-    <h5 class="mt-4">স্লাইড ১</h5>
+    <h5 class="mt-4">Slider 1</h5>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label for="id_carousel_1">ইমেজ</label><br>
+        <label for="id_carousel_1">Image</label><br>
         {% if form.carousel_1.value %}
           <img src="{{ form.carousel_1.value.url }}" alt="Slide 1" class="mb-2 rounded" width="100"><br>
         {% endif %}
@@ -48,10 +48,10 @@ Sliders
     <hr>
 
     <!-- Slide 2 -->
-    <h5 class="mt-4">স্লাইড ২</h5>
+    <h5 class="mt-4">Slider 2</h5>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label for="id_carousel_2">ইমেজ</label><br>
+        <label for="id_carousel_2">Image</label><br>
         {% if form.carousel_2.value %}
           <img src="{{ form.carousel_2.value.url }}" alt="Slide 2" class="mb-2 rounded" width="100"><br>
         {% endif %}
@@ -73,10 +73,10 @@ Sliders
     <hr>
 
     <!-- Slide 3 -->
-    <h5 class="mt-4">স্লাইড ৩</h5>
+    <h5 class="mt-4">Slider 3</h5>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label for="id_carousel_3">ইমেজ</label><br>
+        <label for="id_carousel_3">Image</label><br>
         {% if form.carousel_3.value %}
           <img src="{{ form.carousel_3.value.url }}" alt="Slide 3" class="mb-2 rounded" width="100"><br>
         {% endif %}
@@ -96,7 +96,7 @@ Sliders
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-4">সংরক্ষণ করুন</button>
+    <button type="submit" class="btn btn-primary mt-4">Save</button>
   </form>
 </div>
 {% endblock %}

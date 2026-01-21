@@ -56,7 +56,7 @@
 
   <div class="card shadow-sm border rounded">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="card-title mb-0">নোটিশ {{ edit_mode|yesno:"আপডেট করুন,তৈরি করুন" }}</h4>
+      <h4 class="card-title mb-0">নোটিশ {{ edit_mode|yesno:"Update,Create" }}</h4>
     </div>
 
     <div class="card-body">
@@ -64,13 +64,13 @@
       {% csrf_token %}
 
       <div class="col-md-5">
-        <label for="id_title" class="form-label">শিরোনাম</label>
+        <label for="id_title" class="form-label">Title</label>
         <input type="text" name="title" id="id_title" class="form-control"
-              placeholder="নোটিশের শিরোনাম লিখুন"
+              placeholder="Notice Title"
               value="{{ form.title.value|default_if_none:'' }}">
       </div>
       <div class="col-md-3">
-        <label for="id_status" class="form-label">স্ট্যাটাস</label>
+        <label for="id_status" class="form-label">Status</label>
         <select name="status" id="id_status" class="form-select">
           <option value="active" {% if form.status.value == "active" %}selected{% endif %}>Active</option>
           <option value="inactive" {% if form.status.value == "inactive" %}selected{% endif %}>Inactive</option>

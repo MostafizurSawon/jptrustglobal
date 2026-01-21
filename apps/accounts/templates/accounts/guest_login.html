@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}লগইন - Go on Travel Desk{% endblock title %}
+{% block title %}Login | {{site_settings.name}} {% endblock title %}
 
 {% block vendor_css %}
 {{ block.super }}
@@ -61,8 +61,8 @@
     <!-- Login -->
     <div  class="d-flex bg_login_mobile col-12 col-lg-4 align-items-center authentication-bg p-sm-12 p-6">
       <div class="w-px-400 mx-auto mt-12 pt-5">
-        <h4 class="mb-1">Go on Travel Desk-এ আপনাকে স্বাগতম! 👋</h4>
-        <p class="mb-6">আপনার অ্যাকাউন্টে লগইন করুন</p>
+        <h4 class="mb-1">Welcome to {{site_settings.name|default:""}}! 👋</h4>
+        <p class="mb-6">Login to your account</p>
 
         {% if messages %}
           {% for message in messages %}
@@ -76,20 +76,20 @@
         <form id="formAuthentication" class="mb-6" method="POST" action="{% url 'guest_login' %}">
           {% csrf_token %}
           <div class="mb-6">
-            <label for="phone_number" class="form-label">ফোন নম্বর</label>
+            <label for="phone_number" class="form-label">Phone Number</label>
             <input
               type="text"
               class="form-control"
               id="phone_number"
               name="phone_number"
-              placeholder="আপনার ফোন নম্বর লিখুন"
+              placeholder="Your Phone Number"
               autofocus
               required
             />
           </div>
 
           <div class="mb-6 form-password-toggle">
-            <label class="form-label" for="password">পাসওয়ার্ড</label>
+            <label class="form-label" for="password">Password</label>
             <div class="input-group input-group-merge">
               <input
                 type="password"
@@ -113,18 +113,18 @@
                 <label class="form-check-label" for="remember-me"> মনে রাখুন </label>
               </div> {% endcomment %}
               <a href="{% url 'guest_forgot_password' %}">
-                <p class="mb-0">পাসওয়ার্ড ভুলে গেছেন?</p>
+                <p class="mb-0">Forgot Password?</p>
               </a>
             </div>
           </div>
 
-          <button class="btn btn-primary d-grid w-100">লগইন করুন</button>
+          <button class="btn btn-primary d-grid w-100">Login</button>
         </form>
 
         <p class="text-center">
-          <span>নতুন ব্যবহারকারী?</span>
+          <span>New User?</span>
           <a href="{% url 'guest_register' %}">
-            <span>অ্যাকাউন্ট তৈরি করুন</span>
+            <span>Create Account</span>
           </a>
         </p>
       </div>
