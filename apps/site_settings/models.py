@@ -15,12 +15,12 @@ class Contact(models.Model):
         help_text="Phone number must start with 0 and be exactly 11 digits."
     )
     purpose = models.CharField(max_length=255, choices=[
-        ('study_visa', 'স্টাডি ভিসা'),
-        ('work_visa', 'ওয়ার্ক পারমিট ভিসা'),
-        ('tourist_visa', 'ট্যুরিস্ট ভিসা'),
-        ('agent_interest', 'এজেন্ট হতে আগ্রহী'),
-        ('general', 'সাধারণ প্রশ্ন'),
-        ('other', 'অন্যান্য '),
+        ('study_visa', 'Study visa'),
+        ('work_visa', 'Work visa'),
+        ('tourist_visa', 'Tourist visa'),
+        ('agent_interest', 'Agent interest'),
+        ('general', 'General Question'),
+        ('other', 'Other '),
     ], default='general', null=True, blank=True)
     message = models.TextField()
     note = models.CharField(max_length=200, null=True, blank=True)
@@ -30,39 +30,6 @@ class Contact(models.Model):
         name_part = self.name if self.name else "Unnamed Contact"
         purpose_part = self.get_purpose_display() if self.purpose else "No Purpose"
         return f"{name_part} ({purpose_part})"
-
-
-
-
-# from django.db import models
-# from django.core.validators import RegexValidator
-
-# # Create your models here.
-# class Contact(models.Model):
-#     phone_validator = RegexValidator(
-#         regex=r'^0\d{10}$',
-#         message="Phone number must start with '0' and be exactly 11 digits long."
-#     )
-#     name = models.CharField(max_length=100)
-#     email = models.EmailField(blank=True, null=True)
-#     phone = models.CharField(
-#         max_length=11,
-#         validators=[phone_validator],
-#         help_text="Phone number must start with 0 and be exactly 11 digits."
-#     )
-#     purpose = models.CharField(max_length=255, choices=[
-#         ('general', 'সাধারণ প্রশ্ন'),
-#         ('booking', 'বুকিং'),
-#         ('feedback', 'মতামত'),
-#         ('other', 'অন্যান্য '),
-#     ], default='general', null=True, blank=True)
-#     message = models.TextField()
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         name_part = self.name if self.name else "Unnamed Contact"
-#         purpose_part = self.get_purpose_display() if self.purpose else "No Purpose"
-#         return f"{name_part} ({purpose_part})"
 
 
 
@@ -101,30 +68,86 @@ class SiteSettings(models.Model):
 
 
 
-
 class Slider(models.Model):
     # Carousel 1
-    carousel_1 = models.ImageField(upload_to='site_settings/sliders/', blank=True, null=True, verbose_name="স্লাইড ১ ইমেজ")
-    carousel_1_heading = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ১ শিরোনাম")
-    carousel_1_text = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ১ বিবরণ")
-    carousel_1_button_link = models.URLField(blank=True, null=True, verbose_name="স্লাইড ১ লিংক")
+    carousel_1 = models.ImageField(
+        upload_to='site_settings/sliders/',
+        blank=True,
+        null=True,
+        verbose_name="Slide 1 - Image"
+    )
+    carousel_1_heading = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 1 - Main Heading"
+    )
+    carousel_1_text = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 1 - Subtext / Description"
+    )
+    carousel_1_button_link = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="Slide 1 - Button URL"
+    )
 
     # Carousel 2
-    carousel_2 = models.ImageField(upload_to='site_settings/sliders/', blank=True, null=True, verbose_name="স্লাইড ২ ইমেজ")
-    carousel_2_heading = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ২ শিরোনাম")
-    carousel_2_text = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ২ বিবরণ")
-    carousel_2_button_link = models.URLField(blank=True, null=True, verbose_name="স্লাইড ২ লিংক")
+    carousel_2 = models.ImageField(
+        upload_to='site_settings/sliders/',
+        blank=True,
+        null=True,
+        verbose_name="Slide 2 - Image"
+    )
+    carousel_2_heading = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 2 - Main Heading"
+    )
+    carousel_2_text = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 2 - Subtext / Description"
+    )
+    carousel_2_button_link = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="Slide 2 - Button URL"
+    )
 
     # Carousel 3
-    carousel_3 = models.ImageField(upload_to='site_settings/sliders/', blank=True, null=True, verbose_name="স্লাইড ৩ ইমেজ")
-    carousel_3_heading = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ৩ শিরোনাম")
-    carousel_3_text = models.CharField(max_length=255, blank=True, null=True, verbose_name="স্লাইড ৩ বিবরণ")
-    carousel_3_button_link = models.URLField(blank=True, null=True, verbose_name="স্লাইড ৩ লিংক")
+    carousel_3 = models.ImageField(
+        upload_to='site_settings/sliders/',
+        blank=True,
+        null=True,
+        verbose_name="Slide 3 - Image"
+    )
+    carousel_3_heading = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 3 - Main Heading"
+    )
+    carousel_3_text = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Slide 3 - Subtext / Description"
+    )
+    carousel_3_button_link = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="Slide 3 - Button URL"
+    )
 
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "হোমপেজ স্লাইডার কনফিগারেশন"
+        return "Homepage Slider Settings"
 
 
 
@@ -194,35 +217,53 @@ class ServiceDescription(models.Model):
 class Appointment(models.Model):
     phone_validator = RegexValidator(
         regex=r'^0\d{10}$',
-        message="Phone number must start with '0' and be exactly 11 digits long."
+        message="Phone number must start with '0' followed by 10 digits (total 11 digits)."
     )
 
-    name = models.CharField(max_length=100, verbose_name="নাম")
-    address = models.TextField(verbose_name="ঠিকানা")
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Full Name"
+    )
+    address = models.TextField(
+        verbose_name="Full Address"
+    )
     mobile_number = models.CharField(
         max_length=11,
         validators=[phone_validator],
-        help_text="মোবাইল নম্বর অবশ্যই ০ দিয়ে শুরু হতে হবে এবং ১১ ডিজিটের হতে হবে।",
-        verbose_name="মোবাইল নম্বর"
+        help_text="Format: 01XXXXXXXXX (must be 11 digits starting with 0)",
+        verbose_name="Mobile Number"
     )
-    appointment_date = models.DateField(verbose_name="অ্যাপয়েন্টমেন্টের তারিখ")
-    description = models.TextField(verbose_name="বিবরণ")
+    appointment_date = models.DateField(
+        verbose_name="Preferred Appointment Date"
+    )
+    description = models.TextField(
+        verbose_name="Purpose of Appointment / Details"
+    )
 
     STATUS_CHOICES = [
-        ('pending', 'পেন্ডিং'),
-        ('confirmed', 'নিশ্চিত'),
-        ('completed', 'সম্পন্ন'),
-        ('cancelled', 'বাতিল'),
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="অবস্থা")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name="Appointment Status"
+    )
 
-    note = models.TextField(null=True, blank=True)
+    note = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Admin Notes / Remarks"
+    )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
 
     def __str__(self):
-        return f"{self.name} - {self.appointment_date}"
+        return f"{self.name} - {self.appointment_date.strftime('%Y-%m-%d')}"
 
 
 # Frontend Appointment Notice

@@ -7,11 +7,27 @@ class ContactForm(forms.ModelForm):
         model = Contact
         fields = ['name', 'email', 'phone', 'purpose', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'contact-input form-control', 'placeholder': 'আপনার সম্পূর্ণ নাম'}),
-            'email': forms.EmailInput(attrs={'class': 'contact-input form-control', 'placeholder': 'আপনার ইমেইল (যদি থাকে)'}),
-            'phone': forms.TextInput(attrs={'class': 'contact-input form-control', 'placeholder': 'আপনার ফোন নম্বর'}),
-            'purpose': forms.Select(attrs={'class': 'form-select form-control', 'placeholder': 'যোগাযোগের কারণ'}),
-            'message': forms.Textarea(attrs={'class': 'contact-input form-control', 'rows': 4, 'placeholder': 'আপনার মেসেজ',}),
+            'name': forms.TextInput(attrs={
+                'class': 'contact-input form-control',
+                'placeholder': 'Full Name'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'contact-input form-control',
+                'placeholder': 'Email Address (optional)'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'contact-input form-control',
+                'placeholder': 'Phone Number'
+            }),
+            'purpose': forms.Select(attrs={
+                'class': 'form-select form-control',
+                'placeholder': 'Reason for Contact'
+            }),
+            'message': forms.Textarea(attrs={
+                'class': 'contact-input form-control',
+                'rows': 4,
+                'placeholder': 'Your Message / Inquiry'
+            }),
         }
 
 
@@ -34,7 +50,7 @@ class ContactNoteForm(forms.ModelForm):
             'note': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'নোট লিখুন...',
+                'placeholder': 'Write note...',
             }),
         }
 
@@ -76,17 +92,44 @@ class SliderForm(forms.ModelForm):
         model = Slider
         fields = '__all__'
         widgets = {
-            'carousel_1_heading': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ১'}),
-            'carousel_1_text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ১'}),
-            'carousel_1_button_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'বাটন লিংক ১'}),
+            'carousel_1_heading': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 1 - Main Heading'
+            }),
+            'carousel_1_text': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 1 - Subtext / Description'
+            }),
+            'carousel_1_button_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 1 - Button URL (e.g. /about or https://...)'
+            }),
 
-            'carousel_2_heading': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ২'}),
-            'carousel_2_text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ২'}),
-            'carousel_2_button_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'বাটন লিংক ২'}),
+            'carousel_2_heading': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 2 - Main Heading'
+            }),
+            'carousel_2_text': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 2 - Subtext / Description'
+            }),
+            'carousel_2_button_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 2 - Button URL'
+            }),
 
-            'carousel_3_heading': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ৩'}),
-            'carousel_3_text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ৩'}),
-            'carousel_3_button_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'বাটন লিংক ৩'}),
+            'carousel_3_heading': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 3 - Main Heading'
+            }),
+            'carousel_3_text': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 3 - Subtext / Description'
+            }),
+            'carousel_3_button_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Slide 3 - Button URL'
+            }),
 
             'carousel_1': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'carousel_2': forms.ClearableFileInput(attrs={'class': 'form-control'}),
@@ -174,11 +217,18 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['name', 'address', 'mobile_number', 'appointment_date', 'description', 'status', 'note']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'আপনার নাম লিখুন'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'ঠিকানা লিখুন', 'rows': 3}),
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Full Name'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Address',
+                'rows': 3
+            }),
             'mobile_number': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': '০১XXXXXXXXX',
+                'placeholder': 'Phone Number (e.g. 01XXXXXXXXX)',
                 'pattern': r'^0\d{10}$'
             }),
             'appointment_date': forms.DateInput(attrs={
@@ -186,9 +236,19 @@ class AppointmentForm(forms.ModelForm):
                 'type': 'date',
                 'min': datetime.date.today().strftime('%Y-%m-%d')
             }),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'বিবরণ লিখুন', 'rows': 3}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
-            'note': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'নোট (ঐচ্ছিক)'}),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Appointment Purpose / Additional Information',
+                'rows': 3
+            }),
+            'status': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'note': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Any additional notes (optional)'
+            }),
         }
 
 class AppointmentFormPublic(forms.ModelForm):
@@ -196,8 +256,8 @@ class AppointmentFormPublic(forms.ModelForm):
         model = Appointment
         fields = ['name', 'address', 'mobile_number', 'appointment_date', 'description']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'আপনার নাম লিখুন'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'ঠিকানা লিখুন', 'rows': 3}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Write your name'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your address', 'rows': 3}),
             'mobile_number': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': '০১XXXXXXXXX',
@@ -208,7 +268,7 @@ class AppointmentFormPublic(forms.ModelForm):
                 'type': 'date',
                 'min': datetime.date.today().strftime('%Y-%m-%d')
             }),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'বিবরণ লিখুন', 'rows': 3}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write description', 'rows': 3}),
         }
 
 
@@ -220,20 +280,42 @@ class AppointmentNoticeForm(forms.ModelForm):
         model = AppointmentNotice
         fields = ['title1', 'des1', 'title2', 'des2', 'title3', 'des3']
         labels = {
-            'title1': 'শিরোনাম ১',
-            'des1': 'বর্ণনা ১',
-            'title2': 'শিরোনাম ২',
-            'des2': 'বর্ণনা ২',
-            'title3': 'শিরোনাম ৩',
-            'des3': 'বর্ণনা ৩',
+            'title1': 'Title 1',
+            'des1': 'Description 1',
+            'title2': 'Title 2',
+            'des2': 'Description 2',
+            'title3': 'Title 3',
+            'des3': 'Description 3',
         }
+
         widgets = {
-            'title1': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ১ লিখুন'}),
-            'des1': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ১ লিখুন', 'rows': 3}),
-            'title2': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ২ লিখুন'}),
-            'des2': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ২ লিখুন', 'rows': 3}),
-            'title3': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'শিরোনাম ৩ লিখুন'}),
-            'des3': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'বর্ণনা ৩ লিখুন', 'rows': 3}),
+            'title1': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Title 1'
+            }),
+            'des1': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Description 1',
+                'rows': 3
+            }),
+            'title2': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Title 2'
+            }),
+            'des2': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Description 2',
+                'rows': 3
+            }),
+            'title3': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Title 3'
+            }),
+            'des3': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Description 3',
+                'rows': 3
+            }),
         }
 
 

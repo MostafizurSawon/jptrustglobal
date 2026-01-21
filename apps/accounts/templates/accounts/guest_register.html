@@ -62,13 +62,13 @@
         {% endfor %}
         {% endif %}
 
-        <h4 class="mb-2">নিবন্ধন করুন 🚀</h4>
-        <p class="mb-4">ফোন নম্বরের মাধ্যমে যাচাই করুন</p>
+        <h4 class="mb-2">Register 🚀</h4>
+        <p class="mb-4">Verify using your phone number</p>
 
         <form method="POST" novalidate id="guest-register-form">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="phone_number" class="form-label">ফোন নম্বর</label>
+            <label for="phone_number" class="form-label">Phone Number</label>
             <input
               type="text"
               name="phone_number"
@@ -79,12 +79,12 @@
             />
           </div>
 
-          <button type="submit" class="btn btn-primary d-grid w-100">ওটিপি পাঠান</button>
+          <button type="submit" class="btn btn-primary d-grid w-100">Send OTP</button>
         </form>
 
         <p class="text-center mt-3">
-          ইতিমধ্যে আপনার একটি অ্যাকাউন্ট আছে?
-          <a href="{% url 'guest_login' %}"><span>এখানে লগইন করুন</span></a>
+          Already have an account?
+          <a href="{% url 'guest_login' %}"><span>Login here</span></a>
         </p>
       </div>
     </div>
@@ -102,7 +102,7 @@
     }
 
     if (!/^\d{12,14}$/.test(phone)) {
-      alert('দয়া করে একটি বৈধ ফোন নম্বর লিখুন (যেমন: 01XXXXXXXXX)');
+      alert('Please enter a valid phone number (e.g., 01XXXXXXXXX)');
       event.preventDefault();
       return false;
     }

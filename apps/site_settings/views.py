@@ -63,9 +63,6 @@ from django.views import View
 from .forms import ContactForm, ContactForm2
 from django.contrib import messages
 from web_project import TemplateLayout, TemplateHelper
-
-# যোগাযোগ ফর্ম ভিউ (অ্যাডমিন/ড্যাশবোর্ডের জন্য)
-# @method_decorator(admin_role_required, name='dispatch')
 @method_decorator(role_required(['admin', 'hr']), name='dispatch')
 class ContactView(View):
     template_name = 'contact.html'
@@ -74,7 +71,6 @@ class ContactView(View):
         form = ContactForm()
         context = TemplateLayout.init(self, {'form': form})
 
-        # যদি layout_path না থাকে, তাহলে ডিফল্ট লেআউট নির্ধারণ করুন
         context["layout_path"] = context.get("layout_path", "layout_default.html")
 
         return render(request, self.template_name, context)
@@ -84,10 +80,10 @@ class ContactView(View):
         print(form.errors)
         if form.is_valid():
             form.save()
-            messages.success(request, "আপনার বার্তা পেয়েছি। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করবো।")
-            return redirect('contact')  # সফলতার পর আবার কন্টাক্ট পেজে রিডাইরেক্ট
+            messages.success(request, "Thank you! We've received your message and will get in touch shortly.")
+            return redirect('contact')
         else:
-            messages.error(request, "অনুগ্রহ করে ফোন নম্বরটি সঠিকভাবে লিখুন (উদাহরণ: 01XXXXXXXXX)")
+            messages.error(request, "Please enter a valid Bangladeshi mobile number (e.g., 01XXXXXXXXX)")
             context = TemplateLayout.init(self, {'form': form})
             context["layout_path"] = context.get("layout_path", "layout_default.html")
             return render(request, self.template_name, context)
@@ -109,10 +105,10 @@ class ContactViewFront(View):
         print(form.errors)  # ফর্ম ত্রুটি ডিবাগিংয়ের জন্য
         if form.is_valid():
             form.save()
-            messages.success(request, "আপনার বার্তা পেয়েছি। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করবো।")
+            messages.success(request, "Thank you! We've received your message and will get in touch shortly.")
             return redirect('contact-home')  # সফলতার পর কন্টাক্ট হোমে রিডাইরেক্ট
         else:
-            messages.error(request, "অনুগ্রহ করে নিচের ত্রুটিগুলো ঠিক করুন।")
+            messages.error(request, "Please correct the error.")
             context = TemplateLayout.init(self, {'form': form})
             context["layout_path"] = context.get("layout_path", "layout_default.html")
             return render(request, self.template_name, context)
@@ -129,15 +125,15 @@ class QueryViewFront(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        print("QueryViewFront থেকে POST অনুরোধ এসেছে")
+        # print("QueryViewFront theke req eseche")
         form = ContactForm2(request.POST)
-        print(form.errors)  # ত্রুটি যাচাই
+        print(form.errors)
         if form.is_valid():
             form.save()
-            messages.success(request, "আমরা আপনার জিজ্ঞাসা পেয়েছি। খুব শীঘ্রই আপনার সাথে যোগাযোগ করবো।")
-            return redirect('query_form')  # সফলতার পর রিডাইরেক্ট
+            messages.success(request, "Thank you! We've received your message and will get in touch shortly.")
+            return redirect('query_form')
         else:
-            messages.error(request, "অনুগ্রহ করে নিচের ত্রুটিগুলো ঠিক করুন।")
+            messages.error(request, "Please correct the error.")
             context = TemplateLayout.init(self, {'form': form})
             context["layout_path"] = context.get("layout_path", "layout_default.html")
             return render(request, self.template_name, context)
@@ -151,18 +147,13 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Contact
 from web_project import TemplateLayout, TemplateHelper
-
 from django.http import HttpResponseForbidden
 
-# @method_decorator(admin_role_required, name='dispatch')
 @method_decorator(role_required(['admin', 'hr']), name='dispatch')
 class ContactDataView(View):
     template_name = 'contact_data.html'
 
     def get(self, request, *args, **kwargs):
-        # if not request.user.is_authenticated or request.user.role != 'admin':
-        #     return HttpResponseForbidden("আপনার এই পাতায় অ্যাক্সেসের অনুমতি নেই।")
-
         contacts = Contact.objects.all().order_by('-created_at')
 
         # Filters
@@ -188,8 +179,7 @@ class ContactDataView(View):
                 Q(message__icontains=search_query)
             )
 
-        # Pagination (25 contacts per page)
-        paginator = Paginator(contacts, 25)
+        paginator = Paginator(contacts, 50)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -227,16 +217,16 @@ class UpdateNoteView(View):
         contact = Contact.objects.filter(id=contact_id).first()
 
         if not contact:
-            return JsonResponse({'success': False, 'error': 'যোগাযোগ তথ্য খুঁজে পাওয়া যায়নি।'}, status=404)
+            return JsonResponse({'success': False, 'error': 'Contact information not found!'}, status=404)
 
         form = ContactNoteForm(request.POST, instance=contact)
 
         if form.is_valid():
             form.save()
-            messages.success(request, "নোট সফলভাবে আপডেট হয়েছে।")
+            messages.success(request, "Note updated successfully.")
             return JsonResponse({'success': True, 'note': contact.note})
         else:
-            messages.error(request, "নোট আপডেট করতে ব্যর্থ হয়েছে।")
+            messages.error(request, "Note update failed!")
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
 
@@ -246,16 +236,16 @@ class UpdateNoteView(View):
 class DeleteContactRowView(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated or request.user.role != 'admin':
-            return JsonResponse({'success': False, 'error': 'অনুমতি নেই।'}, status=403)
+            return JsonResponse({'success': False, 'error': 'No Permission'}, status=403)
 
         contact_id = request.POST.get('id')
         contact = Contact.objects.filter(id=contact_id).first()
 
         if not contact:
-            return JsonResponse({'success': False, 'error': 'যোগাযোগ তথ্য খুঁজে পাওয়া যায়নি।'}, status=404)
+            return JsonResponse({'success': False, 'error': 'Contact information not found!'}, status=404)
 
         contact.delete()  # 🔥 delete the entire row
-        messages.success(request, "সফলভাবে Delete হয়েছে।")
+        messages.success(request, "Successfully deleted!")
         return JsonResponse({'success': True})
 
 
@@ -285,18 +275,18 @@ class SiteSettingsUpdateView(UpdateView):
         return SiteSettings.objects.first()  # Assumes a single settings instance
 
     def form_valid(self, form):
-        messages.success(self.request, "সাইট সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।")
+        messages.success(self.request, "Site settings updated successfully.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "ত্রুটি হয়েছে! অনুগ্রহ করে সব তথ্য সঠিকভাবে পূরণ করুন।")
+        messages.error(self.request, "Please correct the errors.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["layout"] = "vertical"
         context["layout_path"] = TemplateHelper.set_layout("layout_vertical.html", context)
-        context["page_title"] = "সাইট সেটিংস"
+        context["page_title"] = "Site Settings"
         return context
 
 
@@ -315,18 +305,18 @@ class SliderUpdateView(UpdateView):
         return Slider.objects.first()
 
     def form_valid(self, form):
-        messages.success(self.request, "স্লাইডার তথ্য সফলভাবে সংরক্ষণ করা হয়েছে।")
+        messages.success(self.request, "Sliders updated successfully.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "ফর্মে ত্রুটি আছে। অনুগ্রহ করে সঠিকভাবে পূরণ করুন।")
+        messages.error(self.request, "Please correct the errors.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["layout"] = "vertical"
         context["layout_path"] = TemplateHelper.set_layout("layout_vertical.html", context)
-        context["page_title"] = "স্লাইডার আপডেট"
+        context["page_title"] = "Slider update"
         return context
 
 
@@ -519,14 +509,14 @@ class TestimonialCreateView(CreateView):
     model = Testimonial
     form_class = TestimonialForm
     template_name = 'admin/testimonial_list.html'
-    success_url = reverse_lazy('testimonial_create')  # url name নিজে সেট করুন
+    success_url = reverse_lazy('testimonial_create')
 
     def form_valid(self, form):
-        messages.success(self.request, "নতুন টেস্টিমোনিয়াল সফলভাবে যোগ করা হয়েছে।")
+        messages.success(self.request, "New testimonial added!")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "ত্রুটি হয়েছে! অনুগ্রহ করে সঠিকভাবে ফর্ম পূরণ করুন।")
+        messages.error(self.request, "Please correct the errors.")
         return super().form_invalid(form)
 
 
@@ -534,8 +524,8 @@ class TestimonialCreateView(CreateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["layout"] = "vertical"
         context["layout_path"] = TemplateHelper.set_layout("layout_vertical.html", context)
-        context["page_title"] = "নতুন টেস্টিমোনিয়াল যোগ করুন"
-        context["testimonials"] = Testimonial.objects.all().order_by('-id')  # 👈 এই লাইন যুক্ত করুন
+        context["page_title"] = "New Testimonial Add"
+        context["testimonials"] = Testimonial.objects.all().order_by('-id')
         return context
 
 
@@ -547,19 +537,19 @@ class TestimonialUpdateView(UpdateView):
     success_url = reverse_lazy('testimonial_create')
 
     def form_valid(self, form):
-        messages.success(self.request, "টেস্টিমোনিয়াল সফলভাবে আপডেট করা হয়েছে।")
+        messages.success(self.request, "Testimonial updated successfully!")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "ত্রুটি হয়েছে! অনুগ্রহ করে সঠিকভাবে ফর্ম পূরণ করুন।")
+        messages.error(self.request, "Please correct the errors.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["layout"] = "vertical"
         context["layout_path"] = TemplateHelper.set_layout("layout_vertical.html", context)
-        context["page_title"] = "টেস্টিমোনিয়াল আপডেট করুন"
-        context["testimonials"] = Testimonial.objects.all().order_by('-id')  # 👈 এই লাইন
+        context["page_title"] = "Update Testimonial"
+        context["testimonials"] = Testimonial.objects.all().order_by('-id')
         return context
 
 
@@ -569,7 +559,7 @@ class DeleteTestimonialView(View):
     def post(self, request, pk, *args, **kwargs):
         testimonial = get_object_or_404(Testimonial, pk=pk)
         testimonial.delete()
-        messages.success(request, "টেস্টিমোনিয়াল সফলভাবে মুছে ফেলা হয়েছে।")
+        messages.success(request, "Testimonial deleted successfully.")
         return redirect('testimonial_create')
 
 
@@ -727,17 +717,17 @@ class AppointmentPublicCreateView(View):
         form = AppointmentFormPublic()
         context = TemplateLayout.init(self, {'form': form})
         context["layout_path"] = context.get("layout_path", "layout_default.html")
-        context["page_title"] = "অ্যাপয়েন্টমেন্ট ফর্ম"
+        context["page_title"] = "Appointment Form"
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = AppointmentFormPublic(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "আপনার অ্যাপয়েন্টমেন্ট সফলভাবে গ্রহণ করা হয়েছে।")
-            return redirect("appointment_public")  # Make sure this name is registered in `urls.py`
+            messages.success(request, "Your appointments submitted successfully.")
+            return redirect("appointment_public")
         else:
-            messages.error(request, "ত্রুটি হয়েছে। অনুগ্রহ করে ফর্মটি সঠিকভাবে পূরণ করুন।")
+            messages.error(request, "Please correct the errors.")
             context = TemplateLayout.init(self, {'form': form})
             context["layout_path"] = context.get("layout_path", "layout_default.html")
             return render(request, self.template_name, context)
@@ -752,22 +742,22 @@ class AppointmentNoticeUpdateView(UpdateView):
     model = AppointmentNotice
     form_class = AppointmentNoticeForm
     template_name = 'admin/appointment_notice_form.html'
-    success_url = reverse_lazy('appointment_notice_settings')  # set this name in urls.py
+    success_url = reverse_lazy('appointment_notice_settings')
 
     def get_object(self):
         return AppointmentNotice.objects.first() or AppointmentNotice.objects.create()
 
     def form_valid(self, form):
-        messages.success(self.request, "অ্যাপয়েন্টমেন্ট নোটিশ সফলভাবে সংরক্ষণ হয়েছে।")
+        messages.success(self.request, "Appointment notice saved successfully.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "ত্রুটি হয়েছে। অনুগ্রহ করে ফর্মটি ঠিকভাবে পূরণ করুন।")
+        messages.error(self.request, "Please correct the errors.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["layout"] = "vertical"
         context["layout_path"] = TemplateHelper.set_layout("layout_vertical.html", context)
-        context["page_title"] = "অ্যাপয়েন্টমেন্ট নোটিশ সেটিংস"
+        context["page_title"] = "Appointment notice settings"
         return context
