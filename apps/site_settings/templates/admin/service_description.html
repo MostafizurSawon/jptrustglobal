@@ -1,0 +1,15 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Service Description{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h5 class="mb-4">Edit Service Description</h5>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+</div>
+{% endblock %}

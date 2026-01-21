@@ -1,0 +1,77 @@
+{% extends layout_path %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Client Payment Detail{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/bootstrap-icons/font/bootstrap-icons.css' %}">
+{% endblock vendor_css %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>পেমেন্ট বিস্তারিত</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">পেমেন্ট ইনফরমেশন</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <p><strong>পেমেন্ট পরিমাণ:</strong> ৳ {{ payment.amount }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>পেমেন্ট পদ্ধতি:</strong> {{ payment.get_payment_method_display }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>লেনদেন আইডি:</strong> {{ payment.transaction_id }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>বার্তা:</strong> {{ payment.message }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>পেমেন্ট তারিখ:</strong> {{ payment.payment_date }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>পেমেন্ট প্রমাণ চিত্র: (রশিদের ছবি, পেমেন্টের স্ক্রিনশট, ব্যাংক চেক, বা অফিস পেমেন্টের কপি আপলোড করুন এখানে )</strong></p>
+                {% if payment.image %}
+                    <img src="{{ payment.image.url }}" alt="Payment Proof" class="img-fluid" width="300">
+                {% else %}
+                    <p class="text-muted">No payment proof available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">সেবা বিস্তারিত</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <p><strong>সেবা নাম:</strong> {{ payment.service.service.name }}</p> <!-- Accessing the related ServiceApplication -->
+            </div>
+            <div class="mb-3">
+                <p><strong>সেবা বিবরণ:</strong> {{ payment.service.service.description }}</p>
+            </div>
+            <div class="mb-3">
+                <p><strong>স্ট্যাটাস:</strong> {{ payment.service.get_status_display }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'client_payment_list' %}" class="btn btn-outline-secondary">Back to Payments List</a>
+    </div>
+</div>
+{% endblock %}

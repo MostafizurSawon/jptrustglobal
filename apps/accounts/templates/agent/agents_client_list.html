@@ -1,0 +1,91 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}My Service Applications{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable
+        $('.datatables-basic').DataTable({
+            pageLength: 5, // Set default rows per page
+            searching: true,  // Enable search functionality
+            paging: true,  // Enable pagination
+            lengthChange: true,  // Allow users to change number of records per page
+            info: true,  // Show info about current page and total records
+            language: {
+                search: "Search:",  // Label for the search box
+                lengthMenu: "Show _MENU_ entries",  // Label for number of records per page dropdown
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",  // Info message for records
+                infoEmpty: "No records available",  // Message for empty data
+                zeroRecords: "No matching records found"  // Message when no matching records are found
+            }
+        });
+    });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Page Content -->
+  <div class="container py-5 card">
+    {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          {% endfor %}
+      {% endif %}
+    <h2>My Service Applications</h2>
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+              <!-- Table to display service applications -->
+          <table class="table table-striped datatables-basic">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Service Name</th>
+                      <th>Status</th>
+                      <th>Message</th>
+                      <th>Applied At</th>
+                      <th>Agent Info</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for application in service_applications %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ application.service.name }}</td>
+                      <td>{{ application.get_status_display }}</td>
+                      <td>{{ application.message|truncatechars:50 }}</td>
+                      <td>{{ application.applied_at }}</td>
+                      <td>
+                          {% if application.agent_info %}
+                              {{ application.agent_info.full_name }}  <!-- Display Agent's full name -->
+                          {% else %}
+                              N/A
+                          {% endif %}
+                      </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="6" class="text-center">No service applications found.</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+</div>
+{% endblock %}

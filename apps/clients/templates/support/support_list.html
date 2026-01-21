@@ -1,0 +1,179 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}My Support Requests{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 container-p-y">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <h4 class="fw-bold mb-3">আমার সাপোর্ট রিকুয়েস্টসমূহ</h4>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <div class="col-md-4">
+          <input type="text" name="search" class="form-control" placeholder="কি খুঁজছেন?" value="{{ search_query }}">
+        </div>
+        <div class="col-md-3">
+          <select name="status" class="form-select">
+            <option value="">সকল স্ট্যাটাস</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+            <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+            <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">ফিল্টার</button>
+        </div>
+        <div class="col-md-3">
+          <button onclick="openSupportCreateModal()" type="button" class="btn btn-success w-100">
+            নতুন রিকুয়েস্ট করুন
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="card p-3">
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>মেসেজ স্ট্যাটাস</th>
+            <th>মেসেজ</th>
+            <th>স্ট্যাটাস</th>
+            <th>তারিখ</th>
+            <th>অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in supports %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              {% comment %} <small>{{ item.user.phone_number }}</small> {% endcomment %}
+              {% if item.user_unread %}
+                <span class="badge bg-success">নতুন</span>
+              {% else %}
+                <span class="badge bg-secondary">আপডেট নাই</span>
+              {% endif %}
+            </td>
+
+
+            <td>{{ item.message }}</td>
+            <td>
+              <span class="badge
+                {% if item.status == 'pending' %}bg-warning
+                {% elif item.status == 'in_progress' %}bg-info
+                {% elif item.status == 'resolved' %}bg-success
+                {% elif item.status == 'closed' %}bg-secondary
+                {% endif %}">
+                {{ item.get_status_display }}
+              </span>
+            </td>
+            <td>{{ item.created_at|date:"Y-m-d h:i A" }}</td>
+            <td>
+              <a href="{% url 'support_detail' item.pk %}" class="btn btn-sm btn-outline-primary">ডিটেইলস</a>
+              {% if item.status == 'in_progress' %}
+                <a href="{% url 'support_chat' item.pk %}" class="btn btn-sm btn-outline-success">চ্যাট করুন</a>
+              {% endif %}
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center text-muted">কোনো রিকুয়েস্ট পাওয়া যায়নি।</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer">
+      {% if is_paginated %}
+        <nav class="d-flex justify-content-center">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a></li>
+            {% endif %}
+            {% for page_num in paginator.page_range %}
+              <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+              </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="supportCreateModal" tabindex="-1" aria-labelledby="supportCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">নতুন সাপোর্ট রিকুয়েস্ট</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="supportCreateModalBody">
+        <div class="text-center p-4">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function openSupportCreateModal() {
+    const modal = new bootstrap.Modal(document.getElementById('supportCreateModal'));
+    fetch("{% url 'support_create' %}")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("supportCreateModalBody").innerHTML = html;
+        modal.show();
+
+        // Optional: handle submit via AJAX
+        const form = document.getElementById("supportCreateForm");
+        if (form) {
+          form.onsubmit = function (e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch("{% url 'support_create' %}", {
+              method: "POST",
+              body: formData
+            })
+            .then(res => {
+              if (res.redirected) {
+                window.location.href = res.url;
+              } else {
+                return res.text();
+              }
+            })
+            .then(html => {
+              if (html) document.getElementById("supportCreateModalBody").innerHTML = html;
+            });
+          };
+        }
+      });
+  }
+</script>
+
+{% endblock %}

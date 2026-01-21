@@ -1,0 +1,225 @@
+{% extends layout_path %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}Create Passport Info{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+{% endblock %}
+
+{% block content %}
+<!-- Page Content -->
+<div class=" my-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center d-flex">
+    <!-- Left Column: Form Fields -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary">
+                <h5 class="text-white text-center">পাসপোর্ট তথ্য তৈরি করুন - {{ request.user.phone_number }}</h5>
+            </div>
+            <div class="card-body mt-2">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- Profile Photo and Passport Number (2 columns) -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_passport_number" class="form-label">পাসপোর্ট নম্বর</label>
+                                {{ form.passport_number|add_class:"form-control" }}
+                            </div>
+                        </div>
+
+                    <!-- Full Name -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="id_full_name" class="form-label">পূর্ণ নাম</label>
+                            {{ form.full_name|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- Date of Birth and Place of Birth (2 columns) -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_date_of_birth" class="form-label">জন্ম তারিখ</label>
+                                {{ form.date_of_birth|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_place_of_birth" class="form-label">জন্মস্থান</label>
+                                {{ form.place_of_birth|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_nationality" class="form-label">জাতীয়তা</label>
+                                {{ form.nationality|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_gender" class="form-label">লিঙ্গ</label>
+                                {{ form.gender|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Father's Name and Mother's Name (2 columns) -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_father_name" class="form-label">বাবার নাম</label>
+                                {{ form.father_name|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_mother_name" class="form-label">মায়ের নাম</label>
+                                {{ form.mother_name|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Spouse Name -->
+                            <div class="form-group mb-3">
+                                <label for="id_spouse_name" class="form-label">স্বামীর/স্ত্রীর নাম</label>
+                                {{ form.spouse_name|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Place of Issue -->
+                            <div class="form-group mb-3">
+                                <label for="id_place_of_issue" class="form-label">ইস্যুর স্থান</label>
+                                {{ form.place_of_issue|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Issue Date and Expiry Date (2 columns) -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_issue_date" class="form-label">ইস্যুর তারিখ</label>
+                                {{ form.issue_date|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_expiry_date" class="form-label">মেয়াদ শেষ হওয়ার তারিখ</label>
+                                {{ form.expiry_date|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Passport Photo and Signature -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_passport_photo" class="form-label">পাসপোর্ট স্ক্যান কপি</label>
+                                {{ form.passport_photo|add_class:"form-control" }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_profile_photo" class="form-label">প্রোফাইল ফটো</label>
+                                {{ form.profile_photo|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Documents Upload (6 fields) -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_1" class="form-label">অতিরিক্ত ডকুমেন্ট ১</label>
+                                {{ form.additional_file_1|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_2" class="form-label">অতিরিক্ত ডকুমেন্ট ২</label>
+                                {{ form.additional_file_2|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_3" class="form-label">অতিরিক্ত ডকুমেন্ট ৩</label>
+                                {{ form.additional_file_3|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_4" class="form-label">অতিরিক্ত ডকুমেন্ট ৪</label>
+                                {{ form.additional_file_4|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_5" class="form-label">অতিরিক্ত ডকুমেন্ট ৫</label>
+                                {{ form.additional_file_5|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="id_additional_file_6" class="form-label">অতিরিক্ত ডকুমেন্ট ৬</label>
+                                {{ form.additional_file_6|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Submit and Cancel Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary w-100">জমা দিন</button>
+                        </div>
+                        <div class="form-group mb-3">
+                            <a href="{% url 'passport_info_create' %}" class="btn btn-secondary w-100">বাতিল করুন</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Instructions -->
+    <div class="col-md-4 d-flex align-items-stretch">
+        <div class="card shadow-sm w-100">
+            <div class="card-header bg-info">
+                <h5 class="text-center text-white">নির্দেশনা</h5>
+            </div>
+            <div class="card-body mt-2">
+                <ul style="line-height: 1.8;">
+                    <li><strong>প্রোফাইল ফটো:</strong> পাসপোর্টের জন্য নিজের একটি পরিষ্কার ছবি আপলোড করুন।</li>
+                    <li><strong>পাসপোর্ট নম্বর:</strong> আপনার পাসপোর্টের ইউনিক নম্বর প্রদান করুন।</li>
+                    <li><strong>ইস্যুর তারিখ ও মেয়াদ শেষ হওয়ার তারিখ:</strong> পাসপোর্ট ইস্যু এবং এর মেয়াদ শেষ হওয়ার তারিখ প্রদান করুন।</li>
+                    <li><strong>ইস্যুর স্থান:</strong> আপনার পাসপোর্ট যেখানে ইস্যু হয়েছে সেই শহর ও দেশ প্রদান করুন।</li>
+                    <li><strong>বাবার নাম এবং মায়ের নাম:</strong> আপনার পিতামাতার পূর্ণ নাম প্রদান করুন।</li>
+                    <li><strong>স্বামী/স্ত্রীর নাম:</strong> যদি প্রযোজ্য হয়, আপনার স্বামী/স্ত্রীর পূর্ণ নাম প্রদান করুন।</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+{% endblock %}

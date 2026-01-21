@@ -1,0 +1,180 @@
+{% extends layout_path %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}আমার সার্ভিস আবেদনসমূহ{% endblock %}
+
+{% block content %}
+<style>
+.table thead th,
+.table tbody td {
+  border-right: 1px solid #dee2e6;
+}
+
+.table th:first-child,
+.table td:first-child {
+  border-left: 1px solid #dee2e6;
+}
+
+.table-bordered {
+  border-collapse: collapse;
+  border: 1px solid #dee2e6;
+}
+
+.custom-pagination .page-link {
+  border-radius: 50% !important;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  line-height: 38px;
+  text-align: center;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #7367f0;
+  border-color: #7367f0;
+  color: #fff;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  background-color: #f1f1f1;
+  color: #999;
+  border-color: #dee2e6;
+}
+
+.custom-pagination .page-link:hover {
+  background-color: #e1e1e1;
+  color: #000;
+}
+</style>
+
+<div class="container py-4 card">
+  <h5 class="mb-4">আমার সার্ভিস আবেদনসমূহ</h5>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Filter Form -->
+  <form method="get" class="row g-3 mb-4 align-items-end">
+    <div class="col-md-4">
+      <label for="service_name" class="form-label">সার্ভিস নির্বাচন করুন</label>
+      <select name="service_name" id="service_name" class="form-select">
+        <option value="">সব</option>
+        {% for service in services %}
+          <option value="{{ service }}" {% if service == request.GET.service_name %}selected{% endif %}>{{ service }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="search" class="form-label">অনুসন্ধান</label>
+      <input type="text" name="search" id="search" class="form-control" value="{{ request.GET.search }}" placeholder="নাম, বার্তা ইত্যাদি...">
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary">ফিল্টার করুন</button>
+      <a href="{% url 'applied_service_apply' %}" class="btn btn-secondary ms-2">রিসেট</a>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Action</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Paid</th>
+          <th>Price</th>
+          <th>Due</th>
+          <th>Message</th>
+          <th>Applied</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for application in service_applications %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            {% comment %} <div class="dropdown">
+              <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'client_payment_list' %}"><i class="fas fa-eye me-2"></i> স্ট্যাটাস</a></li>
+                <li><a class="dropdown-item" href="{% url 'client_application_status' %}"><i class="fas fa-chart-line me-2"></i> অগ্রগতি</a></li>
+                {% if application.balance > 0 %}
+                <li><a class="dropdown-item" href="{% url 'service_application_payment' service_application_id=application.id %}"><i class="fas fa-credit-card me-2"></i> পেমেন্ট</a></li>
+                {% else %}
+                <li><a class="dropdown-item disabled"><i class="fas fa-check-circle me-2"></i> পরিশোধ</a></li>
+                {% endif %}
+              </ul>
+            </div> {% endcomment %}
+            <a class="btn btn-sm btn-primary m-1" href="{% url 'client_payment_list' %}"><i class="fas fa-eye me-2"></i> স্ট্যাটাস</a>
+                <a class="btn btn-sm btn-primary m-1" href="{% url 'client_application_status' %}"><i class="fas fa-chart-line me-2"></i> অগ্রগতি</a>
+                {% if application.balance > 0 %}
+                <a class="btn btn-sm btn-success m-1" href="{% url 'service_application_payment' service_application_id=application.id %}"><i class="fas fa-credit-card me-2"></i> পেমেন্ট</a>
+                {% else %}
+                <a class="btn btn-sm btn-success disabled"><i class="fas fa-check-circle me-2"></i> পরিশোধ</a>
+                {% endif %}
+          </td>
+          <td>{{ application.service.name }}</td>
+          <td>{{ application.get_status_display }}</td>
+          <td class="text-success">{{ application.amount_paid|intcomma }} ৳</td>
+          <td class="text-primary">{{ application.service.price|intcomma }} ৳</td>
+          <td class="text-warning">{{ application.balance|intcomma }} ৳</td>
+          <td>{{ application.message|truncatechars:50 }}</td>
+          <td>{{ application.applied_at|date:"d-m-Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center">কোনো সার্ভিস আবেদন পাওয়া যায়নি।</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+    <div class="alert alert-info d-flex justify-content-between align-items-center mt-3 text-dark">
+        <div class=""><strong>মোট পরিশোধ:</strong> <span  class="text-success">{{ total_paid|intcomma }} ৳ </span></div>
+        <div><strong>মোট বাকি:</strong> <span  class="text-warning"> {{ total_due|intcomma }} ৳ </span></div>
+      </div>
+  </div>
+
+  <!-- Pagination -->
+  {% if service_applications.has_other_pages %}
+    <nav aria-label="Pagination">
+      <ul class="pagination justify-content-center custom-pagination">
+        {% if service_applications.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ service_applications.previous_page_number }}&{{ request.GET.urlencode }}">«</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">«</span></li>
+        {% endif %}
+
+        {% for i in service_applications.paginator.page_range %}
+          {% if service_applications.number == i %}
+            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}&{{ request.GET.urlencode }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if service_applications.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ service_applications.next_page_number }}&{{ request.GET.urlencode }}">»</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">»</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

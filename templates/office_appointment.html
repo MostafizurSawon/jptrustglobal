@@ -1,0 +1,654 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Office Appointment | {{site_settings.name}} </title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts - Noto Sans Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --light-bg: #f8f9fa;
+        --dark-text: #2c3e50;
+        --border-radius: 12px;
+        --box-shadow: 0 8px 25px rgba(44, 62, 80, 0.1);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans Bengali', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: var(--dark-text);
+        line-height: 1.6;
+      }
+
+      .premium-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+      }
+
+      .appointment-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        margin: 20px auto;
+        max-width: 1200px;
+      }
+
+      .card-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: shimmer 3s infinite;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+      }
+
+      .card-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-body {
+        padding: 40px;
+      }
+
+      .form-section {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        height: fit-content;
+      }
+
+      .notice-section {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        color: var(--dark-text);
+        height: fit-content;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-title i {
+        color: var(--secondary-color);
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--dark-text);
+        margin-bottom: 8px;
+        display: block;
+        font-size: 1rem;
+      }
+
+      .appointment-input {
+        border: 2px solid #e0e6ed;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        width: 100%;
+      }
+
+      .appointment-input:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        outline: none;
+        transform: translateY(-2px);
+      }
+
+      .appointment-input:hover {
+        border-color: var(--secondary-color);
+        transform: translateY(-1px);
+      }
+
+      .submit-btn {
+        background: var(--gradient-primary);
+        border: none;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .notice-item {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--accent-color);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .notice-title {
+        font-weight: 600;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .notice-message {
+        color: var(--dark-text);
+        line-height: 1.6;
+      }
+
+      .blocked-dates {
+        background: rgba(231, 76, 60, 0.1);
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        border-radius: 6px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+
+      .blocked-dates-title {
+        font-weight: 600;
+        color: var(--accent-color);
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+
+      .date-tag {
+        display: inline-block;
+        background: var(--accent-color);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin: 2px;
+      }
+
+      .alert {
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border: none;
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(39, 174, 96, 0.05) 100%);
+        color: var(--success-color);
+        border-left: 4px solid var(--success-color);
+      }
+
+      .alert-danger {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
+        color: var(--accent-color);
+        border-left: 4px solid var(--accent-color);
+      }
+
+      .floating-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .floating-element {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .floating-element:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+      }
+
+      .floating-element:nth-child(3) {
+        width: 60px;
+        height: 60px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      .home-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        border: none;
+        border-radius: 50px;
+        padding: 12px 20px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .home-btn:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        .card-header h1 {
+          font-size: 2rem;
+        }
+
+        .card-body {
+          padding: 20px;
+        }
+
+        .form-section,
+        .notice-section {
+          padding: 20px;
+          margin-bottom: 20px;
+        }
+
+        .row {
+          gap: 0;
+        }
+
+        .home-btn {
+          top: 10px;
+          left: 10px;
+          padding: 10px 15px;
+          font-size: 0.9rem;
+        }
+      }
+
+      .input-icon {
+        position: relative;
+      }
+
+      .input-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+        z-index: 1;
+      }
+
+      .input-icon .appointment-input {
+        padding-left: 45px;
+      }
+
+      .form-group.required .form-label::after {
+        content: ' *';
+        color: var(--accent-color);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
+
+    <!-- Home Button -->
+    <a href="{% url 'home' %}" class="home-btn"><i class="fas fa-home"></i> হোমে ফিরুন</a>
+
+    <div class="premium-container">
+      <div class="container">
+        <div class="appointment-card" data-aos="fade-up" data-aos-duration="800">
+          <!-- Card Header -->
+          <div class="card-header">
+            <h1><i class="fas fa-calendar-check me-3"></i>Office Appointment</h1>
+            <p>Book and take our premium services.</p>
+          </div>
+
+          <!-- Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show m-4" role="alert">
+                <small>{{ message }}</small>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Card Body -->
+          <div class="card-body">
+            <div class="row">
+              <!-- Appointment Form -->
+              <div class="col-lg-7">
+                <div class="form-section" data-aos="fade-right" data-aos-delay="200">
+                  <h3 class="section-title">
+                    <i class="fas fa-user-edit"></i>
+                    Appointment Form
+                  </h3>
+
+                  <form method="post" id="appointmentForm" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                      <label for="{{ form.name.id_for_label }}" class="form-label">Full Name</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        {{ form.name }}
+                      </div>
+                      {% if form.name.errors %}
+                        <div class="invalid-feedback d-block">{{ form.name.errors.0 }}</div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Address Field -->
+                    <div class="mb-3">
+                      <label for="{{ form.address.id_for_label }}" class="form-label"><i class="fas fa-map-marker-alt me-2"></i> Address</label>
+                      {{ form.address }}
+                      {% if form.address.errors %}
+                        <div class="invalid-feedback d-block">{{ form.address.errors.0 }}</div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Mobile Number Field -->
+                    <div class="mb-3">
+                      <label for="{{ form.mobile_number.id_for_label }}" class="form-label">Mobile Number</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        {{ form.mobile_number }}
+                      </div>
+                      {% if form.mobile_number.errors %}
+                        <div class="invalid-feedback d-block">{{ form.mobile_number.errors.0 }}</div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Appointment Date Field -->
+                    <div class="mb-3">
+                      <label for="{{ form.appointment_date.id_for_label }}" class="form-label"><i class="fas fa-calendar-alt me-2"></i> Appointment Date</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        {{ form.appointment_date }}
+                      </div>
+                      {% if form.appointment_date.errors %}
+                        <div class="invalid-feedback d-block">{{ form.appointment_date.errors.0 }}</div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="mb-3">
+                      <label for="{{ form.description.id_for_label }}" class="form-label"><i class="fas fa-comment-alt me-2"></i> Description</label>
+                      {{ form.description }}
+                      {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-end">
+                      <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i> Book Appointment</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Notice Board -->
+              <div class="col-lg-5">
+                <div class="notice-section" data-aos="fade-left" data-aos-delay="400">
+                  <h3 class="section-title" style="color: white;">
+                    <i class="fas fa-bullhorn"></i>
+                    Important Notice
+                  </h3>
+
+                  {% if notices %}
+                    {% for notice in notices %}
+                      <div class="notice-item" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                        <div class="notice-title">
+                          <i class="fas fa-exclamation-circle me-2"></i>
+                          {{ notice.title }}
+                        </div>
+                        <div class="notice-message">{{ notice.message }}</div>
+
+                        {% if notice.get_blocked_dates_list %}
+                          <div class="blocked-dates">
+                            <div class="blocked-dates-title">
+                              <i class="fas fa-ban me-1"></i>Off day dates:
+                            </div>
+                            {% for date in notice.get_blocked_dates_list %}
+                              <span class="date-tag">{{ date }}</span>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="notice-item" data-aos="zoom-in">
+                      <div class="notice-title">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ note.title1 }}
+                      </div>
+                      <div class="notice-message">{{ note.des1 }}</div>
+                    </div>
+
+                    <div class="notice-item" data-aos="zoom-in" data-aos-delay="100">
+                      <div class="notice-title">
+                        <i class="fas fa-clock me-2"></i>
+                        {{ note.title2 }}
+                      </div>
+                      <div class="notice-message">{{ note.des2 }}</div>
+                    </div>
+
+                    <div class="notice-item" data-aos="zoom-in" data-aos-delay="200">
+                      <div class="notice-title">
+                        <i class="fas fa-phone-alt me-2"></i>
+                        {{ note.title3 }}
+                      </div>
+                      <div class="notice-message">{{ note.des3 }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+
+      // Form validation and enhancement
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('appointmentForm');
+        const inputs = form.querySelectorAll('.appointment-input');
+
+        // Add real-time validation
+        inputs.forEach(input => {
+          input.addEventListener('input', function () {
+            validateField(this);
+          });
+
+          input.addEventListener('blur', function () {
+            validateField(this);
+          });
+        });
+
+        // Form submission with loading state
+        form.addEventListener('submit', function (e) {
+          const submitBtn = form.querySelector('.submit-btn');
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Booking appointment...';
+          submitBtn.disabled = true;
+        });
+
+        function validateField(field) {
+          const value = field.value.trim();
+          field.classList.remove('is-invalid', 'is-valid');
+
+          if (field.hasAttribute('required') && !value) {
+            field.classList.add('is-invalid');
+            return false;
+          }
+
+          // Mobile number validation
+          if (field.name === 'mobile_number') {
+            const phoneRegex = /^0\d{10}$/;
+            if (value && !phoneRegex.test(value)) {
+              field.classList.add('is-invalid');
+              return false;
+            }
+          }
+
+          // Date validation
+          if (field.type === 'date') {
+            const selectedDate = new Date(value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+              field.classList.add('is-invalid');
+              return false;
+            }
+          }
+
+          if (value) {
+            field.classList.add('is-valid');
+          }
+
+          return true;
+        }
+      });
+
+      // Enhanced mobile number formatting
+      document.querySelector('input[name="mobile_number"]').addEventListener('input', function () {
+        let value = this.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 11) {
+          value = value.substring(0, 11);
+        }
+        this.value = value;
+      });
+
+      // Prevent past date selection
+      const dateInput = document.querySelector('input[type="date"]');
+      if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+      }
+    </script>
+  </body>
+</html>

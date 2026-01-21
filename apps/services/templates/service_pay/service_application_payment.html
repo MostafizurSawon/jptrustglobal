@@ -1,0 +1,161 @@
+{% extends layout_path %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}Service Application Payment{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable with pagination, search, and content per page
+        $('.datatables-basic').DataTable({
+            pageLength: 5, // Content per page (5 rows per page)
+            searching: true, // Enable search functionality
+            paging: true, // Enable pagination
+            lengthChange: true, // Allow users to change the number of records per page
+            info: true, // Show info about the current page and total records
+            language: {
+                search: "Search:", // Label for the search box
+                lengthMenu: "Show _MENU_ entries", // Label for the number of records per page dropdown
+                info: "Showing _START_ to _END_ of _TOTAL_ entries", // Info message for records
+                infoEmpty: "No records available", // Message for empty data
+                zeroRecords: "No matching records found" // Message when no matching records are found
+            }
+        });
+    });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container my-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <h2>Service Application Payment</h2>
+
+    <div class="row justify-content-center">
+        <!-- Left Column: Form -->
+        <div class="col-md-7 p-5 card h-100">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="service_name" class="form-label">Service Name</label>
+                    <input type="text" class="form-control" id="service_name" value="{{ service_application.service.name }}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    {{ form.status|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="due_amount" class="form-label">Due Amount</label>
+                    {{ form.due_amount }}
+                </div>
+
+
+                <div class="mb-3">
+                  <label for="payment_message" class="form-label">Payment Message</label>
+                  {{ form.payment_message|add_class:"form-control" }}
+                  <style>
+                      textarea[name="payment_message"] {
+                          height: 80px !important;
+                          resize: vertical;
+                      }
+                  </style>
+              </div>
+
+
+                <div class="mb-3">
+                    <label for="discount" class="form-label">Discount</label>
+                    {{ form.discount|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="action_taken" class="form-label">Action Taken</label>
+                    {{ form.action_taken|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="payment_due_date" class="form-label">Payment Due Date</label>
+                    {{ form.payment_due_date|add_class:"form-control" }}
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Submit Payment</button>
+                    <a href="{% url 'client-payment' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Right Column: Service Info -->
+        <div class="col-md-5">
+            <div class="card shadow-sm h-100 p-4">
+
+                <div class="card-body">
+                  <div class="d-flex justify-content-between"><h5 class="card-title">{{ service_application.service.name }}</h5>
+                    <h5 class="card-title">Client: {{ service_application.user.phone_number }}</h5></div>
+
+                    <p class="card-text text-muted small">{{ service_application.service.description|default:"No description available." }}</p>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Price:</span>
+                            <strong>{{ service_application.service.price }} ৳</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Status:</span>
+                            <span>
+                                {% if service_application.service.status|lower == "active" %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Discount:</span>
+                            <strong>{{ service_application.discount }} ৳</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Amount Paid:</span>
+                            <strong>{{ service_application.amount_paid }} ৳</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Balance Due:</span>
+                            <strong>{{ service_application.balance }} ৳</strong>
+                        </li>
+                        {% if service_application.payment_due_date %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Payment Due:</span>
+                            <strong>{{ service_application.payment_due_date|date:"j-n-Y" }}</strong>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

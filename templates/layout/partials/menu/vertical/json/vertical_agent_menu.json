@@ -1,0 +1,33 @@
+{
+  "menu": [
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "Dashboard",
+      "slug": "index"
+    },
+    {
+      "name": "Agent Information",
+      "icon": "menu-icon tf-icons ti ti-user-shield",
+      "slug": "agent-informations",
+      "submenu": [
+        {
+          "url": "agents_data",
+          "name": "Agent's profile",
+          "slug": "agents_data"
+        },
+        {
+          "url": "agents_client",
+          "name": "Agent's Client",
+          "slug": "agents_client"
+        },
+        {
+          "url": "agent-cv-create",
+          "name": "Client Cv build",
+          "slug": "agent-cv-create"
+        }
+      ]
+    }
+
+  ]
+}

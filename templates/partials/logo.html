@@ -1,0 +1,6 @@
+{% load static %}
+{% if site_settings.favicon %}
+  <img src="{{ site_settings.favicon.url }}" alt="{{ site_settings.name }}" width="40" height="30" />
+{% else %}
+  <img src="{% static 'favicon/favicon.png' %}" alt="Default logo" width="40" height="30" />
+{% endif %}

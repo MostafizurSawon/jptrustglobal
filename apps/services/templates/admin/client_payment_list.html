@@ -1,0 +1,265 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Client Payments{% endblock %}
+
+{% block content %}
+<style>
+.vuexy-table tr:nth-child(odd) { background-color: #f9f9f9; }
+.vuexy-table tr:hover { background-color: #f2f0fc !important; }
+.vuexy-table th { background-color: #f3f3f9; color: #5d596c; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+.vuexy-table td { vertical-align: middle; font-size: 0.875rem; }
+.custom-pagination .page-link { border-radius: 50% !important; width: 38px; height: 38px; padding: 0; line-height: 38px; text-align: center; display: inline-block; transition: all 0.2s; }
+.custom-pagination .page-item.active .page-link { background-color: #7367f0; border-color: #7367f0; color: #fff; }
+.custom-pagination .page-item.disabled .page-link { background-color: #f1f1f1; color: #999; border-color: #dee2e6; }
+.custom-pagination .page-link:hover { background-color: #e1e1e1; color: #000; }
+</style>
+
+<div class="container py-4 card">
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+  <h2 class="mb-4">Client Payments</h2>
+
+  <form method="get" class="row g-3 mb-4 align-items-end">
+    <div class="col-md-3">
+      <label for="user" class="form-label">Filter by User</label>
+      <input type="text" name="user" id="user" class="form-control" value="{{ request.GET.user }}" placeholder="Phone number">
+    </div>
+    <div class="col-md-3">
+      <label for="service" class="form-label">Filter by Service</label>
+      <select name="service" id="service" class="form-select">
+        <option value="">সব সার্ভিস</option>
+        {% for s in service_options %}
+          <option value="{{ s.name }}" {% if service_filter == s.name %}selected{% endif %}>
+            {{ s.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+    </div>
+
+    <div class="col-md-3">
+      <label for="end_date" class="form-label">End Date</label>
+      <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary me-2">Filter</button>
+      <a href="?" class="btn btn-outline-secondary">Reset</a>
+    </div>
+  </form>
+
+  {% comment %} <a href="{% url 'service_application_pdf' %}?search={{ search_query }}&service={{ service_filter }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-outline-danger mb-3" target="_blank">
+    <i class="fa fa-file-pdf me-1"></i> Export PDF
+  </a> {% endcomment %}
+
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered w-100 text-nowrap vuexy-table text-center">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Action</th>
+          <th>User</th>
+          <th>Service</th>
+          <th>Price</th>
+          <th>Amount</th>
+          <th>Due</th>
+          <th>Status</th>
+          <th>Method</th>
+          <th>Date</th>
+          <th style="max-width: 200px;">Admin Message</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for payment in payments %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            <button class="btn btn-edit-payment p-0 m-0 bg-transparent border-0 shadow-none "
+                  title="Edit"
+                  data-payment='{
+                    "id": "{{ payment.id }}",
+                    "user": "{{ payment.user.phone_number }}",
+                    "service": "{{ payment.service.service.name|escapejs }}",
+                    "amount": "{{ payment.amount }}",
+                    "method": "{{ payment.payment_method }}",
+                    "transaction": "{{ payment.transaction_id|default_if_none:"" }}",
+                    "message": "{{ payment.message|default_if_none:""|escapejs }}",
+                    "admin_message": "{{ payment.admin_message|default_if_none:""|escapejs }}",
+                    "status": "{{ payment.status }}",
+                    "image_url": "{{ payment.image.url }}"
+                  }'>
+            <i class="fas fa-edit me-1 text-primary"></i>
+          </button>
+
+          <a class="btn btn-sm btn-success" href="{% url 'payment_invoice' payment.id %}" title="Invoice">
+            <i class="fa fa-file-invoice"></i>
+          </a>
+
+          </td>
+          <td>{{ payment.user.phone_number }}</td>
+          <td>{{ payment.service.service.name }}</td>
+          <td>{{ payment.service.service.price|intcomma }} ৳</td>
+          <td>{{ payment.amount|intcomma }} ৳</td>
+          <td>{{ payment.service.balance|intcomma }} ৳</td>
+          <td>{{ payment.get_status_display }}</td>
+          <td>{{ payment.payment_method }}</td>
+          <td>{{ payment.payment_date|date:"Y-m-d H:i" }}</td>
+          <td style="max-width: 200px; white-space: normal; word-wrap: break-word;">
+            {{ payment.admin_message|default:"-" }}
+          </td>
+
+
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-center">কোনো পেমেন্ট রেকর্ড পাওয়া যায়নি।</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if payments.has_other_pages %}
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center custom-pagination">
+      {% if payments.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ payments.previous_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.service %}&service={{ request.GET.service }}{% endif %}">&laquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %}
+      <li class="page-item active"><span class="page-link">{{ payments.number }}</span></li>
+      {% if payments.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ payments.next_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.service %}&service={{ request.GET.service }}{% endif %}">&raquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Edit Modal -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editPaymentModal">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">Edit Payment</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form method="POST" enctype="multipart/form-data" id="edit-payment-form">
+      {% csrf_token %}
+      <input type="hidden" name="payment_id" id="modal_payment_id" />
+
+      <div class="mb-2">
+        <label class="form-label">User Phone</label>
+        <input type="text" class="form-control" id="modal_user" readonly>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Service</label>
+        <input type="text" class="form-control" id="modal_service" readonly>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Amount</label>
+        <input type="number" name="amount" class="form-control" id="modal_amount" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Payment Method</label>
+        <select name="payment_method" class="form-select" id="modal_method" required>
+          <option value="Bkash">Bkash</option>
+          <option value="Rocket">Rocket</option>
+          <option value="Nagad">Nagad</option>
+          <option value="Bank">Bank</option>
+          <option value="Others">Others</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Transaction ID</label>
+        <input type="text" name="transaction_id" class="form-control" id="modal_transaction">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Client Message</label>
+        <textarea name="message" class="form-control" id="modal_message" rows="2"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Payment proof:</label><br>
+        <img id="modal_uploaded_image" src="" alt="Payment Image" class="rounded mb-2" style="max-height: 120px; cursor: pointer; display: none;" onclick="window.open(this.src, '_blank')">
+      </div>
+
+      {% comment %} <div class="mb-2">
+        <label class="form-label">Replace Image (optional)</label>
+        <input type="file" name="image" class="form-control">
+      </div> {% endcomment %}
+
+      <hr>
+
+      <div class="mb-2">
+        <label for="modal_status" class="form-label">Status</label>
+        <select name="status" id="modal_status" class="form-select" required>
+          {% for value, label in status_choices %}
+            <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="modal_admin_message" class="form-label">Admin Message</label>
+        <textarea name="admin_message" id="modal_admin_message" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-success">Update</button>
+        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('.table').addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn-edit-payment');
+      if (btn) {
+        const data = JSON.parse(btn.getAttribute('data-payment'));
+
+        document.getElementById('modal_payment_id').value = data.id;
+        document.getElementById('modal_user').value = data.user;
+        document.getElementById('modal_service').value = data.service;
+        document.getElementById('modal_amount').value = data.amount;
+        document.getElementById('modal_method').value = data.method || '';
+        document.getElementById('modal_transaction').value = data.transaction;
+        document.getElementById('modal_message').value = data.message;
+        document.getElementById('modal_admin_message').value = data.admin_message;
+        document.getElementById('modal_status').value = data.status;
+
+        const img = document.getElementById('modal_uploaded_image');
+        if (data.image_url) {
+          img.src = data.image_url;
+          img.style.display = 'block';
+        } else {
+          img.src = '';
+          img.style.display = 'none';
+        }
+
+        const form = document.getElementById('edit-payment-form');
+        form.action = `/dashboard/client-payments/edit/${data.id}/`;
+
+        new bootstrap.Offcanvas(document.getElementById('editPaymentModal')).show();
+      }
+    });
+  });
+</script>
+{% endblock %}

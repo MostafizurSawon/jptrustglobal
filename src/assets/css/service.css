@@ -1,0 +1,238 @@
+/* banner style start */
+.banner-service-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    gap: 5px;
+    margin: 2px;
+
+}
+.banner-service-container-rev {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    gap: 5px;
+    flex-direction: row-reverse;
+    margin: 2px;
+
+}
+
+
+.banner-service-header,
+.banner-service-body {
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.custom-pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+}
+
+.custom-pagination .page-item {
+    display: inline-block;
+}
+
+.custom-pagination .page-link {
+    color: #ff9800;
+    border: 1px solid #ff9800;
+    background: #fff;
+    margin: 0 4px;
+    border-radius: 50px !important;
+    transition: background 0.2s, color 0.2s;
+    padding: 6px 18px;
+    font-size: 16px;
+    text-decoration: none;
+    outline: none;
+    display: inline-block;
+}
+
+.custom-pagination .page-item.active .page-link,
+.custom-pagination .page-link:hover {
+    background: #ff9800;
+    color: #fff;
+    border-color: #ff9800;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    color: #ccc;
+    background: #f5f5f5;
+    border-color: #eee;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.custom-pagination-nav {
+    margin-top: 32px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+@media (max-width: 768px) {
+    .banner-service-container {
+        flex-direction: column;
+    }
+    .banner-service-container-rev {
+        flex-direction: column;
+    }
+
+    .banner-service-header,
+    .banner-service-body {
+        width: 100%;
+
+    }
+
+}
+
+.banner-service-body {
+    padding: 10px;
+
+}
+
+.banner-service-body h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #E2136E;
+    text-align: start;
+}
+
+.banner-service-body p {
+    font-size: 16px;
+    font-weight: 400;
+    color: #636363;
+    text-align: start;
+
+}
+
+.banner-service-header img {
+    width: 100%;
+    object-fit: contain;
+    max-height: 500px;
+    border-radius: 10px;
+}
+
+.service-section {
+    margin-top: -100px;
+}
+
+.banner-btn-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background: #ffffff;
+    width: 100%;
+
+}
+
+.button-secondary {
+    border: 1px solid #2980B9;
+    color: #2980B9;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.5s;
+    text-decoration: none;
+}
+
+.button-secondary:hover {
+    border: 1x solid #2980B9;
+    background-color: #2980B9;
+    color: #ffffff;
+}
+
+/* banner style end */
+
+
+/* Flight Booking Section Styles */s
+.flight-booking-section {
+    margin: 50px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.flight-booking-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.flight-booking-image img {
+    width: 100%;
+    max-height: 400px;
+    width: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.flight-booking-content {
+    flex: 1;
+}
+
+.flight-booking-content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2980B9;
+    margin-bottom: 15px;
+}
+
+.flight-booking-content p {
+    font-size: 16px;
+    font-weight: 400;
+    color: #636363;
+    margin-bottom: 20px;
+}
+
+.flight-booking-content .btn-primary {
+    background-color: #2980B9;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.flight-booking-content .btn-primary:hover {
+    background-color: #4e93c1;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .flight-booking-container {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .flight-booking-image img {
+        max-width: 100%;
+        height: 300px;
+    }
+
+    .flight-booking-content h2 {
+        font-size: 24px;
+    }
+
+    .flight-booking-content p {
+        font-size: 14px;
+    }
+}
+/* modal filter end */

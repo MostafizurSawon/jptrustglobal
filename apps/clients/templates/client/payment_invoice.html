@@ -1,0 +1,294 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+{% block title %}
+  পেমেন্ট চালান
+{% endblock %}
+{% block content %}
+  <!-- QR Code & PDF Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+    body {
+      font-family: 'Space Mono', monospace !important;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .img_container img {
+      max-height: 150px;
+      object-fit: contain;
+    }
+
+    .invoice_agency_container {
+      width: 794px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+    }
+    .section-copy {
+      page-break-inside: avoid;
+      margin-bottom: 40px;
+    }
+    .copy-label {
+      font-size: 14px;
+      padding: 4px 12px;
+      display: inline-block;
+    }
+    .bg_paid {
+      background-color: rgba(107, 213, 107, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .bg_parpaid {
+      background-color: rgba(255, 193, 7, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .bg_unpaid {
+      background-color: rgba(255, 99, 71, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .bg_rejected {
+      background-color: rgba(108, 117, 125, 0.2); /* soft gray */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .invoice-table td,
+    .invoice-table th {
+      padding: 4px 8px;
+      font-size: 11pt;
+    }
+    .signature-line {
+      width: 160px;
+      margin-left: auto;
+    }
+    .info-block p {
+      margin: 0 0 4px;
+      font-size: 11pt;
+    }
+    .img_container img {
+      object-fit: fill;
+      width: 100%;
+      height: auto;
+    }
+    .divider {
+      position: relative;
+      margin: 40px 0;
+      border-top: 2px dashed #333;
+      text-align: center;
+    }
+    .divider .scissors {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      padding: 0 10px;
+      font-size: 18px;
+      color: #000;
+    }
+    @media print {
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .btn-wrap,
+      .main-menu,
+      .layout-navbar {
+        display: none !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      html,
+      body {
+        width: 210mm;
+        height: 297mm;
+        overflow: hidden !important;
+      }
+
+      .invoice_agency_container {
+        width: 100%;
+        max-height: 100%;
+        height: 280mm;
+        margin: -10mm auto 0 auto;
+        padding: 0mm 10mm;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        overflow: hidden !important;
+      }
+
+      .section-copy {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 0 !important;
+      }
+
+      .signature-line {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+    }
+  </style>
+
+  <div id="invoice_agency_container" class="invoice_agency_container">
+    {% for section in section_list %}
+      {% with label=section.0 badge=section.1 bg_class=section.2 %}
+        <div class="section-copy">
+          <!-- Header -->
+          <div class="text-center img_container">
+            <img src="{% static 'invoice/invoice_header.jpg' %}" alt="Header" class="img-fluid w-100" />
+          </div>
+
+          <!-- Copy Label -->
+          <div class="text-center my-2">
+            <span class="badge bg-{{ badge }} text-dark copy-label fw-bold">{{ label }}</span>
+          </div>
+
+          <!-- Info -->
+          <div class="d-flex justify-content-between">
+            <div class="info-block mb-2">
+              <p>
+                <strong>লেনদেন আইডি:</strong> {{ payment.id }}
+              </p>
+              <p>
+                <strong>ক্লায়েন্ট নাম:</strong> {{ payment.user.passport_info.full_name }}
+              </p>
+              <p>
+                <strong>ফোন নম্বর:</strong> {{ payment.user.phone_number }}
+              </p>
+              <p>
+                <strong>তারিখ:</strong> {{ payment.payment_date|date:'d/m/Y' }}
+              </p>
+            </div>
+            <div class="d-flex gap-2 align-items-center mb-2">
+              {% if payment.service.status == 'full_payment' %}
+                <div class="bg_paid">
+                  <span>{{ payment.service.get_status_display }}</span>
+                </div>
+              {% elif payment.service.status == 'partial_payment' %}
+                <div class="bg_parpaid">
+                  <span>{{ payment.service.get_status_display }}</span>
+                </div>
+              {% elif payment.service.status == 'payment_pending' %}
+                <div class="bg_unpaid">
+                  <span>{{ payment.service.get_status_display }}</span>
+                </div>
+              {% elif payment.service.status == 'rejected' %}
+                <div class="bg_rejected">
+                  <span>{{ payment.service.get_status_display }}</span>
+                </div>
+                {% else %}
+              <div class="bg_unpaid">
+                  <span>পেন্ডিং</span>
+                </div>
+              {% endif %}
+
+              <div id="qrcode{{ forloop.counter }}"></div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <table class="table table-bordered invoice-table">
+            <tbody>
+              <tr>
+                <th>সেবার নাম:</th>
+                <td colspan="3">{{ payment.service.service.name }}</td>
+              </tr>
+              <tr>
+                <th>সেবার মূল্য:</th>
+                <td>{{ payment.service.service.price|intcomma }} ৳</td>
+                <th>পরিশোধিত:</th>
+                <td>{{ payment.amount|intcomma }} ৳</td>
+              </tr>
+              <tr>
+                <th>পরিশোধের তারিখ:</th>
+                <td>{{ payment.payment_date|date:'d/m/Y' }}</td>
+                <th>বাকি:</th>
+                <td>{{ payment.service.balance|intcomma }} ৳</td>
+              </tr>
+              <tr>
+                <th>পেমেন্ট পদ্ধতি:</th>
+                <td>{{ payment.get_payment_method_display }}</td>
+                <th>ছাড়:</th>
+                <td>{{ payment.service.discount|intcomma|default:'০' }} ৳</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Signature -->
+          <div class="text-end mt-5 pt-5">
+            <hr class="signature-line mt-4" style="width: 200px; margin-left: auto;" />
+            <p class="fw-bold">কর্তৃপক্ষের স্বাক্ষর</p>
+          </div>
+        </div>
+
+        {% if forloop.first %}
+          <!-- Divider -->
+          <div class="divider">
+            <i class="fas fa-scissors scissors"></i>
+          </div>
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+
+  {% if show_print %}
+    <!-- Buttons -->
+    <div class="btn-wrap text-center my-4">
+      <button id="invoice_agency_download" class="btn btn-outline-primary">PDF ডাউনলোড</button>
+      <button onclick="window.print()" class="btn btn-outline-success">প্রিন্ট করুন</button>
+    </div>
+  {% endif %}
+
+  <!-- JS -->
+  <script>
+    const fixedId = '{{ payment.id }}';
+    const url = `https://goontraveldesk.com/dashboard/invoice/search/?payment_id=${fixedId}`;
+
+    window.onload = function () {
+      new QRCode(document.getElementById('qrcode1'), { text: url, width: 100, height: 100 });
+      new QRCode(document.getElementById('qrcode2'), { text: url, width: 100, height: 100 });
+    };
+
+    document.getElementById('invoice_agency_download').addEventListener('click', function () {
+      const { jsPDF } = window.jspdf;
+      const container = document.getElementById('invoice_agency_container');
+
+      html2canvas(container, {
+        scale: 2,
+        useCORS: true
+      }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`invoice_{{ payment.transaction_id }}.pdf`);
+      });
+    });
+  </script>
+{% endblock %}

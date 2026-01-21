@@ -1,0 +1,209 @@
+{% extends layout_path %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}All Client Services{% endblock %}
+
+{% block vendor_css %}
+ <link rel="stylesheet" href="{% static 'css/table.css' %}" />
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+{% endblock %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+{% endblock %}
+
+{% block page_js %}
+{{ block.super }}
+<style>
+  /* Keep your current border styles */
+  .table-bordered > :not(caption) > * > * {
+    border: 1px solid #dee2e6 !important;
+  }
+
+  /* Add background color to rows starting from the 2nd one */
+  .datatables-basic tbody tr:nth-child(n+2) {
+    background-color: #fcfcfc !important;
+  }
+
+  /* Optional: hover style for clarity */
+  .datatables-basic tbody tr:hover {
+    background-color: #f3f4f6 !important;
+  }
+
+  /* Highlight the first row differently if needed */
+  .datatables-basic tbody tr:first-child {
+    background-color: #ffffff !important;
+  }
+</style>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize DataTable
+    $.fn.dataTable.ext.errMode = 'none';
+    $('.datatables-basic').DataTable({
+      pageLength: 25
+    });
+
+    // Edit button handler
+    document.querySelector('.datatables-basic').addEventListener('click', function (e) {
+      if (e.target.closest('.btn-edit-service')) {
+        const button = e.target.closest('.btn-edit-service');
+        const data = JSON.parse(button.getAttribute('data-service'));
+        document.getElementById('service_id').value = data.id;
+        document.getElementById('id_name').value = data.name;
+        document.getElementById('id_description').value = data.description;
+        document.getElementById('id_price').value = data.price;
+        document.getElementById('id_status').value = data.status;
+        const offcanvas = new bootstrap.Offcanvas(document.getElementById('add-new-record'));
+        offcanvas.show();
+      }
+    });
+
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+<div class="card">
+  <div class="d-flex justify-content-between align-items-center p-3 pb-4">
+    <h5 class="mb-0">All Client Services</h5>
+    <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add-new-record">
+      <i class="ti ti-plus me-sm-1"></i> Add New Record
+    </button>
+  </div>
+
+  <div class="card-datatable table-responsive p-3">
+    <table class="table table-striped datatables-basic  table-hover table-bordered datatables-basic w-100 text-nowrap">
+      <thead class="table-light">
+        <tr>
+          <th style="width: 30px;">#</th>
+          <th>Action</th>
+          <th>Service</th>
+          <th width="150px">Description</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Image</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          {% comment %} <td>{{ service.id }}</td> {% endcomment %}
+          <td class="">
+
+              <div class="btn-group" role="group">
+                <button class="btn btn-icon btn-sm btn-outline-primary btn-edit-service"
+                        data-service='{
+                          "id": "{{ service.id }}",
+                          "name": "{{ service.name|escapejs }}",
+                          "description": "{{ service.description|escapejs }}",
+                          "price": "{{ service.price }}",
+                          "status": "{{ service.status }}"
+                        }'
+                        title="Edit">
+                  <i class="ti ti-edit"></i>
+                </button>
+                {% comment %} <a href="{% url 'client_service_detail' service.id %}" class="btn btn-icon btn-sm btn-outline-info" title="View">
+                  <i class="ti ti-eye"></i>
+                </a> {% endcomment %}
+                <a href="{% url 'client_service_delete' service.id %}" class="btn btn-icon btn-sm btn-outline-danger"
+                  onclick="return confirm('Are you sure you want to delete this service?');"
+                  title="Delete">
+                  <i class="ti ti-trash"></i>
+                </a>
+              </div>
+
+
+          </td>
+          <td>{{ service.name }}</td>
+          <td>{{ service.description|truncatechars:50 }}</td>
+          <td>{{ service.price }} ৳</td>
+          <td>
+            {% if service.status|lower == 'active' %}
+              <span class="badge bg-success">Active</span>
+            {% else %}
+              <span class="badge bg-warning">Inactive</span>
+            {% endif %}
+
+            {% comment %} <span class="badge bg-{{ service.status|yesno:'success,danger' }}">{{ service.status|capfirst }}</span> {% endcomment %}
+          </td>
+          <td>
+            {% if service.image %}
+              <img src="{{ service.image.url }}" width="40" height="40" class="rounded" />
+            {% else %}
+              <span class="text-muted">No image</span>
+            {% endif %}
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Offcanvas Modal: Add/Edit Client Service -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="add-new-record">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">Add / Edit Service</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <form method="POST" enctype="multipart/form-data" id="form-add-new-record" class="add-new-record pt-0 row g-3">
+      {% csrf_token %}
+      <input type="hidden" name="service_id" id="service_id" />
+
+      <div class="col-sm-12">
+        <label class="form-label" for="id_name">Name</label>
+        <input type="text" name="name" id="id_name" class="form-control" required />
+      </div>
+
+      <div class="col-sm-12">
+        <label class="form-label" for="id_description">Description</label>
+        <textarea name="description" id="id_description" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="col-sm-12">
+        <label class="form-label" for="id_price">Price</label>
+        <input type="number" step="0.01" name="price" id="id_price" class="form-control" required />
+      </div>
+
+      <div class="col-sm-12">
+        <label class="form-label" for="id_image">Image</label>
+        <input type="file" name="image" id="id_image" class="form-control" />
+      </div>
+
+      <div class="col-sm-12">
+        <label class="form-label" for="id_status">Status</label>
+        <select name="status" id="id_status" class="form-select">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="col-sm-12 d-flex justify-content-between">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+/* Ensure table cells do not wrap text unnecessarily */
+table.dataTable td {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Fix button spacing */
+.table td .btn {
+    margin-right: 4px;
+}
+
+/* Fix for small screen overflow */
+.vuexy-table td {
+    vertical-align: middle;
+    white-space: normal !important;
+    word-break: break-word;
+}
+
+.vuexy-table .btn {
+    white-space: nowrap;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+}
+
+.vuexy-table th,
+.vuexy-table td {
+    min-width: 10px;
+    /* You can adjust this as needed */
+}
+
+.vuexy-table th:nth-child(12),
+/* Action column */
+.vuexy-table td:nth-child(12) {
+    min-width: 160px;
+}
+
+
+.index-col {
+  width: 12px !important;
+  max-width: 12px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}

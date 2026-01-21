@@ -1,0 +1,140 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ site_title }} | Guest Login</title>
+
+    <link rel="shortcut icon" href="{{ site_favicon.image.url }}" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="https://kit.fontawesome.com/8d42debf19.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+	<!-- STYLE CSS -->
+	<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <!-- google font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+<header id="topNav" class="navbar-all max-width-site">
+    <div class="top-header">
+        <div class="header-contact-info font-poppins">
+            <ul>
+                <li><a href="tel:{{ site_phone }}"><i class="fas fa-phone-alt"></i> {{ site_phone }}</a></li>
+                <li><a href="{{ site_email }}"><i class="fas fa-envelope"></i> {{ site_email }}</a></li>
+                <li><a href="#"><i class="fas fa-map-marker-alt"></i> {{ site_address }}</a></li>
+            </ul>
+        </div>
+        <div class="top-social-info">
+            <div class="header-social font-poppins">
+                <ul>
+                    <li><a href="{{ site_facebook }}" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="{{ site_x }}" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="{{ site_instagram }}" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="{{ site.youtube }}" title="LinkedIn"><i class="fab fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-header">
+        <button class="menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="logo-container">
+            <a href="{% url 'home' %}" class="logo-link">
+                {% if site_logo %}
+                    <img class="logo" src="{{ site_logo.image.url }}" alt="logo">
+                {% else %}
+                    <img class="logo" src="{% static 'logo/logo.png' %}" alt="logo">
+                {% endif %}
+            </a>
+        </div>
+        <nav class="menu-container font-poppins">
+            <ul>
+                <li><a class="menu-item" href="{% url 'home' %}">Home</a></li>
+                <li><a class="menu-item" href="{% url 'services' %}">Our Services</a></li>
+                <li><a class="menu-item" href="{% url 'about' %}">About Us</a></li>
+                <li><a class="menu-item" href="{% url 'contact' %}">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="header-btn">
+            {% if request.user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav_custom_btn_1">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'guest_login' %}" class="nav_custom_btn_1">Client Log In</a>
+                <a href="{% url 'guest_register' %}" class="button-signup">Sign Up</a>
+            {% endif %}
+            <a href="{% url 'guest_cv' %}" class="nav_custom_btn_1">Build Your CV</a>
+        </div>
+    </div>
+    <div class="collapse mobile-menu navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li><a class="menu-item" href="{% url 'home' %}">Home</a></li>
+            <li><a class="menu-item" href="{% url 'services' %}">Our Services</a></li>
+            <li><a class="menu-item" href="{% url 'about' %}">About Us</a></li>
+            <li><a class="menu-item" href="{% url 'contact' %}">Contact Us</a></li>
+        </ul>
+    </div>
+</header>
+
+</body>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+
+
+
+
+		<div class="wrapper" >
+			<div class="inner bg-2 text-black">
+				<h3 class="text-black">Log in</h3>
+				<form method="POST" novalidate>
+      				{% csrf_token %}
+
+					<div class="form-wrapper text-black">
+						<label for="phone_number" class="form-label">Phone Number</label>
+						<input type="text" name="phone_number" id="phone_number" class="form-control" required>
+					</div>
+					<div class="form-wrapper text-black">
+						<label  for="password" class="form-label">Password</label>
+						<input type="password" name="password" id="password" class="form-control" required>
+					</div>
+
+
+					<button class="btn-1" type="submit">Login</button>
+					<section class="lower_login">
+					<p>Don't have an account? <a href="{% url 'guest_register' %}">Sign up here</a></p>
+				</section>
+				</form>
+
+			</div>
+		</div>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

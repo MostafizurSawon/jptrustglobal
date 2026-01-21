@@ -1,0 +1,54 @@
+{% extends layout_path %}
+{% load static %}
+{% block title %}পেমেন্ট ভেরিফিকেশন{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-header bg-primary  text-center">
+          <h4 class="text-white"><i class="fas fa-file-invoice"></i> পেমেন্ট ভেরিফিকেশন</h4>
+        </div>
+        <div class="card-body mt-4">
+          <form method="post" class="d-flex flex-column flex-md-row gap-2">
+            {% csrf_token %}
+            <input type="text" name="payment_id" class="form-control"
+              placeholder="Enter your Payment ID"
+              value="{{ request.GET.payment_id|default:'' }}"
+              required>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+
+          {% if payment %}
+            {% if payment.status == 'approved' %}
+              <div class="alert alert-success mt-4">
+                <h5>চালান যাচাই করা হয়েছে ✅</h5>
+                <p><strong>পরিষেবার নাম:</strong> {{ payment.service.service.name }}</p>
+                <p class="mb-0">বিস্তারিত জানতে আপনার <a href="{% url 'index' %}">ড্যাশবোর্ডে</a> যান।</p>
+              </div>
+            {% elif payment.status == 'pending' %}
+            <div class="alert alert-danger mt-4 d-flex align-items-center gap-2">
+              <i class="fas fa-times-circle fs-5 text-warning"></i>
+              <strong>চালান #{{ searched_id }}</strong> পেন্ডিং আছে।
+            </div>
+            {% else %}
+              <div class="alert alert-danger mt-4 d-flex align-items-center gap-2">
+                <i class="fas fa-times-circle fs-5 text-danger"></i>
+                <strong>চালান #{{ searched_id }}</strong> রিজেক্টেড হয়েছে।
+              </div>
+            {% endif %}
+          {% elif error %}
+            <div class="alert alert-danger mt-4 d-flex align-items-center gap-2">
+              <i class="fas fa-times-circle fs-5 text-danger"></i>
+              <strong>চালান #{{ searched_id }}</strong> খুঁজে পাওয়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

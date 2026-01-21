@@ -1,0 +1,313 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}সকল আবেদন তালিকা{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block content %}
+
+<style>
+
+.timeline-indicator {
+  background-color: #ccc !important;
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.timeline-indicator-success {
+  background-color: #28c76f !important;
+}
+
+.timeline-indicator-primary {
+  background-color: #7367f0 !important;
+}
+
+.timeline-indicator-danger {
+  background-color: #ea5455 !important;
+}
+
+.timeline-indicator i.ti-circle {
+  display: none;
+}
+
+.rocket-icon {
+  transform: rotate(180deg);
+  animation: floatRocket 1.6s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes floatRocket {
+  0% { transform: rotate(180deg) translateY(0); }
+  50% { transform: rotate(180deg) translateY(4px); }
+  100% { transform: rotate(180deg) translateY(0); }
+}
+
+</style>
+
+
+<div class="row">
+  {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+  {% for application in applications %}
+    <!-- Left: Timeline Card -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h6 class="mb-0">আপনার আবেদনের অগ্রগতি: <strong>{{ application.service.name }}</strong></h6>
+        </div>
+
+
+        <div class="progress my-4 mx-4" style="height: 20px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated"
+              style="width: {{ application.progress }}%;"
+              role="progressbar"
+              aria-valuenow="{{ application.progress }}"
+              aria-valuemin="0"
+              aria-valuemax="100">
+            {{ application.progress }}%
+          </div>
+        </div>
+
+
+
+
+        <div class="row overflow-hidden container-fluid">
+          <div class="col-12">
+            <ul class="timeline timeline-center mt-4">
+              {% for step in application.timeline_status %}
+                <li class="timeline-item">
+                  <!-- Timeline Icon -->
+                  {% comment %} Golok class conditionally apply করছি {% endcomment %}
+                  <span class="
+                    timeline-indicator
+                    {% if step.current %}
+                      timeline-indicator-primary
+                    {% elif step.past %}
+                      timeline-indicator-success
+                    {% endif %}
+                  " data-aos="zoom-in" data-aos-delay="100">
+                    {% if step.current %}
+                      <img src="{% static 'custom/rocket.svg' %}" alt="Rocket" class="rocket-icon" />
+                    {% else %}
+                      <i class="ti ti-circle"></i>
+                    {% endif %}
+                  </span>
+
+
+                  <!-- Timeline Event Card -->
+                  <div class="timeline-event card p-3" data-aos="fade-up">
+                    {% if step.current %}
+                      <h6 class="fw-bold text-primary mb-1">বর্তমান ধাপ: {{ step.label|linebreaksbr }}</h6>
+                      {% comment %} <p class="text-primary small mb-1">{{ step.message|default:step.description }}</p> {% endcomment %}
+                      <p class="text-primary small mb-1" style="white-space: pre-line;">
+                        {{ step.message|default:step.description|linebreaksbr|safe }}
+                      </p>
+
+                    {% elif step.past %}
+                      <h6 class="fw-semibold text-success mb-1" >{{ step.label|linebreaksbr }}</h6>
+                      {% comment %} <p class="text-success small mb-1">{{ step.message|default:step.description }}</p> {% endcomment %}
+                      <p class="text-success small mb-1" style="white-space: pre-line;">
+                        {{ step.message|default:step.description|linebreaksbr|safe }}
+                      </p>
+
+                    {% else %}
+                      <h6 class="text-dark mb-1 small">{{ step.label|linebreaksbr }}</h6>
+                      <p class="text-dark small mb-1" style="white-space: pre-line;">{{ step.message|default:step.description|linebreaksbr|safe }}</p>
+                    {% endif %}
+                  </div>
+
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <!-- Right: Service Info Card -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        {% if application.service.image %}
+          <img src="{{ application.service.image.url }}" alt="{{ application.service.name }}"
+               class="card-img-top rounded-top" style=" object-fit: cover;">
+        {% else %}
+          <img src="{% static 'img/placeholders/placeholder.png' %}" alt="No Image"
+               class="card-img-top rounded-top" style=" object-fit: cover;">
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="card-title fw-bold">সার্ভিস নামঃ {{ application.service.name }}</h5>
+          <p class="card-text small">
+            {{ application.service.description }}
+          </p>
+
+          <div class="row mt-4 gx-3 gy-3">
+            <div class="col-6 col-md-3">
+              <div class="p-3 rounded bg-light border shadow-sm">
+                <div class="text-primary mb-1"><i class="fas fa-tag fa-lg"></i></div>
+                <div class="fw-semibold text-primary">মূল্য</div>
+                <div class="fw-bold">{{ application.service.price|intcomma }} ৳</div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="p-3 rounded bg-warning bg-opacity-25 border shadow-sm">
+                <div class="text-warning mb-1"><i class="fas fa-percent fa-lg"></i></div>
+                <div class="fw-semibold text-warning">ডিসকাউন্ট</div>
+                <div class="fw-bold">{{ application.discount }} ৳</div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="p-3 rounded bg-success bg-opacity-25 border shadow-sm">
+                <div class="text-success mb-1"><i class="fas fa-check-circle fa-lg"></i></div>
+                <div class="fw-semibold text-success">পরিশোধ</div>
+                <div class="fw-bold">{{ application.amount_paid|intcomma }} ৳</div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="p-3 rounded bg-danger bg-opacity-25 border shadow-sm">
+                <div class="text-danger mb-1"><i class="fas fa-exclamation-triangle fa-lg"></i></div>
+                <div class="fw-semibold text-danger">বাকি</div>
+                <div class="fw-bold">{{ application.balance }} ৳</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Applications Table -->
+<div class="container py-5 card">
+  <div class="d-flex justify-content-between align-items-center pb-4">
+    <h5 class="mb-0">আপনার আবেদনসমূহ</h5>
+  </div>
+
+  <!-- Filter -->
+  <div class="row">
+    <div class="col-md-3 mb-4 col-sm-6">
+      <form method="GET" action="{% url 'client_application_status' %}">
+        <label for="service_name" class="form-label">সার্ভিস দিয়ে ফিল্টার করুন:</label>
+        <select name="service_name" id="service_name" class="form-select" onchange="this.form.submit()">
+          <option value="">সার্ভিস নির্বাচন করুন</option>
+          {% for service in services %}
+            <option value="{{ service }}" {% if service == request.GET.service_name %}selected{% endif %}>{{ service }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div class="alert alert-info d-flex justify-content-between align-items-center mt-3">
+    <div><strong>মোট পরিশোধ:</strong> {{ total_paid|intcomma }} ৳</div>
+    <div><strong>মোট বাকি:</strong> {{ total_due|intcomma }} ৳</div>
+  </div>
+  <!-- Table -->
+  <div class="card-datatable table-responsive pt-0">
+    <table class="datatables-basic table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Paid</th>
+          <th>Price</th>
+          <th>Due</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+
+      </thead>
+      <tbody>
+        {% for application in applications %}
+
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ application.service.name }}</td>
+          <td>
+            <span class="badge
+              {% if application.status == 'ready' or application.status == 'full_payment' %} bg-success
+              {% elif application.status == 'partial_payment' %} bg-warning
+              {% elif application.status == 'payment_pending' or application.status == 'approved' %} bg-info
+              {% elif application.status == 'rejected' %} bg-danger
+              {% else %} bg-secondary
+              {% endif %}">
+              {{ application.get_status_display }}
+            </span>
+          </td>
+          <td class="text-success">{{ application.amount_paid|intcomma }} ৳</td>
+          <td class="text-primary">{{ application.service.price|intcomma }} ৳</td>
+          <td class="text-warning">{{ application.balance }} ৳</td>
+          <td>{{ application.message|truncatechars:50 }}</td>
+          <td>{{ application.applied_at|date:"d-m-Y" }}</td>
+          <td>
+            {% if application.balance > 0 %}
+              <a href="{% url 'service_application_payment' service_application_id=application.id %}" class="btn btn-sm btn-primary">পেমেন্ট</a>
+            {% else %}
+              <a href="#" class="btn btn-sm btn-success disabled" tabindex="-1" aria-disabled="true">পরিশোধ হয়েছে</a>
+            {% endif %}
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center">কোনো আবেদন পাওয়া যায়নি।</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    $.fn.dataTable.ext.errMode = 'none';
+    $('.datatables-basic').DataTable({
+      pageLength: 5,
+      searching: true,
+      paging: true,
+      lengthChange: true,
+      info: true,
+      language: {
+        search: "অনুসন্ধান:",
+        lengthMenu: "_MENU_ টি এন্ট্রি দেখান",
+        info: "মোট _TOTAL_ টি থেকে _START_ থেকে _END_ টি প্রদর্শিত হচ্ছে",
+        infoEmpty: "কোনো ডেটা নেই",
+        zeroRecords: "কোনো মিল খুঁজে পাওয়া যায়নি"
+      }
+    });
+  });
+</script>
+{% endblock %}

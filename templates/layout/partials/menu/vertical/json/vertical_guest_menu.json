@@ -1,0 +1,82 @@
+{
+  "menu": [
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-layout-dashboard",
+      "name": "ড্যাশবোর্ড",
+      "slug": "index"
+    },
+    {
+      "url": "service_apply",
+      "icon": "menu-icon tf-icons ti ti-file-plus",
+      "name": "আবেদন করুন",
+      "slug": "service-apply"
+    },
+    {
+      "url": "applied_service_apply",
+      "icon": "menu-icon tf-icons ti ti-file-text",
+      "name": "আমার আবেদনসমূহ",
+      "slug": "applied_service_apply"
+    },
+    {
+      "url": "client_application_status",
+      "icon": "menu-icon tf-icons ti ti-clipboard-check",
+      "name": "আবেদন অগ্রগতি",
+      "slug": "client_application_status"
+    },
+    {
+      "name": "পাসপোর্ট বিভাগ",
+      "icon": "menu-icon tf-icons ti ti-id",
+      "slug": "passport-section",
+      "submenu": [
+        {
+          "url": "passport_info_create",
+          "name": "পাসপোর্ট তথ্য যুক্ত করুন",
+          "slug": "passport_info_create"
+        },
+        {
+          "url": "passport_info_detail",
+          "name": "দেখুন ও সম্পাদনা করুন",
+          "slug": "passport_info_detail"
+        }
+      ]
+    },
+    {
+      "name": "সিভি বিভাগ",
+      "icon": "menu-icon tf-icons ti ti-file-cv",
+      "slug": "guest-section",
+      "submenu": [
+        {
+          "url": "cv-form-wizard",
+          "name": "সিভি যোগ করুন",
+          "slug": "cv-form-wizard"
+        },
+        {
+          "url": "guest_cv_detail",
+          "name": "সিভি প্রিন্ট/সম্পাদনা",
+          "slug": "guest_cv_detail"
+        }
+      ]
+    },
+    {
+      "url": "client_payment_list",
+      "icon": "menu-icon tf-icons ti ti-credit-card",
+      "name": "আমার পেমেন্টসমূহ",
+      "slug": "client_payment_list"
+    },
+
+    {
+    "url": "notice",
+    "icon": "menu-icon tf-icons ti ti-bell",
+    "name": "নোটিশ",
+    "slug": "notice"
+    },
+    {
+      "url": "support_list",
+      "icon": "menu-icon tf-icons ti ti-lifebuoy",
+      "name": "কাস্টমার সাপোর্ট",
+      "slug": "support_list"
+    }
+
+  ]
+}

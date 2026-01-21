@@ -1,0 +1,137 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}CV Section{% endblock %}
+
+{% block content %}
+
+<div class="card p-4">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <h5 class="mb-4">CV Section Configuration</h5>
+
+  <form method="POST" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+
+    <!-- Title -->
+    <div class="col-md-6">
+      <label for="id_title" class="form-label">Main Title</label>
+      {{ form.title }}
+      {% if form.title.errors %}
+        <div class="text-danger small">{{ form.title.errors.0 }}</div>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <label for="id_title" class="form-label">Main Title Description</label>
+      {{ form.title_d }}
+      {% if form.title.errors %}
+        <div class="text-danger small">{{ form.title.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+
+
+    <!-- Title 1 -->
+    <div class="col-md-6">
+      <label for="id_title1" class="form-label">Title 1</label>
+      {{ form.title1 }}
+      {% if form.title1.errors %}
+        <div class="text-danger small">{{ form.title1.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Title 2 -->
+    <div class="col-md-6">
+      <label for="id_title2" class="form-label">Title 2</label>
+      {{ form.title2 }}
+      {% if form.title2.errors %}
+        <div class="text-danger small">{{ form.title2.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Image 1 -->
+    <div class="col-md-6">
+      <label for="id_img1" class="form-label">Image 1</label>
+      {{ form.img1 }}
+      {% if form.img1.value %}
+        <div class="mt-2">
+          <img src="{{ form.img1.value.url }}" alt="Image 1 Preview" height="60" class="border rounded">
+        </div>
+      {% endif %}
+      {% if form.img1.errors %}
+        <div class="text-danger small">{{ form.img1.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Image 2 -->
+    <div class="col-md-6">
+      <label for="id_img2" class="form-label">Image 2</label>
+      {{ form.img2 }}
+      {% if form.img2.value %}
+        <div class="mt-2">
+          <img src="{{ form.img2.value.url }}" alt="Image 2 Preview" height="60" class="border rounded">
+        </div>
+      {% endif %}
+      {% if form.img2.errors %}
+        <div class="text-danger small">{{ form.img2.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Description 1 -->
+    <div class="col-md-6">
+      <label for="id_des1" class="form-label">Description 1</label>
+      {{ form.des1 }}
+      {% if form.des1.errors %}
+        <div class="text-danger small">{{ form.des1.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Description 2 -->
+    <div class="col-md-6">
+      <label for="id_des2" class="form-label">Description 2</label>
+      {{ form.des2 }}
+      {% if form.des2.errors %}
+        <div class="text-danger small">{{ form.des2.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Link -->
+    <div class="col-md-12">
+      <label for="id_link" class="form-label">Link</label>
+      {{ form.link }}
+      {% if form.link.errors %}
+        <div class="text-danger small">{{ form.link.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Submit -->
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fields = ['des1', 'des2'];
+    fields.forEach(function (field) {
+      const textarea = document.getElementById('id_' + field);
+      if (textarea) {
+        textarea.setAttribute('style', 'height:' + (textarea.scrollHeight) + 'px;overflow-y:hidden;resize: vertical;');
+        textarea.addEventListener('input', function () {
+          this.style.height = 'auto';
+          this.style.height = (this.scrollHeight) + 'px';
+        });
+      }
+    });
+  });
+</script>
+
+{% endblock %}

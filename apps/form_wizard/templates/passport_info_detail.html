@@ -1,0 +1,184 @@
+{% extends layout_path %}
+{% load custom_filters %}
+
+
+{% block title %}Passport Info Details{% endblock %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="row justify-content-center d-flex">
+    <!-- Left Column: Form Fields -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-0">পাসপোর্ট তথ্য</h5>
+                    <small class="text-muted">User: {{ passport_info.user.phone_number }}</small>
+                </div>
+                <a href="{% url 'passport_info_create' %}" class="btn btn-primary">
+                    <i class="ti ti-pencil me-1"></i> তথ্য সম্পাদনা করুন
+                </a>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- Left side: Images -->
+                    <div class="col-md-4 col-12 mb-4 mb-md-0 text-center">
+                    <!-- Profile Photo -->
+                    <div class="mb-4">
+                        <h6 class="mb-2">পাসপোর্ট ফটো</h6>
+                        {% if passport_info.profile_photo %}
+                            <a href="{{ passport_info.profile_photo.url }}" target="_blank">
+                                <img
+                                    src="{{ passport_info.profile_photo.url }}"
+                                    alt="Passport Photo"
+                                    class="img-fluid rounded"
+                                    style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.2);" />
+                            </a>
+                        {% else %}
+                            <p class="text-muted">কোনো প্রোফাইল ফটো আপলোড করা হয়নি।</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Passport Scan -->
+                    <div>
+                        <h6 class="mb-2">পাসপোর্ট স্ক্যান কপি</h6>
+                        {% if passport_info.passport_photo %}
+                            <a href="{{ passport_info.passport_photo.url }}" target="_blank">
+                                <img
+                                    src="{{ passport_info.passport_photo.url }}"
+                                    alt="Passport Scan"
+                                    class="img-fluid rounded"
+                                    style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.2);" />
+                            </a>
+                        {% else %}
+                            <p class="text-muted">কোনো স্ক্যান কপি পাওয়া যায়নি।</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                    <!-- Right side: Details -->
+                    <div class="col-md-8 col-12">
+                        <!-- Personal Details -->
+                        <div class="mb-4">
+                            <h6 class="d-flex align-items-center mb-3">
+                                <i class="ti ti-user-check me-2"></i><span class="align-middle">ব্যক্তিগত তথ্য</span>
+                            </h6>
+                            <hr class="mt-0" />
+                            <dl class="row">
+                                <dt class="col-sm-4 fw-semibold">পূর্ণ নাম:</dt>
+                                <dd class="col-sm-8">{{ passport_info.full_name }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">জন্ম তারিখ:</dt>
+                                <dd class="col-sm-8">{{ passport_info.date_of_birth }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">জন্মস্থান:</dt>
+                                <dd class="col-sm-8">{{ passport_info.place_of_birth }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">লিঙ্গ:</dt>
+                                <dd class="col-sm-8">{{ passport_info.gender }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">জাতীয়তা:</dt>
+                                <dd class="col-sm-8">{{ passport_info.nationality }}</dd>
+                            </dl>
+                        </div>
+
+                        <!-- Passport Details -->
+                        <div class="mb-4">
+                            <h6 class="d-flex align-items-center mb-3">
+                                <i class="ti ti-credit-card me-2"></i><span class="align-middle">পাসপোর্টের বিস্তারিত</span>
+                            </h6>
+                            <hr class="mt-0" />
+                            <dl class="row">
+                                <dt class="col-sm-4 fw-semibold">পাসপোর্ট নম্বর:</dt>
+                                <dd class="col-sm-8">{{ passport_info.passport_number }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">ইস্যুর তারিখ:</dt>
+                                <dd class="col-sm-8">{{ passport_info.issue_date }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">মেয়াদ শেষ হওয়ার তারিখ:</dt>
+                                <dd class="col-sm-8">{{ passport_info.expiry_date }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">ইস্যুর স্থান:</dt>
+                                <dd class="col-sm-8">{{ passport_info.place_of_issue }}</dd>
+                            </dl>
+                        </div>
+
+                        <!-- Family Details -->
+                        <div>
+                            <h6 class="d-flex align-items-center mb-3">
+                                <i class="ti ti-users me-2"></i><span class="align-middle">পারিবারিক তথ্য</span>
+                            </h6>
+                            <hr class="mt-0" />
+                            <dl class="row">
+                                <dt class="col-sm-4 fw-semibold">বাবার নাম:</dt>
+                                <dd class="col-sm-8">{{ passport_info.father_name }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">মায়ের নাম:</dt>
+                                <dd class="col-sm-8">{{ passport_info.mother_name }}</dd>
+
+                                <dt class="col-sm-4 fw-semibold">স্বামী/স্ত্রীর নাম:</dt>
+                                <dd class="col-sm-8 mb-0">{{ passport_info.spouse_name }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- Additional Documents -->
+                    <!-- Additional Documents Section -->
+                    <div class="mt-4">
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="ti ti-folder me-2"></i><span class="align-middle">অতিরিক্ত ডকুমেন্টস</span>
+                        </h6>
+                        <hr class="mt-0" />
+                        <div class="row">
+                        {% for i in "123456" %}
+                            {% with field_name="additional_file_"|add:i %}
+                                {% with file=passport_info|dynamic_attr:field_name %}
+                                    {% if file %}
+                                        <div class="col-md-12 mb-4">
+                                            <strong>ডকুমেন্ট {{ i }}:</strong><br>
+
+                                            <div class="my-3">
+                                              {% if file.url|lower|slice:"-4:" == ".pdf" %}
+                                                  <embed src="{{ file.url }}" type="application/pdf" width="100%" height="500px" />
+                                              {% else %}
+                                                  <img src="{{ file.url }}" class="img-fluid rounded" style="max-height: 200px;" />
+                                              {% endif %}
+                                            </div>
+
+
+                                            <div>
+                                                <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                    <i class="ti ti-download"></i> ডাউনলোড করুন
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{
+  "menu": [
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-layout-dashboard",
+      "name": "ড্যাশবোর্ড",
+      "slug": "index"
+    },
+    {
+      "name": "খরচ",
+      "icon": "menu-icon tf-icons ti ti-receipt-2",
+      "slug": "account-management",
+      "submenu": [
+        {
+          "url": "expense_list",
+          "name": "খরচের তালিকা",
+          "slug": "expense_list"
+        },
+        {
+          "url": "create_expense",
+          "name": "খরচ যোগ করুন",
+          "slug": "create_expense"
+        },
+        {
+          "url": "expense_category_list",
+          "name": "খরচের শ্রেণী",
+          "slug": "expense_category_list"
+        }
+      ]
+    },
+    {
+      "name": "ভিজিটরের তথ্য",
+      "icon": "menu-icon tf-icons ti ti-address-book",
+      "slug": "visitors-informations",
+      "submenu": [
+        {
+          "url": "contact_dashboard",
+          "name": "কন্টাক্ট ফর্ম ডেটা",
+          "slug": "contact_dashboard"
+        },
+        {
+          "url": "contact",
+          "name": "ভিজিটর অফিস এন্ট্রি",
+          "slug": "contact"
+        }
+      ]
+    },
+    {
+      "name": "ওয়েবসাইট সেটিংস",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "slug": "mater-settings",
+      "submenu": [
+        {
+          "url": "site_settings",
+          "name": "সাইট সেটিংস",
+          "slug": "site_settings"
+        },
+        {
+          "url": "slider_update",
+          "name": "স্লাইডার সেটিংস",
+          "slug": "slider_update"
+        },
+        {
+          "url": "testimonial_create",
+          "name": "টেস্টিমোনিয়াল সেটিংস",
+          "slug": "testimonial_create"
+        },
+        {
+          "url": "public_notice_create",
+          "icon": "menu-icon tf-icons ti ti-news",
+          "name": "সর্বশেষ নোটিশ ও ব্লগ",
+          "slug": "public_notice_create"
+        },
+        {
+          "url": "service_dashboard",
+          "name": "সার্ভিস সমূহ",
+          "slug": "service_dashboard"
+        },
+        {
+          "url": "trending_dashboard",
+          "name": "ট্রেন্ডিং ভিডিও",
+          "slug": "trending_dashboard"
+        }
+      ]
+    }
+  ]
+}

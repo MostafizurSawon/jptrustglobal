@@ -1,0 +1,87 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Service Application Admin List{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable with pagination, search, and content per page
+        $.fn.dataTable.ext.errMode = 'none';
+        $('.datatables-basic').DataTable({
+            pageLength: 5, // Content per page (5 rows per page)
+            searching: true, // Enable search functionality
+            paging: true, // Enable pagination
+            lengthChange: true, // Allow users to change the number of records per page
+            info: true, // Show info about the current page and total records
+            language: {
+                search: "Search:", // Label for the search box
+                lengthMenu: "Show _MENU_ entries", // Label for the number of records per page dropdown
+                info: "Showing _START_ to _END_ of _TOTAL_ entries", // Info message for records
+                infoEmpty: "No records available", // Message for empty data
+                zeroRecords: "No matching records found" // Message when no matching records are found
+            }
+        });
+    });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container my-5 p-5 card">
+    <h4 class="">Service Application List (Agent)</h4>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-striped mb-4 datatables-basic">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Service Name</th>
+                    <th>User Phone Number</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                    <th>Applied At</th>
+                    <th>Reference (Agent)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% comment %} {% for application in service_applications %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ application.service.name }}</td>
+                        <td>{{ application.user.phone_number }}</td>
+                        <td>{{ application.get_status_display }}</td>
+                        <td>{{ application.message }}</td>
+                        <td>{{ application.applied_at }}</td>
+                        <td>
+                            {% if application.agent_info %}
+                                {{ application.agent_info.full_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %} {% endcomment %}
+                    <tr>
+                        <td colspan="7" class="text-center">No applications found.</td>
+                    </tr>
+                {% comment %} {% endfor %} {% endcomment %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

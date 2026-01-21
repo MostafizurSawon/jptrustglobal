@@ -1,0 +1,171 @@
+{% extends layout_path %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}Edit Passport Info{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="my-5">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="row justify-content-center d-flex">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary">
+          <h5 class="text-white text-center">পাসপোর্ট তথ্য আপডেট করুন - {{ object.user.phone_number }}</h5>
+        </div>
+        <div class="card-body mt-2">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Passport Number and Full Name -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_passport_number" class="form-label">পাসপোর্ট নম্বর</label>
+                  {{ form.passport_number|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_full_name" class="form-label">পূর্ণ নাম</label>
+                  {{ form.full_name|add_class:"form-control" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Birth Info -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_date_of_birth" class="form-label">জন্ম তারিখ</label>
+                  {{ form.date_of_birth|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_place_of_birth" class="form-label">জন্মস্থান</label>
+                  {{ form.place_of_birth|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_nationality" class="form-label">জাতীয়তা</label>
+                  {{ form.nationality|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_gender" class="form-label">লিঙ্গ</label>
+                  {{ form.gender|add_class:"form-control" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Parents + Spouse + Issue -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_father_name" class="form-label">বাবার নাম</label>
+                  {{ form.father_name|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_mother_name" class="form-label">মায়ের নাম</label>
+                  {{ form.mother_name|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_spouse_name" class="form-label">স্বামী/স্ত্রীর নাম</label>
+                  {{ form.spouse_name|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_place_of_issue" class="form-label">ইস্যুর স্থান</label>
+                  {{ form.place_of_issue|add_class:"form-control" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Issue & Expiry Dates -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_issue_date" class="form-label">ইস্যুর তারিখ</label>
+                  {{ form.issue_date|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_expiry_date" class="form-label">মেয়াদ শেষ হওয়ার তারিখ</label>
+                  {{ form.expiry_date|add_class:"form-control" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_passport_photo" class="form-label">পাসপোর্ট স্ক্যান কপি</label>
+                  {{ form.passport_photo|add_class:"form-control" }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="id_profile_photo" class="form-label">প্রোফাইল ফটো</label>
+                  {{ form.profile_photo|add_class:"form-control" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+              <button type="submit" class="btn btn-primary w-100 me-2">আপডেট করুন</button>
+              <a href="{% url 'client_passport_list' %}" class="btn btn-outline-secondary w-100">বাতিল</a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="col-md-4 d-flex align-items-stretch">
+      <div class="card shadow-sm w-100">
+        <div class="card-header bg-info">
+          <h5 class="text-center text-white">নির্দেশনা</h5>
+        </div>
+        <div class="card-body mt-2">
+          <ul style="line-height: 1.8;">
+            <li><strong>পাসপোর্ট নম্বর:</strong> আপনার পাসপোর্ট নম্বর দিন।</li>
+            <li><strong>ইস্যুর তারিখ ও মেয়াদ:</strong> নির্ভুলভাবে দিন।</li>
+            <li><strong>ছবি:</strong> ছবি স্পষ্ট হতে হবে।</li>
+            <li><strong>ব্যক্তিগত তথ্য:</strong> যথাযথভাবে পূরণ করুন।</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}All Client Passports{% endblock %}
+
+{% block content %}
+<style>
+.vuexy-table th,
+.vuexy-table td {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.vuexy-table th {
+  background-color: #f3f3f9;
+  color: #5d596c;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+.vuexy-table tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+.vuexy-table tr:hover {
+  background-color: #f2f0fc !important;
+}
+.custom-pagination .page-link {
+  border-radius: 50% !important;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  line-height: 38px;
+  text-align: center;
+  display: inline-block;
+  transition: all 0.2s;
+}
+.custom-pagination .page-item.active .page-link {
+  background-color: #7367f0;
+  border-color: #7367f0;
+  color: #fff;
+}
+.custom-pagination .page-item.disabled .page-link {
+  background-color: #f1f1f1;
+  color: #999;
+  border-color: #dee2e6;
+}
+.custom-pagination .page-link:hover {
+  background-color: #e1e1e1;
+  color: #000;
+}
+</style>
+
+<div class="container py-4 card">
+  <h4 class="mb-4">সকল ক্লায়েন্ট পাসপোর্ট</h4>
+
+  <!-- Flash messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Search Form -->
+  <form method="get" class="row g-3 align-items-end mb-4">
+    <div class="col-md-4">
+      <label for="search" class="form-label">অনুসন্ধান</label>
+      <input type="text" id="search" name="search" class="form-control" value="{{ search_query }}" placeholder="নাম / পাসপোর্ট নম্বর / ফোন ...">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <a href="{% url 'client_passport_list' %}" class="btn btn-outline-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered vuexy-table text-center">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Action</th>
+          <th>User</th>
+          <th>Full Name</th>
+          <th>Passport No</th>
+          <th>Issue Date</th>
+          <th>Expiry Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for passport in passports %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td class="d-flex justify-content-center align-items-center gap-2">
+            <a href="{% url 'passport_info_detail_by_user' passport.user.id %}" class="" title="View">
+              <i class="fas fa-eye text-success"></i>
+            </a>
+            <a href="{% url 'passport_info_edit_admin' passport.id %}" class="" title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <form method="POST" action="{% url 'passport_delete' passport.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn p-0 m-0 bg-transparent border-0 shadow-none text-danger" title="Delete" onclick="return confirm('আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?');">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </form>
+          </td>
+          <td>{{ passport.user.phone_number }} </td>
+          <td>{{ passport.full_name }}</td>
+          <td>{{ passport.passport_number }}</td>
+          <td>{{ passport.issue_date|date:"d-m-Y" }}</td>
+          <td>{{ passport.expiry_date|date:"d-m-Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">কোনো পাসপোর্ট রেকর্ড পাওয়া যায়নি।</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if passports.has_other_pages %}
+  <nav aria-label="Pagination">
+    <ul class="pagination justify-content-center custom-pagination mt-3">
+      {% if passports.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ passports.previous_page_number }}&search={{ search_query }}">«</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">«</span></li>
+      {% endif %}
+
+      {% for i in passports.paginator.page_range %}
+        {% if passports.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}&search={{ search_query }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if passports.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ passports.next_page_number }}&search={{ search_query }}">»</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">»</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

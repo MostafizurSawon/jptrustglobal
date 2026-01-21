@@ -1,0 +1,76 @@
+{% extends layout_path %}
+
+{% block title %}
+  Appointment Notice
+{% endblock %}
+{% block content %}
+  <div class="card mt-4 p-4">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <h3 class="mb-4">{{ page_title }}</h3>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- Title Row -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          {{ form.title1.label_tag }}
+          {{ form.title1 }}
+          {% if form.title1.errors %}
+            <div class="invalid-feedback d-block">{{ form.title1.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+          {{ form.title2.label_tag }}
+          {{ form.title2 }}
+          {% if form.title2.errors %}
+            <div class="invalid-feedback d-block">{{ form.title2.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+          {{ form.title3.label_tag }}
+          {{ form.title3 }}
+          {% if form.title3.errors %}
+            <div class="invalid-feedback d-block">{{ form.title3.errors.0 }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Description Row -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          {{ form.des1.label_tag }}
+          {{ form.des1 }}
+          {% if form.des1.errors %}
+            <div class="invalid-feedback d-block">{{ form.des1.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+          {{ form.des2.label_tag }}
+          {{ form.des2 }}
+          {% if form.des2.errors %}
+            <div class="invalid-feedback d-block">{{ form.des2.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+          {{ form.des3.label_tag }}
+          {{ form.des3 }}
+          {% if form.des3.errors %}
+            <div class="invalid-feedback d-block">{{ form.des3.errors.0 }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

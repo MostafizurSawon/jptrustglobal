@@ -1,0 +1,74 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <h5 class="mb-3">Add Testimonial</h5>
+  <form method="POST" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </form>
+</div>
+
+<div class="card mt-4 p-4">
+  <h5>All Testimonials</h5>
+  <table class="table table-bordered mt-3">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Image</th>
+      <th>Description</th>
+      <th>Rating</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in testimonials %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ t.name }}</td>
+      <td>
+        {% if t.image %}
+          <a href="{{ t.image.url }}" target="_blank">
+            <img src="{{ t.image.url }}" width="60" height="60" class="rounded" alt="{{ t.name }}">
+          </a>
+        {% endif %}
+
+      </td>
+      <td>{{ t.description }}</td>
+      <td>
+        <small>{{ t.ratings }} Stars</small>
+      </td>
+      <td>
+        <a href="{% url 'testimonial_update' t.id %}" class="btn btn-sm btn-warning">Edit</a>
+
+        <form method="POST" action="{% url 'testimonial_delete' t.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger"
+            onclick="return confirm('আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?');">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-center">No testimonials found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+  {% comment %} {% include "partials/pagination.html" with page_obj=testimonials %} {% endcomment %}
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends layout_path %}
+{% block title %}সাপোর্ট চ্যাট{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 container-p-y">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0">চ্যাট - টিকিট #{{ support.id }}</h4>
+
+    <a href="{% url 'support_list' %}" class="btn btn-primary btn-sm">
+      ← ফিরে যান
+    </a>
+  </div>
+
+
+  <div class="card">
+    <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+      {% for reply in replies %}
+        <div class="d-flex {% if reply.sender.is_staff %}justify-content-start{% else %}justify-content-end{% endif %}">
+          <div class="mb-3 p-2 rounded {% if reply.sender.is_staff %}bg-success text-white{% else %}bg-primary text-white{% endif %}" style="max-width: 70%;">
+            {% if reply.attachment %}
+              <div class="mt-2">
+                <a href="{{ reply.attachment.url }}" class="btn btn-sm btn-secondary" target="_blank">সংযুক্তি দেখুন</a>
+              </div>
+            {% endif %}
+
+            <p>{{ reply.message }}</p>
+            {% comment %} <small class="text-white">{{ reply.created_at|date:"Y-m-d H:i" }}</small> {% endcomment %}
+            <small class="text-white text-end">Time: {{ reply.created_at|date:"Y-m-d h:i A" }}</small>
+          </div>
+        </div>
+
+      {% empty %}
+        <p class="text-muted">কোনো মেসেজ নেই।</p>
+      {% endfor %}
+    </div>
+
+    <div class="card-footer">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-2 align-items-center">
+          <div class="col-md-8 col-12">
+            <textarea name="message" rows="1" class="form-control" placeholder="মেসেজ লিখুন..."></textarea>
+          </div>
+          <div class="col-md-2 col-8">
+            <input type="file" name="attachment" class="form-control">
+          </div>
+          <div class="col-md-2 col-4">
+            <button class="btn btn-primary w-100" type="submit">পাঠান</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const chatBody = document.querySelector('.card-body');
+  if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+
+
+
+</script>
+{% comment %} setInterval(() => {
+  window.location.reload();
+}, 20000);  {% endcomment %}
+
+{% endblock %}

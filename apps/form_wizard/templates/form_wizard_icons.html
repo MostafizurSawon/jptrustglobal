@@ -1,0 +1,485 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}CV Creation - Wizard{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/bs-stepper/bs-stepper.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
+<script src="{% static 'vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script src="{% static 'js/form-wizard-icons.js' %}"></script>
+
+{% endblock page_js %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-6">
+    <small class="text-light fw-medium">Basic Icons</small>
+    <div class="bs-stepper wizard-icons wizard-icons-example mt-2">
+        <div class="bs-stepper-header">
+            <!-- Step 1: General Info -->
+            <div class="step" data-target="#general-info">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-icon">
+                        <svg viewBox="0 0 54 54">
+                            <use xlink:href="{% static 'svg/icons/form-wizard-account.svg' %}#wizardAccount"></use>
+                        </svg>
+                    </span>
+                    <span class="bs-stepper-label">General Info</span>
+                </button>
+            </div>
+            <div class="line"><i class="ti ti-chevron-right"></i></div>
+
+            <!-- Step 2: Parent Info -->
+            <div class="step" data-target="#parent-info">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-icon">
+                        <svg viewBox="0 0 58 54">
+                            <use xlink:href="{% static 'svg/icons/form-wizard-personal.svg' %}#wizardPersonal"></use>
+                        </svg>
+                    </span>
+                    <span class="bs-stepper-label">Parent Info</span>
+                </button>
+            </div>
+            <div class="line"><i class="ti ti-chevron-right"></i></div>
+
+            <!-- Step 3: Academic Info -->
+            <div class="step" data-target="#academic-info">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-icon">
+                        <svg viewBox="0 0 54 54">
+                            <use xlink:href="{% static 'svg/icons/form-wizard-address.svg' %}#wizardAddress"></use>
+                        </svg>
+                    </span>
+                    <span class="bs-stepper-label">Academic Info</span>
+                </button>
+            </div>
+            <div class="line"><i class="ti ti-chevron-right"></i></div>
+
+            <!-- Step 4: Skill -->
+            <div class="step" data-target="#skill">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-icon">
+                        <svg viewBox="0 0 54 54">
+                            <use xlink:href="{% static 'svg/icons/form-wizard-skills.svg' %}#wizardSkills"></use>
+                        </svg>
+                    </span>
+                    <span class="bs-stepper-label">Skill</span>
+                </button>
+            </div>
+            <div class="line"><i class="ti ti-chevron-right"></i></div>
+
+            <!-- Step 5: Address -->
+            <div class="step" data-target="#address">
+                <button type="button" class="step-trigger">
+                    <span class="bs-stepper-icon">
+                        <svg viewBox="0 0 54 54">
+                            <use xlink:href="{% static 'svg/icons/form-wizard-address.svg' %}#wizardAddress"></use>
+                        </svg>
+                    </span>
+                    <span class="bs-stepper-label">Address</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="bs-stepper-content">
+            <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <!-- General Info -->
+                <div id="general-info" class="content">
+                    <div class="content-header mb-4">
+                        <h6 class="mb-0">General Info</h6>
+                        <small>Enter Your General Info.</small>
+                    </div>
+                    <div class="row g-6">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="full_name">Full Name (English)</label>
+                            <input type="text" id="full_name" class="form-control" placeholder="John Doe" />
+                        </div>
+
+                        <!-- Full Name (Bangla) -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="full_name_bn">Full Name (Bangla)</label>
+                            <input type="text" id="full_name_bn" class="form-control" placeholder="জন ডো" />
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="col-12">
+                            <label class="form-label" for="bio">Bio</label>
+                            <textarea id="bio" class="form-control" rows="3" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+
+                        <!-- Blood Group -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="blood_group">Blood Group</label>
+                            <select id="blood_group" class="form-select">
+                                <option value="A+" selected>A+</option>
+                                <option value="A-">A-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Language -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="language">Language</label>
+                            <input type="text" id="language" class="form-control" placeholder="Enter languages spoken" />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="john.doe@email.com" />
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="date_of_birth">Date of Birth</label>
+                            <input type="date" id="date_of_birth" class="form-control" />
+                        </div>
+
+                        <!-- Nationality -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="nationality">Nationality</label>
+                            <input type="text" id="nationality" class="form-control" placeholder="Your Nationality" />
+                        </div>
+
+                        <!-- National ID -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="national_id">National ID</label>
+                            <input type="text" id="national_id" class="form-control" placeholder="National ID number" />
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="gender">Gender</label>
+                            <select id="gender" class="form-select">
+                                <option value="Male" selected>Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-3">
+                        <button class="btn btn-label-secondary btn-prev" disabled>
+                            <i class="ti ti-arrow-left ti-xs me-sm-2"></i>
+                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                            <span class="align-middle d-sm-inline-block d-none me-sm-2">Next</span>
+                            <i class="ti ti-arrow-right ti-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Parent Info -->
+                <div id="parent-info" class="content">
+                    <div class="content-header mb-4">
+                        <h6 class="mb-0">Parent Info</h6>
+                        <small>Enter Parent Info</small>
+                    </div>
+                    <div class="row g-6">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="fathers_name">Father's Name</label>
+                            <input type="text" id="fathers_name" class="form-control" placeholder="Father's Name" />
+                        </div>
+
+                        <!-- Father's Mobile -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="fathers_mobile">Father's Mobile</label>
+                            <input type="text" id="fathers_mobile" class="form-control" placeholder="Father's Mobile" />
+                        </div>
+
+                        <!-- Father's NID -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="fathers_nid">Father's NID</label>
+                            <input type="text" id="fathers_nid" class="form-control" placeholder="Father's National ID" />
+                        </div>
+
+                        <!-- Mother's Name -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="mothers_name">Mother's Name</label>
+                            <input type="text" id="mothers_name" class="form-control" placeholder="Mother's Name" />
+                        </div>
+
+                        <!-- Mother's Mobile -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="mothers_mobile">Mother's Mobile</label>
+                            <input type="text" id="mothers_mobile" class="form-control" placeholder="Mother's Mobile" />
+                        </div>
+
+                        <!-- Mother's NID -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="mothers_nid">Mother's NID</label>
+                            <input type="text" id="mothers_nid" class="form-control" placeholder="Mother's National ID" />
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-label-secondary btn-prev">
+                            <i class="ti ti-arrow-left ti-xs me-sm-2"></i>
+                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                            <span class="align-middle d-sm-inline-block d-none me-sm-2">Next</span>
+                            <i class="ti ti-arrow-right ti-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Academic Info -->
+                <div id="academic-info" class="content">
+                    <div class="content-header mb-4">
+                        <h6 class="mb-0">Academic Info</h6>
+                        <small>Enter Your Academic Info.</small>
+                    </div>
+                    <div class="row g-6">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="last_education">Last Education</label>
+                            <select id="last_education" class="form-control">
+                                <option value="SSC" {% if form.last_education.value == 'SSC' %}selected{% endif %}>SSC</option>
+                                <option value="HSC" {% if form.last_education.value == 'HSC' %}selected{% endif %}>HSC</option>
+                                <option value="HONOURS" {% if form.last_education.value == 'HONOURS' %}selected{% endif %}>Honours</option>
+                                <option value="Others" {% if form.last_education.value == 'Others' %}selected{% endif %}>Others</option>
+                            </select>
+                        </div>
+
+                        <!-- Other Education Details (if "Others" selected) -->
+                        <div class="col-sm-6" id="last_education_other_div" style="display: none;">
+                            <label class="form-label" for="last_education_other">Other Education</label>
+                            <input type="text" id="last_education_other" class="form-control" placeholder="Your last education details" />
+                        </div>
+
+                        <!-- Education Result -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="last_education_result">Result</label>
+                            <input type="text" id="last_education_result" class="form-control" placeholder="Your education result" />
+                        </div>
+
+                        <!-- Passing Year -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="last_education_passing_year">Passing Year</label>
+                            <input type="number" id="last_education_passing_year" class="form-control" placeholder="Year of passing" />
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-label-secondary btn-prev">
+                            <i class="ti ti-arrow-left ti-xs me-sm-2"></i>
+                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                            <span class="align-middle d-sm-inline-block d-none me-sm-2">Next</span>
+                            <i class="ti ti-arrow-right ti-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <script>
+                  // Show the "Other Education" input field if the "Others" option is selected
+                  document.getElementById('last_education').addEventListener('change', function() {
+                      const otherEducationDiv = document.getElementById('last_education_other_div');
+                      if (this.value === 'Others') {
+                          otherEducationDiv.style.display = 'block';
+                      } else {
+                          otherEducationDiv.style.display = 'none';
+                      }
+                  });
+              </script>
+
+                <!-- Skill -->
+                <div id="skill" class="content">
+                    <div class="content-header mb-4">
+                        <h6 class="mb-0">Skill</h6>
+                        <small>Enter Your Skills.</small>
+                    </div>
+                    <div class="row g-6">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="current_job_status">Job Status</label>
+                            <select id="current_job_status" class="form-control">
+                                <option value="Student" {% if form.current_job_status.value == 'Student' %}selected{% endif %}>Student</option>
+                                <option value="Unemployed" {% if form.current_job_status.value == 'Unemployed' %}selected{% endif %}>Unemployed</option>
+                            </select>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="skills">Skills</label>
+                            <input type="text" id="skills" class="form-control" placeholder="Enter your skills" value="{{ form.skills.value }}" />
+                        </div>
+
+                        <!-- Special Skills -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="special_skills">Special Skills</label>
+                            <input type="text" id="special_skills" class="form-control" placeholder="Enter your special skills" value="{{ form.special_skills.value }}" />
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-label-secondary btn-prev">
+                            <i class="ti ti-arrow-left ti-xs me-sm-2"></i>
+                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                            <span class="align-middle d-sm-inline-block d-none me-sm-2">Next</span>
+                            <i class="ti ti-arrow-right ti-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div id="address" class="content">
+                    <div class="content-header mb-4">
+                        <h6 class="mb-0">Address</h6>
+                        <small>Enter Your Address.</small>
+                    </div>
+                    <div class="row g-6">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="wardNo">Ward No</label>
+                            <input type="number" id="wardNo" class="form-control" placeholder="Ward Number" value="{{ form.wardNo.value }}" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="postOffice">Post Office</label>
+                            <input type="text" id="postOffice" class="form-control" placeholder="Post Office" value="{{ form.postOffice.value }}" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="policeStation">Police Station</label>
+                            <input type="text" id="policeStation" class="form-control" placeholder="Police Station" value="{{ form.policeStation.value }}" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="district">District</label>
+                            <input type="text" id="district" class="form-control" placeholder="District" value="{{ form.district.value }}" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="postal_code">Postal Code</label>
+                            <input type="text" id="postal_code" class="form-control" placeholder="Postal Code" value="{{ form.postal_code.value }}" />
+                        </div>
+
+                        <div class="col-sm-6"></div>
+                        <!-- Permanent Address Same Checkbox using form-check -->
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="permanent_address_same" onclick="copyAddress()" {% if form.permanent_address_same.value %}checked{% endif %}>
+                                <label class="form-check-label" for="permanent_address_same">
+                                    Permanent Address Same?
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Permanent Address -->
+                        <div class="col-sm-6">
+                            <label class="form-label" for="permanent_wardNo">Permanent Ward No</label>
+                            <input type="number" id="permanent_wardNo" class="form-control" placeholder="Ward Number" value="{{ form.permanent_wardNo.value }}" readonly />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="permanent_postOffice">Permanent Post Office</label>
+                            <input type="text" id="permanent_postOffice" class="form-control" placeholder="Post Office" value="{{ form.permanent_postOffice.value }}" readonly />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="permanent_policeStation">Permanent Police Station</label>
+                            <input type="text" id="permanent_policeStation" class="form-control" placeholder="Police Station" value="{{ form.permanent_policeStation.value }}" readonly />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="permanent_district">Permanent District</label>
+                            <input type="text" id="permanent_district" class="form-control" placeholder="District" value="{{ form.permanent_district.value }}" readonly />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="permanent_postal_code">Permanent Postal Code</label>
+                            <input type="text" id="permanent_postal_code" class="form-control" placeholder="Postal Code" value="{{ form.permanent_postal_code.value }}" readonly />
+                        </div>
+
+                    </div>
+                    <script>
+                        // Function to copy data from the current address to permanent address when the checkbox is clicked
+                        function copyAddress() {
+                            var isChecked = document.getElementById("permanent_address_same").checked;
+
+                            // If checked, copy data
+                            if (isChecked) {
+                                document.getElementById("permanent_wardNo").value = document.getElementById("wardNo").value;
+                                document.getElementById("permanent_postOffice").value = document.getElementById("postOffice").value;
+                                document.getElementById("permanent_policeStation").value = document.getElementById("policeStation").value;
+                                document.getElementById("permanent_district").value = document.getElementById("district").value;
+                                document.getElementById("permanent_postal_code").value = document.getElementById("postal_code").value;
+                            } else {
+                                // If unchecked, reset the permanent address fields
+                                document.getElementById("permanent_wardNo").value = "";
+                                document.getElementById("permanent_postOffice").value = "";
+                                document.getElementById("permanent_policeStation").value = "";
+                                document.getElementById("permanent_district").value = "";
+                                document.getElementById("permanent_postal_code").value = "";
+                            }
+                        }
+
+
+                    </script>
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <button class="btn btn-label-secondary btn-prev">
+                            <i class="ti ti-arrow-left ti-xs me-sm-2"></i>
+                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button type="submit" name="submit" class="btn btn-success btn-submit">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the stepper
+    var stepper = new Stepper(document.querySelector('.bs-stepper'));
+
+    // Set up the event listener for the next button
+    const nextButtons = document.querySelectorAll('.btn-next');
+    nextButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            // Prevent form submission on next click
+            e.preventDefault();
+            stepper.next();
+        });
+    });
+
+    // Set up the event listener for the previous button
+    const prevButtons = document.querySelectorAll('.btn-prev');
+    prevButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            stepper.previous();
+        });
+    });
+
+    // Form submission handler for the submit button
+    const submitButton = document.querySelector('.btn-submit');
+    if (submitButton) {
+        submitButton.addEventListener('click', function(e) {
+            // Trigger form submission on submit click
+            e.preventDefault();
+            document.querySelector('form').submit();
+        });
+    }
+});
+</script>
+
+{% endblock %}

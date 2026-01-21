@@ -1,0 +1,186 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Notice {{ edit_mode|yesno:"Update,Create" }}{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+{% endblock %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js' %}"></script>
+{% endblock %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $.fn.dataTable.ext.errMode = 'none';
+        $('.datatables-notice').DataTable({
+            responsive: true,
+            pageLength: 5,
+            searching: true,
+            paging: true,
+            lengthChange: true,
+            info: true,
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                infoEmpty: "No records available",
+                zeroRecords: "No matching records found"
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card shadow-sm border rounded">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="card-title mb-0">নোটিশ {{ edit_mode|yesno:"আপডেট করুন,তৈরি করুন" }}</h4>
+    </div>
+
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" class="row g-3">
+      {% csrf_token %}
+
+      <div class="col-md-5">
+        <label for="id_title" class="form-label">শিরোনাম</label>
+        <input type="text" name="title" id="id_title" class="form-control"
+              placeholder="নোটিশের শিরোনাম লিখুন"
+              value="{{ form.title.value|default_if_none:'' }}">
+      </div>
+      <div class="col-md-3">
+        <label for="id_status" class="form-label">স্ট্যাটাস</label>
+        <select name="status" id="id_status" class="form-select">
+          <option value="active" {% if form.status.value == "active" %}selected{% endif %}>Active</option>
+          <option value="inactive" {% if form.status.value == "inactive" %}selected{% endif %}>Inactive</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="id_service" class="form-label">সেবা নির্বাচন করুন</label>
+        <select name="service" id="id_service" class="form-select">
+          <option value="">সকল ক্লায়েন্ট নোটিশ</option>
+          {% for service in services %}
+            <option value="{{ service.id }}"
+              {% if form.service.value == service.id|stringformat:"s" %}selected{% endif %}>
+              {{ service.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+
+      <div class="col-md-12">
+        <label for="id_message" class="form-label">বার্তা</label>
+        <textarea name="message" id="id_message" rows="4" class="form-control"
+                  placeholder="এখানে বার্তা লিখুন">{{ form.message.value|default_if_none:"" }}</textarea>
+      </div>
+
+      <div class="col-md-6">
+        <label for="id_file" class="form-label">ফাইল</label>
+        <input type="file" name="file" id="id_file" class="form-control">
+      </div>
+
+      <div class="col-md-6">
+        <label for="id_image" class="form-label">ছবি</label>
+        <input type="file" name="image" id="id_image" class="form-control">
+      </div>
+
+
+
+      <div class="col-12 d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-primary me-2">
+          {{ edit_mode|yesno:"আপডেট করুন,সংরক্ষণ করুন" }}
+        </button>
+        <a href="{% url 'notice_create' %}" class="btn btn-secondary">বাতিল</a>
+      </div>
+    </form>
+
+    </div>
+  </div>
+</div>
+
+{% if request.user.role == "admin" %}
+<div class="mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="card-title mb-0">নোটিশ তালিকা</h4>
+    </div>
+    <div class="table-responsive p-5">
+      <table class="table table-bordered table-hover datatables-notice w-100">
+        <thead class="table-light">
+          <tr>
+            <th>Service</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>File</th>
+            <th>Image</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for notice in notices %}
+          <tr>
+            <td>{{ notice.service.name }}</td>
+            <td>{{ notice.title }}</td>
+            <td>{{ notice.status|capfirst }}</td>
+            <td>{{ notice.message|truncatewords:10 }}</td>
+            <td>
+              {% if notice.file %}
+              <a class="btn btn-sm btn-outline-primary" href="{{ notice.file.url }}" target="_blank">
+                <i class="bx bx-download"></i> Download
+              </a>
+              {% else %}-{% endif %}
+            </td>
+            <td>
+              {% if notice.image %}
+              <img src="{{ notice.image.url }}" alt="Image" width="50">
+              {% else %}-{% endif %}
+            </td>
+            <td>{{ notice.created_at|date:"d M, Y" }}</td>
+            <td>
+              <a href="{% url 'notice_edit' notice.id %}" class="btn btn-sm btn-warning">Edit</a>
+              <form method="post" action="{% url 'notice_delete' notice.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('আপনি কি এই নোটিশটি ডিলিট করতে চান?');">
+                  <i class="bx bx-trash"></i> Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center text-muted">No notices found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

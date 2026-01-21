@@ -1,0 +1,140 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}সেবা পেমেন্ট{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/bootstrap-icons/font/bootstrap-icons.css' %}">
+<style>
+  .card-equal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+</style>
+{% endblock vendor_css %}
+
+{% block content %}
+<div class="container-fluid py-5">
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+  <div class="row align-items-stretch">
+
+    <!-- Left Column (Payment Form) -->
+    <div class="col-md-6 mb-4">
+      <div class="card card-equal shadow-sm">
+        <div class="card-header">
+          <h4 class="mb-0"><i class="bi bi-credit-card me-2 text-success"></i>সেবা আবেদন পেমেন্ট</h4>
+        </div>
+        <div class="card-body">
+          <p class="mb-3"><strong>আপনার বাকি পরিমাণ:</strong>  {{ balance | intcomma }} ৳</p>
+
+          <!-- Payment Form -->
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_amount" class="form-label">পেমেন্ট পরিমাণ:</label>
+                <input type="number" id="id_amount" class="form-control" name="amount" value="{{ balance }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_payment_method" class="form-label">পেমেন্ট পদ্ধতি:</label>
+                {{ form.payment_method }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_transaction_id" class="form-label">লেনদেন আইডি (যদি থাকে):</label>
+                <input type="text" id="id_transaction_id" class="form-control" name="transaction_id" placeholder="লেনদেন আইডি লিখুন (যদি থাকে)">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_message" class="form-label">আপনার বার্তা:</label>
+                <textarea id="id_message" class="form-control" name="message" placeholder="আপনার বার্তা লিখুন"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image" class="form-label">পেমেন্ট রশিদ/স্ক্রিনশট/চেক:</label>
+                {{ form.image }}
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary w-50">
+                    <i class="bi bi-check-circle me-1"></i> পেমেন্ট সাবমিট করুন
+                </button>
+                <a href="{% url 'applied_service_apply' %}" class="btn btn-secondary w-50">
+                    <i class="bi bi-x-circle me-1"></i> বাতিল করুন
+                </a>
+            </div>
+        </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column (Service Details) -->
+    <div class="col-md-6 mb-4">
+      <div class="card card-equal shadow-sm border-0">
+        {% if service_application.service.image %}
+          <img src="{{ service_application.service.image.url }}" alt="{{ service_application.service.name }}"
+               class="card-img-top rounded-top" style="object-fit: cover; max-height: 230px;">
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="fw-bold mb-2">
+            <i class="bi bi-box-seam me-2 text-primary"></i>{{ service_application.service.name }}
+          </h5>
+          <p class="text-muted">{{ service_application.service.description }}</p>
+
+          <hr>
+
+          <div class="row gx-3 gy-3 text-center">
+            <div class="col-6">
+              <div class="p-3 bg-light rounded shadow-sm">
+                <div class="fw-semibold text-info">স্ট্যাটাস: {{ service_application.get_status_display }}</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="p-3 bg-light rounded shadow-sm">
+                <div class="fw-semibold">আবেদন: {{ service_application.applied_at|date:"d M Y" }}</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="p-3 bg-light rounded shadow-sm">
+                <div class="fw-bold text-success">পরিশোধ: {{ service_application.amount_paid }} ৳</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="p-3 bg-light rounded shadow-sm">
+                <div class="fw-bold text-danger">বাকি: {{ service_application.balance }} ৳</div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="mt-3">
+            <p class="mb-1 fw-semibold"><i class="bi bi-chat-left-dots text-secondary me-2"></i>আপনার বার্তা:</p>
+            <p class="text-muted small">{{ service_application.message|default:"বার্তা নেই" }}</p>
+
+            <p class="mb-1 fw-semibold"><i class="bi bi-telephone text-secondary me-2"></i>ফোন নম্বর:</p>
+            <p class="text-muted">{{ service_application.user.phone_number }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

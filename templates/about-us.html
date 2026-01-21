@@ -1,0 +1,230 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Learn more about JP Trust Global, your trusted travel agency for expert tour packages, flight and hotel bookings, and personalized travel solutions. Discover our mission, values, and why travelers choose us for seamless journeys." />
+    <meta name="keywords" content="about JP Trust Global, travel agency, travel services, tour packages, flight booking, hotel booking, business travel, leisure travel, personalized travel, travel solutions, vacation, tourism, travel deals, about us" />
+    <meta name="author" content="JP Trust Global" />
+    <meta name="robots" content="index, follow" />
+    <title>{{site_settings.name|default:""}} | About Us</title>
+    <link rel="shortcut icon" href="{{ site_settings.favicon.url }}" type="image/x-icon" />
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/8d42debf19.js" crossorigin="anonymous"></script>
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+    <!-- swipper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- aos cdn -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header id="topNav" class="navbar-all max-width-site">
+      <!-- header html start -->
+
+      <div class="bottom-header">
+        <button class="menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="logo-container">
+          <a href="{% url 'home' %}"><img class="logo" src="{% static 'logo/logo.png' %}" alt="logo" /></a>
+        </div>
+        <nav class="menu-container font-poppins">
+          <ul>
+            <li>
+              <a class="menu-item" href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+              <a class="menu-item" href="{% url 'services' %}">Services</a>
+            </li>
+
+            <li>
+              <a class="menu-item nav_link_active" href="{% url 'about' %}">About Us</a>
+            </li>
+
+            <li>
+              <a class="menu-item" href="{% url 'contact-home' %}">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="header-btn">
+          {% if user.is_authenticated %}
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'index' %}">Dashboard</a>
+            <form method="POST" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav_custom_btn_1 d-flex align-items-center">
+                <span class="align-middle">Log Out</span>
+                <i class="ti ti-logout ms-2 ti-14px"></i>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'guest_login' %}" class="nav_custom_btn_1 d-flex align-items-center">Client Login</a>
+            <a href="{% url 'guest_register' %}" class="nav_custom_btn_1 d-flex align-items-center">Sign Up</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="collapse mobile-menu navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'services' %}">Services</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link nav_link_active" href="{% url 'about' %}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact-home' %}">Contact</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'index' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav_custom_btn_1 w-full">
+                  <span class="align-middle">Log Out</span>
+                  <i class="ti ti-logout ms-2 ti-14px"></i>
+                </button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_login' %}"><button class="nav_custom_btn_1 w-full">Client Login</button></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_register' %}"><button class="nav_custom_btn_1 w-full">Sign Up</button></a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </header>
+
+    <!-- About Us section start -->
+    <section class="max-width-site-1 about-us-section" data-aos="fade-right" data-aos-duration="1200">
+      <div class="left-side" data-aos="fade-up" data-aos-delay="200">
+        <div class="left-side-image-1">
+          <img src="{% static 'assets/about-us/about-us-banner.jpg' %}" alt="About Us Image" />
+        </div>
+        <div class="left-side-image-2">
+          <img src="{% static 'assets/about-us/about-us-overlay.jpg' %}" alt="About Us Image" />
+        </div>
+      </div>
+      <div class="right-side" data-aos="fade-left" data-aos-delay="300">
+        <div class="about-us-header">
+          <h1>Who We Are</h1>
+        </div>
+        <div class="about-us-paragraph">
+          <p>At JP Trust Global we are committed to making travel easy, comfortable, and memorable. With years of experience and trusted service, we provide world-class flights, hotels, tour packages, and other travel services. Our goal is to turn every journey into an extraordinary experience — safely, affordably, and reliably.</p>
+        </div>
+      </div>
+    </section>
+    <!-- About Us section end -->
+
+    <!-- Our Mission section start -->
+    <section class="max-width-site-1 about-us-section" data-aos="fade-up" data-aos-duration="1200">
+      <div class="about-us-section-2 bg-section-2">
+        <div class="second-part">
+          <div class="right-side" data-aos="fade-left" data-aos-delay="200">
+            <div class="about-us-header">
+              <h1 class="text-center">Our Mission</h1>
+            </div>
+            <div class="about-us-paragraph">
+              <p>Our mission is to provide travelers with a reliable and hassle-free experience. We have built a platform where you can easily book the best flights, hotels, visa assistance, and tours. Combining quality, professionalism, and affordable pricing, we start every journey with trust and care.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Our Mission section end -->
+
+    <!-- Why Choose Us section start -->
+    <section class="max-width-site-1 about-us-section" data-aos="fade-left" data-aos-duration="1200">
+      <div class="right-side" data-aos="fade-right" data-aos-delay="200">
+        <div class="about-us-header">
+          <h1>Why Choose Us?</h1>
+        </div>
+        <div class="about-us-paragraph">
+          <p>JP Trust Global is more than just a travel agency — it is a complete travel solution. Our skilled team, modern technology, and 24/7 support provide you with a worry-free experience. Wherever you go, we are by your side — from flights to hotels, car rentals, travel insurance, and much more. Your satisfaction and safety are our top priorities.</p>
+        </div>
+      </div>
+      <div class="left-side" data-aos="zoom-in" data-aos-delay="400">
+        <div class="left-side-image-1">
+          <img src="{% static 'assets/about-us/contact_home_service.svg' %}" alt="Contact Image" />
+        </div>
+      </div>
+    </section>
+    <!-- Why Choose Us section end -->
+
+    <!-- floating menu -->
+    <div class="mobile_float_menu">
+      {% if user.is_authenticated %}
+          <a href="{% url 'home' %}" class="float_menu float_menu_active">
+          <i class="fas fa-house"></i> Home
+        </a>
+
+          <a class="float_menu" href="{% url 'index' %}">
+          <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+            <button type="submit" class="float_menu">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </button>
+        </form>
+
+      {% else %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+        <a href="{% url 'guest_register' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Sign Up</a>
+        <a href="{% url 'guest_login' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Login</a>
+      {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- aos script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- custom js -->
+    <script src="{% static 'custom/script.js' %}"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+      let swiper = new Swiper('.mySwiper', {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+          delay: 2000,
+          disableOnInteraction: false
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
+      });
+    </script>
+  </body>
+</html>

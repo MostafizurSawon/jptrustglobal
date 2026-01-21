@@ -1,0 +1,247 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}CV Creation - Wizard{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/bs-stepper/bs-stepper.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
+<script src="{% static 'vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script src="{% static 'js/form-wizard-icons.js' %}"></script>
+{% endblock page_js %}
+
+{% block content %}
+<div class="container-fluid card p-5">
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+  {% endif %}
+  <h2 class="mb-4">আপনার সিভি তৈরি অথবা আপডেট করুন</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+
+      <!-- Full Name (English & Bangla) -->
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="full_name">পূর্ণ নাম (ইংরেজি)</label>
+        <input type="text" name="full_name" id="full_name" class="form-control" placeholder="পূর্ণ নাম ইংরেজিতে লিখুন" value="{{ form.full_name.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="full_name_bn">পূর্ণ নাম (বাংলা)</label>
+        <input type="text" name="full_name_bn" id="full_name_bn" class="form-control" placeholder="পূর্ণ নাম বাংলায় লিখুন" value="{{ form.full_name_bn.value | default_if_none:''}}">
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="email">ইমেইল</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="example@mail.com" value="{{ form.email.value | default_if_none:''}}">
+      </div>
+
+      <!-- Date of Birth & Gender -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="date_of_birth">জন্মতারিখ</label>
+        <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ form.date_of_birth.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="gender">লিঙ্গ</label>
+        <select name="gender" id="gender" class="form-select">
+          <option value="Male" {% if form.gender.value == 'Male' %}selected{% endif %}>পুরুষ</option>
+          <option value="Female" {% if form.gender.value == 'Female' %}selected{% endif %}>নারী</option>
+          <option value="Other" {% if form.gender.value == 'Other' %}selected{% endif %}>অন্যান্য</option>
+        </select>
+      </div>
+
+      <!-- National ID & Nationality -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="national_id">জাতীয় পরিচয়পত্র নম্বর</label>
+        <input type="number" name="national_id" id="national_id" class="form-control" placeholder="NID নম্বর" value="{{ form.national_id.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="nationality">জাতীয়তা</label>
+        <input type="text" name="nationality" id="nationality" class="form-control" placeholder="বাংলাদেশী" value="{{ form.nationality.value | default_if_none:''}}">
+      </div>
+
+      <!-- Blood Group -->
+      <div class="col-md-4 mb-3">
+        <label class="form-label" for="blood_group">রক্তের গ্রুপ</label>
+        <select name="blood_group" id="blood_group" class="form-select">
+          <option value="A+" {% if form.blood_group.value == 'A+' %}selected{% endif %}>A+</option>
+          <option value="A-" {% if form.blood_group.value == 'A-' %}selected{% endif %}>A-</option>
+          <option value="B+" {% if form.blood_group.value == 'B+' %}selected{% endif %}>B+</option>
+          <option value="B-" {% if form.blood_group.value == 'B-' %}selected{% endif %}>B-</option>
+          <option value="AB+" {% if form.blood_group.value == 'AB+' %}selected{% endif %}>AB+</option>
+          <option value="AB-" {% if form.blood_group.value == 'AB-' %}selected{% endif %}>AB-</option>
+          <option value="O+" {% if form.blood_group.value == 'O+' %}selected{% endif %}>O+</option>
+          <option value="O-" {% if form.blood_group.value == 'O-' %}selected{% endif %}>O-</option>
+          <option value="Other" {% if form.blood_group.value == 'Other' %}selected{% endif %}>অন্যান্য</option>
+        </select>
+      </div>
+
+      <!-- Skills & Bio -->
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="skills">দক্ষতা</label>
+        <input type="text" name="skills" id="skills" class="form-control" placeholder="আপনার দক্ষতা লিখুন কমা দিয়ে আলাদা করে" value="{{ form.skills.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="special_skills">বিশেষ দক্ষতা</label>
+        <input type="text" name="special_skills" id="special_skills" class="form-control" placeholder="আপনার বিশেষ দক্ষতা লিখুন কমা দিয়ে আলাদা করে" value="{{ form.special_skills.value | default_if_none:''}}">
+      </div>
+      <div class="col-12 mb-3">
+        <label class="form-label" for="bio">জীবনবৃত্তান্ত</label>
+        <textarea name="bio" id="bio" class="form-control" rows="3" placeholder="সংক্ষিপ্ত নিজের পরিচয় লিখুন">{{ form.bio.value | default_if_none:''}}</textarea>
+      </div>
+
+      <!-- Language -->
+      <div class="col-md-12 mb-3">
+        <label class="form-label" for="language">ভাষা</label>
+        <input type="text" name="language" id="language" class="form-control" placeholder="যেমনঃ বাংলা, English ( কমা দিয়ে আলাদা করে লিখুন )" value="{{ form.language.value | default_if_none:''}}">
+      </div>
+
+      <!-- Address -->
+      <!-- বর্তমান ঠিকানা -->
+      <div class="col-12 mb-3">
+        <label class="form-label" for="current_address">বর্তমান ঠিকানা</label>
+        <textarea name="current_address" id="current_address" class="form-control" rows="2" placeholder="আপনার বর্তমান ঠিকানা লিখুন">{{ form.current_address.value | default_if_none:''}}</textarea>
+      </div>
+
+      <!-- স্থায়ী ঠিকানা একই? -->
+      <div class="col-md-6 mb-3">
+        <div class="form-check mt-4">
+          <input type="checkbox" class="form-check-input" id="is_permanent_same_as_current" name="is_permanent_same_as_current" {% if form.is_permanent_same_as_current.value %}checked{% endif %}>
+          <label class="form-check-label" for="is_permanent_same_as_current">স্থায়ী ঠিকানা একই?</label>
+        </div>
+      </div>
+
+      <!-- স্থায়ী ঠিকানা -->
+      <div class="col-12 mb-3">
+        <label class="form-label" for="permanent_address">স্থায়ী ঠিকানা</label>
+        <textarea name="permanent_address" id="permanent_address" class="form-control" rows="2" placeholder="স্থায়ী ঠিকানা লিখুন">{{ form.permanent_address.value | default_if_none:''}}</textarea>
+      </div>
+
+      <!-- পরিবার -->
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="fathers_name">পিতার নাম</label>
+          <input type="text" name="fathers_name" id="fathers_name" class="form-control" placeholder="পিতার নাম লিখুন" value="{{ form.fathers_name.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="fathers_mobile">পিতার মোবাইল</label>
+          <input type="text" name="fathers_mobile" id="fathers_mobile" class="form-control" placeholder="পিতার মোবাইল নম্বর লিখুন" value="{{ form.fathers_mobile.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="fathers_nid">পিতার এনআইডি</label>
+          <input type="text" name="fathers_nid" id="fathers_nid" class="form-control" placeholder="পিতার এনআইডি নম্বর লিখুন" value="{{ form.fathers_nid.value | default_if_none:''}}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="mothers_name">মাতার নাম</label>
+          <input type="text" name="mothers_name" id="mothers_name" class="form-control" placeholder="মাতার নাম লিখুন" value="{{ form.mothers_name.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="mothers_mobile">মাতার মোবাইল</label>
+          <input type="text" name="mothers_mobile" id="mothers_mobile" class="form-control" placeholder="মাতার মোবাইল নম্বর লিখুন" value="{{ form.mothers_mobile.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="mothers_nid">মাতার এনআইডি</label>
+          <input type="text" name="mothers_nid" id="mothers_nid" class="form-control" placeholder="মাতার এনআইডি নম্বর লিখুন" value="{{ form.mothers_nid.value | default_if_none:''}}">
+      </div>
+
+      <!-- বৈবাহিক ও শিক্ষাগত -->
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="married">বৈবাহিক অবস্থা</label>
+          <select name="married" id="married" class="form-select">
+              <option value="Married" {% if form.married.value == 'Married' %}selected{% endif %}>বিবাহিত</option>
+              <option value="Unmarried" {% if form.married.value == 'Unmarried' %}selected{% endif %}>অবিবাহিত</option>
+          </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+          <label class="form-label" for="last_education">সর্বশেষ শিক্ষাগত যোগ্যতা</label>
+          <select name="last_education" id="last_education" class="form-select">
+              <option value="SSC" {% if form.last_education.value == 'SSC' %}selected{% endif %}>এসএসসি</option>
+              <option value="HSC" {% if form.last_education.value == 'HSC' %}selected{% endif %}>এইচএসসি</option>
+              <option value="HONOURS" {% if form.last_education.value == 'HONOURS' %}selected{% endif %}>স্নাতক</option>
+              <option value="Others" {% if form.last_education.value == 'Others' %}selected{% endif %}>অন্যান্য</option>
+          </select>
+      </div>
+
+      <div class="col-md-4 mb-3">
+          <label class="form-label" for="last_education_result">ফলাফল</label>
+          <input type="text" name="last_education_result" id="last_education_result" class="form-control" placeholder="ফলাফল লিখুন (যেমনঃ GPA 4.50)" value="{{ form.last_education_result.value | default_if_none:''}}">
+      </div>
+      <div class="col-md-4 mb-3">
+          <label class="form-label" for="last_education_passing_year">পাসের বছর</label>
+          <input type="number" name="last_education_passing_year" id="last_education_passing_year" class="form-control" placeholder="পাসের সাল লিখুন (যেমনঃ 2022)" value="{{ form.last_education_passing_year.value | default_if_none:''}}">
+      </div>
+
+      <!-- Job Info -->
+      <div class="col-md-4 mb-3">
+          <label class="form-label" for="current_job_status">বর্তমান পেশার অবস্থা</label>
+          <select name="current_job_status" id="current_job_status" class="form-select">
+              <option value="Unemployed" {% if form.current_job_status.value == 'Unemployed' %}selected{% endif %}>বেকার</option>
+              <option value="Employed" {% if form.current_job_status.value == 'Employed' %}selected{% endif %}>চাকরিজীবী</option>
+              <option value="Student" {% if form.current_job_status.value == 'Student' %}selected{% endif %}>ছাত্র/ছাত্রী</option>
+              <option value="Business" {% if form.current_job_status.value == 'Business' %}selected{% endif %}>ব্যবসা</option>
+              <option value="Others" {% if form.current_job_status.value == 'Others' %}selected{% endif %}>অন্যান্য</option>
+          </select>
+      </div>
+
+      <!-- Profile Picture -->
+      <div class="col-md-6 mb-3">
+          {% if form.instance.profile_picture %}
+            <img src="{{ form.instance.profile_picture.url }}" alt="Profile Image" class="img-thumbnail" />
+          {% endif %}
+
+          <label class="form-label" for="profile_picture">প্রোফাইল ছবি</label>
+          <input type="file" name="profile_picture" id="profile_picture" class="form-control" value="{{ form.profile_picture.value | default_if_none:''}}">
+      </div>
+      </div>
+
+
+      <!-- Submit Button -->
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const currentAddress = document.getElementById("current_address");
+    const permanentAddress = document.getElementById("permanent_address");
+    const sameCheckbox = document.getElementById("is_permanent_same_as_current");
+
+    sameCheckbox.addEventListener("change", function () {
+      if (this.checked) {
+        permanentAddress.value = currentAddress.value;
+      } else {
+        permanentAddress.value = '';
+      }
+    });
+  });
+</script>
+{% block js_customs %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends layout_path %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="row">
+    <!-- Left Side: Image -->
+    <div class="col-md-6 mb-4">
+      <div class="d-flex justify-content-center">
+        <img src="https://cdn.pixabay.com/photo/2017/06/11/22/00/contact-us-2393716_960_720.jpg" alt="Contact Image" class="img-fluid rounded shadow" />
+      </div>
+    </div>
+
+    <!-- Right Side: Form -->
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="card p-5">
+      <h2 class="mb-4 text-center">Contact Us</h2>
+        <h5 class="card-title mb-4">We'd love to hear from you!</h5>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_name" class="form-label">Full Name</label>
+            {{ form.name }}
+          </div>
+          <div class="mb-3">
+            <label for="id_email" class="form-label">Email Address</label>
+            {{ form.email }}
+          </div>
+          <div class="mb-3">
+            <label for="id_phone" class="form-label">Phone Number</label>
+            {{ form.phone }}
+          </div>
+          <div class="mb-3">
+            <label for="id_purpose" class="form-label">Purpose</label>
+            {{ form.purpose }}
+          </div>
+          <div class="mb-3">
+            <label for="id_message" class="form-label">Message</label>
+            {{ form.message }}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

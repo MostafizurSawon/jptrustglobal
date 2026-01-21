@@ -1,0 +1,271 @@
+{% comment %} {% extends layout_path %}
+{% load static %}
+
+{% block title %}Service Application Payment{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('.datatables-basic').DataTable({
+            pageLength: 5, // Content per page (5 rows per page)
+            searching: true, // Enable search functionality
+            paging: true, // Enable pagination
+            lengthChange: true, // Allow users to change the number of records per page
+            info: true, // Show info about the current page and total records
+            language: {
+                search: "Search:", // Label for the search box
+                lengthMenu: "Show _MENU_ entries", // Label for the number of records per page dropdown
+                info: "Showing _START_ to _END_ of _TOTAL_ entries", // Info message for records
+                infoEmpty: "No records available", // Message for empty data
+                zeroRecords: "No matching records found" // Message when no matching records are found
+            }
+        });
+    });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container my-5 card p-5">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <h2>Service Application Payment</h2>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-striped datatables-basic">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Service Name</th>
+                    <th>Due Amount</th>
+                    <th>Price</th>
+                    <th>User Phone Number</th>
+                    <th>Status</th>
+                    <th>Applied At</th>
+                    <th>Agent</th>
+                    <th>Payment Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in service_applications %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ application.balance }}</td>
+                        <td>
+                            {% if application.service.image %}
+                                <img src="{{ application.service.image.url }}" alt="{{ application.service.name }}" class="img-fluid" width="50">
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>{{ application.service.price }}</td>
+                        <td>{{ application.user.phone_number }}</td>
+                        <td>{{ application.get_status_display }}</td>
+                        <td>{{ application.applied_at }}</td>
+                        <td>
+                            {% if application.agent_info %}
+                               {{ application.agent_info.full_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ application.action_taken }}
+                        </td>
+                        <td>
+                          <a href="{% url 'service_application_payment' service_application_id=application.id %}" class="btn btn-primary btn-sm">
+                                Pay
+                            </a>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal{{ application.id }}">
+                                Pay
+                            </button>
+
+                            <!-- Modal for Payment -->
+                            <div class="modal fade" id="paymentModal{{ application.id }}" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="paymentModalLabel">Payment for {{ application.service.name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form method="POST">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="service_application_id" value="{{ application.id }}">
+                                      <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        {{ form.status }}
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="amount_paid" class="form-label">Amount Paid</label>
+                                        {{ form.amount_paid }}
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="payment_message" class="form-label">Payment Message</label>
+                                        {{ form.payment_message }}
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="discount" class="form-label">Discount</label>
+                                        {{ form.discount }}
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="action_taken" class="form-label">Action Taken</label>
+                                        {{ form.action_taken }}
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="payment_due_date" class="form-label">Payment Due Date</label>
+                                        {{ form.payment_due_date }}
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit Payment</button>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center">No applications found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} {% endcomment %}
+
+
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Service Application Payment{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable with pagination, search, and content per page
+        $('.datatables-basic').DataTable({
+            pageLength: 5, // Content per page (5 rows per page)
+            searching: true, // Enable search functionality
+            paging: true, // Enable pagination
+            lengthChange: true, // Allow users to change the number of records per page
+            info: true, // Show info about the current page and total records
+            language: {
+                search: "Search:", // Label for the search box
+                lengthMenu: "Show _MENU_ entries", // Label for the number of records per page dropdown
+                info: "Showing _START_ to _END_ of _TOTAL_ entries", // Info message for records
+                infoEmpty: "No records available", // Message for empty data
+                zeroRecords: "No matching records found" // Message when no matching records are found
+            }
+        });
+    });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container my-5 card p-5">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <h2>Service Application Payment</h2>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-striped datatables-basic">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Service Name</th>
+                    <th>Price</th>
+                    <th>Due Amount</th> <!-- Added Due Amount column -->
+                    <th>User Phone Number</th>
+                    <th>Status</th>
+                    <th>Applied At</th>
+                    <th>Agent</th>
+                    <th>Payment Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in service_applications %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ application.service.name }}</td>
+                        <td>{{ application.service.price }}</td>
+                        <td>{{ application.balance }}</td> <!-- Display the Due Amount -->
+                        <td>{{ application.user.phone_number }}</td>
+                        <td>{{ application.get_status_display }}</td>
+                        <td>{{ application.applied_at }}</td>
+                        <td>
+                            {% if application.agent_info %}
+                               {{ application.agent_info.full_name }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if application.amount_paid < application.service.price %}
+                                <span class="badge bg-warning">Partial Payment</span>
+                            {% else %}
+                                <span class="badge bg-success">Paid</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'service_application_payment' service_application_id=application.id %}" class="btn btn-primary btn-sm">
+                                Pay
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center">No applications found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

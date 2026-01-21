@@ -1,0 +1,113 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}
+  Site Settings
+{% endblock %}
+
+{% block content %}
+  <div class="">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <h4 class="mb-4">Site Settings</h4>
+    <form method="post" enctype="multipart/form-data" class="card p-5">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="id_name">Site Name</label>
+          {{ form.name }}
+        </div>
+        {% comment %} <div class="col-md-6 mb-3">
+          <label for="id_title">Site Title</label>
+          {{ form.title }}
+        </div> {% endcomment %}
+
+        <div class="col-md-4 mb-3">
+          <label for="id_phone">Phone No</label>
+          {{ form.phone }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="id_whatsapp">Whatsapp No</label>
+          {{ form.whatsapp }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <label for="id_email">Email</label>
+          {{ form.email }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <label for="id_footer">Footer Text</label>
+          {{ form.footer }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="id_footer_description">Footer Description</label>
+          {{ form.footer_description }}
+        </div>
+        <div class="col-md-12 mb-3">
+          <label for="id_map_link">Contact Map Link</label>
+          {{ form.map_link }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <label for="id_address">Address</label>
+          {{ form.address }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="id_service">Service Description</label>
+          {{ form.service }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="id_trending">Trending Description</label>
+          {{ form.trending }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label for="id_facebook">Facebook URL</label>
+          {{ form.facebook }}
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="id_instagram">Instagram URL</label>
+          {{ form.instagram }}
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="id_youtube">YouTube URL</label>
+          {{ form.youtube }}
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="id_x">X (Twitter) URL</label>
+          {{ form.x }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_logo">Logo</label><br />
+          {% if form.instance.logo %}
+            <div style="width: 60px; height: 60px;">
+              <img src="{{ form.instance.logo.url }}" alt="Logo" style="height: 100%" class="mb-2" />
+            </div>
+          {% endif %}
+          {{ form.logo }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="id_favicon">Favicon</label><br />
+          {% if form.instance.favicon %}
+            <div style="width: 60px; height: 60px;">
+              <img src="{{ form.instance.favicon.url }}" alt="Favicon" style="width: 60px;" class="mb-2" />
+            </div>
+          {% endif %}
+          {{ form.favicon }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-3">সংরক্ষণ করুন</button>
+    </form>
+  </div>
+{% endblock %}

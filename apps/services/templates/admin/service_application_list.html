@@ -1,0 +1,320 @@
+{% extends layout_path %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}
+  Service Application List
+{% endblock %}
+
+{% block vendor_css %}
+  <link rel="stylesheet" href="{% static 'css/table.css' %}" />
+{{ block.super }}
+{% endblock %}
+
+{% block page_js %}
+  {{ block.super }}
+  <style>
+    .vuexy-table td {
+      vertical-align: middle;
+      white-space: normal !important; /* allow wrapping */
+      word-break: break-word;
+    }
+
+
+  </style>
+  <script>
+  const progressMap = {{ progress_json_map|safe }};
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add one event listener for all buttons inside table
+    document.querySelector('.vuexy-table').addEventListener('click', function (e) {
+      // Status Modal
+      const btnStatus = e.target.closest('.btn-edit-progress');
+      if (btnStatus) {
+        const appId = btnStatus.getAttribute('data-app-id');
+        const status = btnStatus.getAttribute('data-status');
+        const message = btnStatus.getAttribute('data-message');
+
+        document.getElementById('progress_application_id').value = appId;
+        document.getElementById('progress_status').value = status;
+        document.getElementById('progress_message').value = message;
+
+        const form = document.getElementById('progress-edit-form');
+        form.action = `/dashboard/service-applications/edit-progress/${appId}/`;
+
+        new bootstrap.Offcanvas(document.getElementById('edit-progress-modal')).show();
+      }
+
+      // Discount Modal
+      const btnDiscount = e.target.closest('.btn-edit-discount');
+      if (btnDiscount) {
+        const appId = btnDiscount.getAttribute('data-app-id');
+        const discount = btnDiscount.getAttribute('data-discount');
+
+        document.getElementById('discount_application_id').value = appId;
+        document.getElementById('discount_input').value = discount;
+
+        const form = document.getElementById('discount-edit-form');
+        form.action = `/dashboard/service-applications/edit-discount/${appId}/`;
+
+        new bootstrap.Offcanvas(document.getElementById('edit-discount-modal')).show();
+      }
+    });
+
+    // Autofill message on status change
+    document.getElementById('progress_status').addEventListener('change', function () {
+      const selectedStatus = this.value;
+      const appId = document.getElementById('progress_application_id').value;
+      document.getElementById('progress_message').value =
+        (progressMap[appId] && progressMap[appId][selectedStatus]) || '';
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+  <div class="container py-4 card">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <h2 class="mb-4">সকল সার্ভিস আবেদন</h2>
+
+    <form method="get" class="row g-3 align-items-end mb-4">
+      <div class="col-md-3">
+        <label class="form-label">Service Filter</label>
+        <select name="service" class="form-select">
+          <option value="">All Services</option>
+          {% for name in service_options %}
+            <option value="{{ name }}" {% if service_filter == name %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">date Start</label>
+        <input type="date" name="start_date" value="{{ start_date }}" class="form-control">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Date End</label>
+        <input type="date" name="end_date" value="{{ end_date }}" class="form-control">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Search</label>
+        <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="নাম, বার্তা, ফোন...">
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+        <a href="{% url 'service_application_list' %}" class="btn btn-secondary ms-2">Reset</a>
+      </div>
+    </form>
+
+    {% comment %} <a href="{% url 'service_application_pdf' %}?search={{ search_query }}&service={{ service_filter }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-outline-danger mb-3" target="_blank">
+      <i class="fa fa-file-pdf me-1"></i> Export PDF
+    </a> {% endcomment %}
+
+
+    <div class="table-responsive">
+      <table class="table table-bordered vuexy-table">
+      {% comment %} <table class="table table-striped table-hover table-bordered w-100 text-nowrap vuexy-table"> {% endcomment %}
+        <thead class="table-light">
+          <tr>
+            <th class="index-col">#</th>
+            <th style="max-width: 100px;">Action</th>
+            <th style="min-width: 120px;">Service</th>
+            <th style="min-width: 100px;">Price</th>
+            <th style="min-width: 100px;">Discount</th>
+            <th style="min-width: 100px;">Paid</th>
+            <th style="min-width: 100px;">Due</th>
+            <th style="min-width: 150px;">User</th>
+            <th style="min-width: 160px;">Message</th>
+            <th style="min-width: 140px;">Admin Status</th>
+            <th style="min-width: 160px;">Admin Message</th>
+            <th style="min-width: 100px;">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for application in service_applications %}
+            <tr>
+              <td class="index-col">{{ forloop.counter }}</td>
+
+              <td class="text-center">
+                {% comment %} <div class="dropdown">
+                  <button class="btn btn-sm btn-icon" type="button"
+                          data-bs-toggle="dropdown"
+                          data-bs-placement="top"
+                          title="অ্যাকশন"
+                          data-bs-toggle="tooltip"
+                          aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <button class="dropdown-item btn-edit-progress"
+                              data-app-id="{{ application.id }}"
+                              data-status="{{ application.admin_status_raw }}"
+                              data-message="{{ application.admin_message|escapejs }}">
+                        আবেদন স্ট্যাটাস
+                      </button>
+                    </li>
+                    <li>
+                      <button class="dropdown-item btn-edit-discount"
+                              data-app-id="{{ application.id }}"
+                              data-discount="{{ application.discount }}">
+                        ডিসকাউন্ট
+                      </button>
+                    </li>
+                  </ul>
+                </div> {% endcomment %}
+
+                      <button class="btn btn-sm btn-primary btn-edit-progress"
+                              data-app-id="{{ application.id }}"
+                              data-status="{{ application.admin_status_raw }}"
+                              data-message="{{ application.admin_message|escapejs }}">
+                        আবেদন স্ট্যাটাস
+                      </button>
+
+                      <button class="btn btn-sm btn-primary btn-edit-discount m-2"
+                              data-app-id="{{ application.id }}"
+                              data-discount="{{ application.discount }}">
+                        ডিসকাউন্ট
+                      </button>
+
+              </td>
+              <td>{{ application.service.name }}</td>
+              <td>{{ application.service.price|intcomma }} ৳</td>
+              <td>{{ application.discount|intcomma }} ৳</td>
+              <td>{{ application.amount_paid|intcomma }} ৳</td>
+              <td>{{ application.balance|intcomma }} ৳</td>
+              <td>{{ application.user.phone_number }}</td>
+              <td>{{ application.message }}</td>
+              <td>{{ application.admin_status }}</td>
+              <td>{{ application.admin_message }}</td>
+              <td>{{ application.applied_at|date:'j M, Y' }}</td>
+              {% comment %} <td>
+                <button class="btn btn-sm btn-warning btn-edit-progress" data-app-id="{{ application.id }}" data-status="{{ application.admin_status_raw }}" data-message="{{ application.admin_message|escapejs }}">Edit Status</button>
+                <button class="btn btn-sm btn-primary mt-2 btn-edit-discount" data-app-id="{{ application.id }}" data-discount="{{ application.discount }}">Edit Discount</button>
+              </td> {% endcomment %}
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="12" class="text-center">No applications found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if service_applications.has_other_pages %}
+      <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-3">
+          {% if service_applications.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ service_applications.previous_page_number }}&search={{ search_query }}&service={{ service_filter }}">&laquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">&laquo;</span>
+            </li>
+          {% endif %}
+
+          {% for num in service_applications.paginator.page_range %}
+            {% if service_applications.number == num %}
+              <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}&service={{ service_filter }}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if service_applications.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ service_applications.next_page_number }}&search={{ search_query }}&service={{ service_filter }}">&raquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">&raquo;</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+
+  <!-- Modal -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="edit-progress-modal">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title">Edit Progress</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form method="POST" id="progress-edit-form">
+        {% csrf_token %}
+        <input type="hidden" name="application_id" id="progress_application_id" />
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select name="status" id="progress_status" class="form-select" required>
+            {% for code, label in progress_status_choices %}
+              <option value="{{ code }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Message</label>
+          <textarea name="message" id="progress_message" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">Update</button>
+          <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Discount Edit Modal -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="edit-discount-modal">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title">Edit Discount</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form method="POST" id="discount-edit-form">
+        {% csrf_token %}
+        <input type="hidden" name="application_id" id="discount_application_id" />
+
+        <div class="mb-3">
+          <label class="form-label">Discount (৳)</label>
+          <input type="number" name="discount" id="discount_input" class="form-control" min="0" required />
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">Update Discount</button>
+          <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+  </script>
+{% endblock %}

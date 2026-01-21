@@ -1,0 +1,746 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="JP Trust Global is your trusted travel agency offering top-rated travel services, tour packages, and personalized travel solutions. Explore destinations, book flights, hotels, and enjoy seamless travel experiences for business and leisure." />
+    <meta name="keywords" content="travel agency, travel services, tour packages, flight booking, hotel booking, business travel, leisure travel, JP Trust Global, personalized travel, travel solutions, vacation, tourism, travel deals" />
+    <meta name="author" content="JP Trust Global" />
+    <meta name="robots" content="index, follow" />
+    <title>{{site_settings.name|default:""}} | Home</title>
+
+    <!-- 🔗 Open Graph Meta Tags for Facebook & Social Media -->
+    <meta property="og:title" content="JP Trust Global | Trusted Travel Partner" />
+    <meta property="og:description" content="Top-rated travel services, tour packages, flights, hotels & more. Explore the world with JP Trust Global." />
+    <meta property="og:image" content="{{ site_settings.logo.url }}" />
+    <meta property="og:url" content="https://jptrustglobal.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JP Trust Global" />
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{{ site_settings.favicon.url }}" type="image/x-icon" />
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/testimonials.css' %}" />
+
+    <!-- Bootstrap 5 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/8d42debf19.js" crossorigin="anonymous"></script>
+
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- swipper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- aos cdn -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
+
+  <body id="smooth-wrapper">
+    <header id="topNav" class="navbar-all">
+      <!-- header html start -->
+
+      <div class="bottom-header">
+        <button class="menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="মেনু" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="logo-container">
+          <a href="{% url 'home' %}"><img class="logo" src="{{ site_settings.logo.url }}" alt="logo" /></a>
+        </div>
+        <nav class="menu-container font-poppins">
+          <ul>
+            <li>
+              <a class="menu-item nav_link_active" href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+              <a class="menu-item" href="{% url 'services' %}">Our Services</a>
+            </li>
+
+            <li>
+              <a class="menu-item" href="{% url 'about' %}">About Us</a>
+            </li>
+
+            <li>
+              <a class="menu-item" href="{% url 'contact-home' %}">Contact Us</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="header-btn">
+          {% if user.is_authenticated %}
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Make your CV</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'index' %}">Dashboard</a>
+            <form method="POST" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav_custom_btn_1 d-flex align-items-center">
+                <span class="align-middle">Log Out</span>
+                <i class="ti ti-logout ms-2 ti-14px"></i>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'guest_login' %}" class="nav_custom_btn_1 d-flex align-items-center">Client Login</a>
+            <a href="{% url 'guest_register' %}" class="nav_custom_btn_1 d-flex align-items-center">Register</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Make Your CV</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="collapse mobile-menu navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link nav_link_active" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Our Services</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact-home' %}">Contact Us</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'cv-form-wizard' %}">Make Your CV</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'index' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav_custom_btn_1 w-full">
+                  <span class="align-middle">Log Out</span>
+                  <i class="ti ti-logout ms-2 ti-14px"></i>
+                </button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_login' %}"><button class="nav_custom_btn_1 w-full">Client Login</button></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_register' %}"><button class="nav_custom_btn_1 w-full">Register</button></a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </header>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- কারোসেল অংশ শুরু -->
+    {% comment %} <section class="mb-5 mt-2 carousal-home">
+      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner m-0">
+          <!-- প্রথম স্লাইড -->
+          <div class="carousel-item active" style="background-image: url({% static 'assets/carousal/1.jpg' %});">
+            <div class="carousal-item-container">
+              <div class="carousal-content-header">
+                <h3>ওয়ার্ক ভিসার মাধ্যমে আপনার স্বপ্নের ক্যারিয়ার গড়ুন</h3>
+                <p>Go On TravelDesk আপনাকে দিচ্ছে নির্ভরযোগ্য ও বিশ্বস্ত ওয়ার্ক ভিসা প্রসেসিং এবং বিশেষজ্ঞের পরামর্শ।</p>
+                <a href="{% url 'contact-home' %}" class="button-custom-1">যোগাযোগ করুন</a>
+              </div>
+            </div>
+          </div>
+          <!-- দ্বিতীয় স্লাইড -->
+          <div class="carousel-item" style="background-image: url({% static 'assets/carousal/2.jpg' %});">
+            <div class="carousal-item-container">
+              <div class="carousal-content-header">
+                <h3>স্টুডেন্ট ভিসায় বিশ্বজুড়ে পড়াশোনার সুযোগ</h3>
+                <p>Go On TravelDesk-এর মাধ্যমে আপনার বিদেশে উচ্চশিক্ষার স্বপ্ন পূরণ করুন। আমরা দিচ্ছি দ্রুত ও নির্ভরযোগ্য ভিসা প্রসেসিং সেবা।</p>
+                <a href="{% url 'contact-home' %}" class="button-custom-1">যোগাযোগ করুন</a>
+              </div>
+            </div>
+          </div>
+          <!-- তৃতীয় স্লাইড -->
+          <div class="carousel-item" style="background-image: url({% static 'assets/carousal/3.jpg' %});">
+            <div class="carousal-item-container">
+              <div class="carousal-content-header">
+                <h3>বিশ্বজুড়ে অবিস্মরণীয় ভ্রমণের অভিজ্ঞতা নিন</h3>
+                <p>Go On TravelDesk-এর সাথে আপনার বিদেশ ভ্রমণকে করুন আরও সহজ ও নিরাপদ। আমরা দিচ্ছি সেরা ট্যুর প্যাকেজ এবং নির্ভরযোগ্য সেবা।</p>
+                <a href="{% url 'contact-home' %}" class="button-custom-1">যোগাযোগ করুন</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- পূর্ববর্তী বোতাম -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">পূর্ববর্তী</span>
+        </button>
+        <!-- পরবর্তী বোতাম -->
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">পরবর্তী</span>
+        </button>
+      </div>
+    </section> {% endcomment %}
+
+    {% comment %}Dynamic Carousel{% endcomment %}
+    <section class="mb-5 mt-2 carousal-home">
+      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner m-0">
+          {% if slider_data.carousel_1 %}
+            <div class="carousel-item active" style="background-image: url({{ slider_data.carousel_1.url }});">
+              <div class="carousal-item-container">
+                <div class="carousal-content-header">
+                  <h3>{{ slider_data.carousel_1_heading }}</h3>
+                  <p>{{ slider_data.carousel_1_text }}</p>
+                  {% if slider_data.carousel_1_button_link %}
+                    <a href="{{ slider_data.carousel_1_button_link }}" class="button-custom-1">Contact Us</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if slider_data.carousel_2 %}
+            <div class="carousel-item" style="background-image: url({{ slider_data.carousel_2.url }});">
+              <div class="carousal-item-container">
+                <div class="carousal-content-header">
+                  <h3>{{ slider_data.carousel_2_heading }}</h3>
+                  <p>{{ slider_data.carousel_2_text }}</p>
+                  {% if slider_data.carousel_2_button_link %}
+                    <a href="{{ slider_data.carousel_2_button_link }}" class="button-custom-1">Contact Us</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if slider_data.carousel_3 %}
+            <div class="carousel-item" style="background-image: url({{ slider_data.carousel_3.url }});">
+              <div class="carousal-item-container">
+                <div class="carousal-content-header">
+                  <h3>{{ slider_data.carousel_3_heading }}</h3>
+                  <p>{{ slider_data.carousel_3_text }}</p>
+                  {% if slider_data.carousel_3_button_link %}
+                    <a href="{{ slider_data.carousel_3_button_link }}" class="button-custom-1">Contact Us</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Prev</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- কারোসেল অংশ শেষ -->
+
+    <!-- video section start -->
+    <section class="max-width-site-1 category-section">
+      <div class="category-heading font-poppins" data-aos="fade-down" data-aos-duration="800">
+        <h1>Trending Videos</h1>
+        <p>{{ site_settings.trending }}</p>
+      </div>
+      <div class="container py-5">
+        {% comment %} <div class="row g-4">
+          <!-- Video Card 1 -->
+          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="800">
+            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
+                <g>
+                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
+                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
+                </g>
+              </svg>
+              <div class="card-body">
+                <p class="video-title">ফ্লাইট বুকিং সহজ পদ্ধতি</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video Card 2 -->
+          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="800">
+            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
+                <g>
+                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
+                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
+                </g>
+              </svg>
+              <div class="card-body">
+                <p class="video-title">ভিসা সহায়তা ও প্রয়োজনীয় তথ্য</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video Card 3 -->
+          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="800">
+            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
+                <g>
+                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
+                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
+                </g>
+              </svg>
+              <div class="card-body">
+                <p class="video-title">সেরা ট্যুর প্যাকেজ বাছাই করুন</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video Card 4 -->
+          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800">
+            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
+                <g>
+                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
+                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
+                </g>
+              </svg>
+              <div class="card-body">
+                <p class="video-title">হোটেল বুকিং টিপস ও ট্রিকস</p>
+              </div>
+            </div>
+          </a>
+        </div> {% endcomment %}
+
+        {% comment %}Dynamic{% endcomment %}
+        <div class="row g-4">
+          {% for trending in global_trending|slice:':4' %}
+            <a href="{{ trending.link }}" target="_blank" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00" data-aos-duration="800">
+              <div class="card video-card bg-dark text-white border-0 rounded-3 overflow-hidden position-relative shadow"
+                style="background-image: url('{% if trending.image %}{{ trending.image.url }}{% else %}{% static 'assets/services/default.jpg' %}{% endif %}'); background-size: cover; background-position: center; height: 220px;">
+                <!-- Don't change the SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
+                  <g>
+                    <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
+                    <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
+                  </g>
+                </svg>
+                <div class="card-body">
+                  <p class="video-title">{{ trending.name }}</p>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+          <div class="text-center mt-5">
+            {% comment %} <a href="{% url 'video_home' %}" class="btn btn-outline-primary">Load more ...</a> {% endcomment %}
+            <a href="{% url 'video_home' %}" class="btn btn-primary" type="button" disabled>
+              See More
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- video section end -->
+    <!-- categories part start -->
+    <section class="light-bg-1">
+      <div class="max-width-site-1 category-section">
+        <div class="category-heading font-poppins" data-aos="fade-down" data-aos-duration="800">
+          <h1>Our Services</h1>
+          <p>{{ site_settings.service }}</p>
+        </div>
+
+        <div class="category-container">
+          {% for service in global_services|slice:':5' %}
+            <a href="{% url 'services' %}#{{ service.name|slugify }}" class="category-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+              <div class="category-card-image">
+                {% if service.image %}
+                  <img src="{{ service.image.url }}" alt="{{ service.name }}" />
+                {% else %}
+                  <img src="{% static 'assets/icone/default.png' %}" alt="No Image" />
+                {% endif %}
+              </div>
+              <div class="category-card-title">
+                <h1>{{ service.name }}</h1>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- categories part end -->
+
+    {% comment %}Team Section{% endcomment %}
+
+    <!-- সিভি তৈরি সেকশন শুরু -->
+    <section class="max-width-site-1 category-section">
+      <div class="container-fluid goal pt-5 h-100">
+        <div class="container pt-5 h-100">
+          <div class="row flex-column-reverse flex-lg-row g-5 h-100 align-items-center">
+            <!-- বাম দিকের লেখা -->
+            <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out">
+              <div class="goal-content">
+                <h1 class="mb-4 cv-header" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">{{ cv.title }}</h1>
+                <p class="mb-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">{{ cv.title_d }}</p>
+
+                <!-- বৈশিষ্ট্য ১ -->
+                <div class="cv-features" data-aos="zoom-in" data-aos-delay="500" data-aos-duration="700">
+                  <div>
+                    <span>
+                      {% comment %} <i class="fa-solid fa-file-lines"></i> {% endcomment %}
+                      {% if cv.img1 %}
+                        <img src="{{ cv.img1.url }}" class="img-fluid" alt="CV Image 1" />
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="cv-features-col-flex">
+                    <h4>{{ cv.title1 }}</h4>
+                    <p>{{ cv.des1 }}</p>
+                  </div>
+                </div>
+
+                <!-- বৈশিষ্ট্য ২ -->
+                <div class="cv-features" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="700">
+                  <div>
+                    <span>
+                      {% comment %} <i class="fa-solid fa-briefcase"></i> {% endcomment %}
+                      {% if cv.img2 %}
+                        <img src="{{ cv.img2.url }}" class="img-fluid" alt="CV Image 2" />
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="cv-features-col-flex">
+                    <h4>{{ cv.title2 }}</h4>
+                    <p>{{ cv.des2 }}</p>
+                  </div>
+                </div>
+
+                <div class="ms-1 mt-1" data-aos="fade-up" data-aos-delay="700" data-aos-duration="700">
+                  <a href="{% url 'cv-form-wizard' %}" class="btn-banner"><span>Make Your CV</span></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- ডান দিকের ভিডিও -->
+            <div class="col-lg-6 h-100 d-flex align-items-center" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out">
+              <div class="w-100">
+                <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg h-100">
+                  <iframe src="{{ cv.link }}" title="Make Your CV" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="h-100 w-100"></iframe>
+                  {% comment %} <iframe src="https://www.youtube-nocookie.com/embed/XJ7bYdjKDcA?si=2n-ByAFQ9q7H-rrd" title="Make Your CV" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="h-100 w-100"></iframe> {% endcomment %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- সিভি তৈরি সেকশন শেষ -->
+
+    <!-- কেন আমাদের বেছে নিবেন অংশ শুরু -->
+    <section class="light-bg-1">
+      <div class="max-width-site-1 category-section py-10">
+        <div class="category-heading font-poppins text-center mb-8" data-aos="fade-down" data-aos-duration="900">
+          <h1 class="text-3xl font-bold text-[#1f2937]">Why Chose Us?</h1>
+        </div>
+
+        <div class="about-us-container grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <!-- Left Image -->
+          <div class="about-us-img-container box flex justify-center" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="{{ choose.image.url }}" alt="Why Chose Us" class="max-w-md" loading="lazy" />
+          </div>
+
+          <!-- Right Cards -->
+          <div class="about-us-grid gap-6">
+            <!-- Card 1 -->
+            <div class="card-choose-us text-center p-4 rounded-xl bg-white" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                <img src="{% static 'assets/icone/professional.png' %}" alt="Expert Team" class="w-16 h-16 mb-4" loading="lazy" />
+                <h3 class="text-lg font-semibold">Expert Travel <br /> Advisors</h3>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card-choose-us text-center p-4 rounded-xl bg-white" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                <img src="{% static 'assets/icone/support.png' %}" alt="24/7 Support" class="w-16 h-16 mb-4" loading="lazy" />
+                <h3 class="text-lg font-semibold">24/7 <br /> Customer Support</h3>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-choose-us text-center p-4 rounded-xl bg-white" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+                <img src="{% static 'assets/icone/trophy.png' %}" alt="Best Deals" class="w-16 h-16 mb-4" loading="lazy" />
+                <h3 class="text-lg font-semibold">Best Price <br /> Guarantee</h3>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card-choose-us text-center p-4 rounded-xl bg-white" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+                <img src="{% static 'assets/icone/optimize.png' %}" alt="Customized Trip" class="w-16 h-16 mb-4" loading="lazy" />
+                <h3 class="text-lg font-semibold">{{ choose.des4 }}</h3>
+            </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- আমাদের টেক টিম অংশ শুরু -->
+    <section class="max-width-site-1 category-section">
+      <div class="container-fluid">
+        <div class="testimonial-header font-poppins">
+          <h1>Our Team</h1>
+          <p>A team of skilled and experienced professionals</p>
+        </div>
+
+        <div class="tech-team-grid">
+          {% for team in teams %}
+            <div class="tech-team-card">
+              <div class="tech-team-image">
+                {% if team.image %}
+                  <img src="{{ team.image.url }}" alt="{{ team.name }}" loading="lazy" />
+                {% else %}
+                  <img src="{% static 'images/default-avatar.png' %}" alt="{{ team.name }}" loading="lazy" />
+                {% endif %}
+              </div>
+              <div class="tech-team-info">
+                <h4>{{ team.name }}</h4>
+                <p>{{ team.designation }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- আমাদের টেক টিম অংশ শেষ -->
+
+    <!-- টেস্টিমোনিয়াল অংশ শুরু -->
+    <section class="light-bg-1 testimonial-section">
+      <div class="max-width-site-1">
+        <div class="container-fluid">
+          <div class="testimonial-header font-poppins">
+            <h1>Our Success Stories</h1>
+            <p>Hear from our valued clients about their experiences with our services</p>
+          </div>
+
+          {% load custom_filters %}
+
+          <div class="testimonial-swiper-container">
+            <div class="swiper testimonialSwiper">
+              <div class="swiper-wrapper">
+                {% for testimonial in testimonials %}
+                  <div class="swiper-slide">
+                    <div class="testimonial-card">
+                      <div class="testimonial-author-image">
+                        {% if testimonial.image %}
+                          <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" />
+                        {% else %}
+                          <img src="{% static 'img/default-avatar.svg' %}" alt="No Image" />
+                        {% endif %}
+                        <div class="author-overlay">
+                          <h4>{{ testimonial.name }}</h4>
+                          <p>{{ testimonial.description }}</p>
+                        </div>
+                      </div>
+                      <div class="testimonial-content">
+                        <div class="quote-icon">
+                          <i class="fa-solid fa-quote-left"></i>
+                        </div>
+                        {% comment %} <div class="testimonial-rating">
+                          {% for i in testimonial.ratings|star_range %}
+                            <i class="fa-solid fa-star"></i>
+                          {% endfor %}
+                        </div> {% endcomment %}
+                      </div>
+                    </div>
+                  </div>
+                {% empty %}
+                  <div class="text-center w-100">No Testimonials Found!</div>
+                {% endfor %}
+              </div>
+
+              <!-- Navigation buttons -->
+              <div class="swiper-button-next testimonial-btn-next"></div>
+              <div class="swiper-button-prev testimonial-btn-prev"></div>
+
+              <!-- Pagination -->
+              <div class="swiper-pagination testimonial-pagination"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- টেস্টিমোনিয়াল অংশ শেষ -->
+
+    <section class="max-width-site-1 mt-60 category-section" data-aos="fade-up">
+      <div class="container-fluid">
+        <div class="service-header font-poppins" data-aos="fade-down">
+          <h1>সর্বশেষ নোটিশ ও ব্লগ</h1>
+          <img class="service-title-image d-none d-sm-inline" src="{% static 'assets/section/latest-section.png' %}" alt="latest news" />
+        </div>
+
+        <div class="service-container">
+          {% for notice in public_notices|slice:':4' %}
+            <div class="blog_card" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'0'|add:'0' }}" data-aos-duration="800" data-aos-easing="ease-in-out" data-aos-once="true">
+              <img src="{% if notice.image %}
+                  {{ notice.image.url }}
+                {% else %}
+                  {% static 'assets/services/default.jpg' %}
+                {% endif %}"
+                alt="{{ notice.title }}" />
+
+              <h1>{{ notice.title|default:'Notice' }}</h1>
+
+              <p class="service-paragraph">
+                {{ notice.message|truncatechars:120 }}
+                {% comment %} {{ notice.message|truncatechars:100 }} {% endcomment %}
+              </p>
+
+              <div class="blog_details_btn">
+                {% if notice.file %}
+                  <a href="{{ notice.file.url }}" target="_blank" download><i class="fa-solid fa-download"></i></a>
+                {% else %}
+
+                {% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <p class="text-muted">No Notice and blogs Found!</p>
+          {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+          <a href="{% url 'public_notices' %}" class="btn btn-primary" type="button" disabled>
+            See More
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- floating menu -->
+    <!-- floating menu -->
+    <div class="mobile_float_menu">
+      {% if user.is_authenticated %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+
+        <a class="float_menu" href="{% url 'index' %}"><i class="fas fa-chart-line"></i> Dashboard</a>
+
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="float_menu"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+        </form>
+      {% else %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+        <a href="{% url 'guest_register' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Register</a>
+        <a href="{% url 'guest_login' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Login</a>
+      {% endif %}
+    </div>
+
+    <!-- ব্লগ অংশ শেষ -->
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    {% include 'footer.html' %}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const testimonialSwiperElement = document.querySelector('.testimonialSwiper');
+
+        if (!testimonialSwiperElement) return;
+
+        try {
+          const testimonialSwiper = new Swiper('.testimonialSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+              delay: 5000,
+              disableOnInteraction: false
+            },
+            pagination: {
+              el: '.testimonial-pagination',
+              clickable: true,
+              dynamicBullets: true
+            },
+            navigation: {
+              nextEl: '.testimonial-btn-next',
+              prevEl: '.testimonial-btn-prev'
+            },
+            breakpoints: {
+              640: {
+                slidesPerView: 1,
+                spaceBetween: 20
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 30
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 40
+              }
+            },
+            effect: 'slide',
+            speed: 800,
+            grabCursor: true,
+            watchSlidesProgress: true,
+            on: {
+              init: function () {
+                this.slides.forEach((slide, index) => {
+                  slide.style.opacity = '0';
+                  slide.style.transform = 'translateY(50px)';
+                  setTimeout(() => {
+                    slide.style.transition = 'all 0.6s ease';
+                    slide.style.opacity = '1';
+                    slide.style.transform = 'translateY(0)';
+                  }, index * 100);
+                });
+              },
+              slideChange: function () {
+                this.slides.forEach(slide => {
+                  const card = slide.querySelector('.testimonial-card');
+                  if (card) {
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                      card.style.transform = 'scale(1)';
+                    }, 100);
+                  }
+                });
+              }
+            }
+          });
+
+          addTestimonialHoverEffects();
+        } catch (error) {
+          console.warn('Swiper initialization failed:', error);
+        }
+
+        function addTestimonialHoverEffects() {
+          const testimonialCards = document.querySelectorAll('.testimonial-card');
+          testimonialCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+              this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+              this.style.transform = 'translateY(0) scale(1)';
+            });
+          });
+        }
+      });
+    </script>
+
+    <!-- aos script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- custom js -->
+    <script src="{% static 'custom/script.js' %}"></script>
+    {% comment %} <script src="{% static 'custom/testimonials.js' %}"></script> {% endcomment %}
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,351 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Discover our range of travel services at JP Trust Global. We offer expert tour packages, flight and hotel bookings, and personalized travel solutions for business and leisure. Enjoy seamless travel experiences with our trusted agency.">
+    <meta name="keywords"
+        content="travel agency, travel services, tour packages, flight booking, hotel booking, business travel, leisure travel, JP Trust Global, personalized travel, travel solutions, vacation, tourism, travel deals, service page">
+    <meta name="author" content="JP Trust Global">
+    <meta name="robots" content="index, follow">
+    <title>Services | JP Trust Global</title>
+
+
+
+    <link rel="shortcut icon" href="{% static 'assets/logo/favicon.png' %}" type="image/x-icon">
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/service.css' %}">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/8d42debf19.js" crossorigin="anonymous"></script>
+    <!-- google font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- swiper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+     <!-- aos cdn -->
+     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <header id="topNav" class="navbar-all max-width-site">
+        <!-- header html start -->
+
+        <div class="bottom-header">
+            <button class="menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="মেনু"
+                type="button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="logo-container">
+
+                <a href="{% url 'home' %}">
+                    <img class="logo" src="{{ site_settings.logo.url }}" alt="logo">
+                </a>
+
+            </div>
+            <nav class="menu-container font-poppins">
+                <ul>
+                  <li>
+                    <a class="menu-item nav_link_active" href="{% url 'home' %}">Home</a>
+                  </li>
+                  <li>
+                    <a class="menu-item" href="{% url 'services' %}">Our Services</a>
+                  </li>
+
+                  <li>
+                    <a class="menu-item" href="{% url 'about' %}">About Us</a>
+                  </li>
+
+                  <li>
+                    <a class="menu-item" href="{% url 'contact-home' %}">Contact Us</a>
+                  </li>
+                </ul>
+            </nav>
+            <div class="header-btn">
+              {% if user.is_authenticated %}
+                <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Make your CV</a>
+                <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'index' %}">Dashboard</a>
+                <form method="POST" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="nav_custom_btn_1 d-flex align-items-center">
+                    <span class="align-middle">Log Out</span>
+                    <i class="ti ti-logout ms-2 ti-14px"></i>
+                  </button>
+                </form>
+              {% else %}
+                <a href="{% url 'guest_login' %}" class="nav_custom_btn_1 d-flex align-items-center">Client Login</a>
+                <a href="{% url 'guest_register' %}" class="nav_custom_btn_1 d-flex align-items-center">Register</a>
+                <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Make Your CV</a>
+              {% endif %}
+            </div>
+
+        </div>
+        <div class="collapse mobile-menu navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link nav_link_active" href="{% url 'home' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'services' %}">Our Services</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact-home' %}">Contact Us</a>
+              </li>
+              {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav_custom_btn_1 w-full" href="{% url 'cv-form-wizard' %}">Make Your CV</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav_custom_btn_1 w-full" href="{% url 'index' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                  <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav_custom_btn_1 w-full">
+                      <span class="align-middle">Log Out</span>
+                      <i class="ti ti-logout ms-2 ti-14px"></i>
+                    </button>
+                  </form>
+                </li>
+              {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'guest_login' %}"><button class="nav_custom_btn_1 w-full">Client Login</button></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'guest_register' %}"><button class="nav_custom_btn_1 w-full">Register</button></a>
+                </li>
+              {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    {% for service in global_services %}
+      <section id="{{ service.name|slugify }}" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="{% cycle 'banner-service-container' 'banner-service-container-rev' %}" data-aos="zoom-in" data-aos-delay="200">
+          <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+            {% if service.image %}
+              <img class="banner-service-image" src="{{ service.image.url }}" alt="{{ service.name }}">
+            {% else %}
+              <img class="banner-service-image" src="{% static 'assets/services/default.jpg' %}" alt="No image">
+            {% endif %}
+          </div>
+          <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+            <h1>{{ service.name }}</h1>
+            <p>{{ service.description|default:"Description not found!" }}</p>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+
+    <!-- ব্যানার সেকশন শুরু -->
+    {% comment %} <section class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/service.jpg' %}" alt="সর্বশেষ বিভাগ">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>বিশেষজ্ঞ ট্রাভেল সার্ভিস</h1>
+                <p>JP Trust Global এর সাথে নির্বিঘ্ন ভ্রমণ অভিজ্ঞতা উপভোগ করুন। আমরা অফার করি বিশেষজ্ঞ ট্যুর প্যাকেজ,
+                    ফ্লাইট এবং হোটেল বুকিং, এবং ব্যক্তিগতকৃত সমাধান ব্যবসায়িক ও ব্যক্তিগত উভয় ভ্রমণকারীর জন্য।
+                    আপনার পুরো যাত্রাপথ আমাদের উপর ছেড়ে দিন—নির্ভার ও আনন্দদায়ক অভিজ্ঞতার জন্য।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ব্যানার সেকশন শেষ -->
+
+    <!-- ফ্লাইট বুকিং ব্যানার সেকশন শুরু -->
+    <section id="Flight_booking" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container-rev">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="200">
+                <img class="banner-service-image" src="{% static 'assets/services/booking_flight_service.jpg' %}"
+                    alt="ফ্লাইট বুকিং পরিষেবা">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="400">
+                <h1>ফ্লাইট বুকিং পরিষেবা</h1>
+                <p>বিশ্বব্যাপী ফ্লাইটের সেরা ডিল খুঁজে পান। আমরা একটি বিস্তৃত ফ্লাইট বুকিং পরিষেবা প্রদান করি যাতে আপনি
+                    আরামে এবং সাশ্রয়ী মূল্যে গন্তব্যে পৌঁছাতে পারেন।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ফ্লাইট বুকিং ব্যানার সেকশন শেষ -->
+
+    <!-- হোটেল বুকিং ব্যানার সেকশন শুরু -->
+    <section id="Hotel_Booking" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/Flight_Booking.jpg' %}" alt="হোটেল বুকিং পরিষেবা">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>হোটেল বুকিং পরিষেবা</h1>
+                <p>বুটিক হোটেল থেকে বিলাসবহুল রিসোর্ট পর্যন্ত, আপনার ভ্রমণের জন্য উপযুক্ত আবাসন খুঁজে নিন। আমরা সেরা
+                    মূল্যে হোটেলের বিশাল নির্বাচন অফার করি।</p>
+            </div>
+        </div>
+    </section>
+    <!-- হোটেল বুকিং ব্যানার সেকশন শেষ -->
+
+    <!-- ট্যুর প্যাকেজ ব্যানার সেকশন শুরু -->
+    <section id="Tour_Packages" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container-rev">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="200">
+                <img class="banner-service-image" src="{% static 'assets/services/tour_package.png' %}" alt="ট্যুর প্যাকেজ">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="400">
+                <h1>ট্যুর প্যাকেজ</h1>
+                <p>আমাদের কিউরেট করা ট্যুর প্যাকেজগুলি অনন্য এবং স্মরণীয় ভ্রমণের অভিজ্ঞতা প্রদানে ডিজাইন করা হয়েছে।
+                    অ্যাডভেঞ্চার ভ্রমণ থেকে রিলাক্স গেটওয়ে পর্যন্ত, আপনার জন্য উপযুক্ত প্যাকেজ খুঁজে নিন।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ট্যুর প্যাকেজ ব্যানার সেকশন শেষ -->
+
+    <!-- ভিসা সহায়তা ব্যানার সেকশন শুরু -->
+    <section id="Visa_Assistance" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/visa.png' %}" alt="ভিসা সহায়তা">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>ভিসা সহায়তা</h1>
+                <p>ভিসা আবেদন প্রক্রিয়া সহজ করতে আমাদের বিশেষজ্ঞ সহায়তা নিন। আমরা গাইডলাইন ও সহায়তা প্রদান করি যেন
+                    আপনি সঠিকভাবে ও নির্বিঘ্নে আবেদন করতে পারেন।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ভিসা সহায়তা ব্যানার সেকশন শেষ -->
+
+    <!-- ট্রাভেল ইন্স্যুরেন্স ব্যানার সেকশন শুরু -->
+    <section id="Travel_Insurance" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container-rev" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/travel_innsurance.png' %}"
+                    alt="ট্রাভেল ইন্স্যুরেন্স">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>ট্রাভেল ইন্স্যুরেন্স</h1>
+                <p>আমাদের ব্যাপক ভ্রমণ বীমা পরিকল্পনা দিয়ে আপনার যাত্রা সুরক্ষিত করুন। আমরা বিভিন্ন পরিকল্পনা অফার করি
+                    যা অপ্রত্যাশিত ঘটনাগুলো কভার করে এবং আপনাকে মানসিক শান্তি প্রদান করে।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ট্রাভেল ইন্স্যুরেন্স ব্যানার সেকশন শেষ -->
+
+    <!-- গাড়ি ভাড়া ব্যানার সেকশন শুরু -->
+    <section id="Car_Rental" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/car_rent.png' %}" alt="গাড়ি ভাড়া">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>গাড়ি ভাড়া</h1>
+                <p>আমাদের গাড়ি ভাড়া পরিষেবার মাধ্যমে আপনার ভ্রমণের জন্য সঠিক যানবাহন খুঁজে নিন। আমরা প্রতিযোগিতামূলক
+                    মূল্যে বিস্তৃত গাড়ির নির্বাচন অফার করি যাতে আপনি নিজের গতিতে আপনার গন্তব্য অন্বেষণ করতে পারেন।</p>
+            </div>
+        </div>
+    </section>
+    <!-- গাড়ি ভাড়া ব্যানার সেকশন শেষ -->
+
+    <!-- ক্রুজ বুকিং ব্যানার সেকশন শুরু -->
+    <section id="Cruise_Booking" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container-rev" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/cruise_booking.jpg' %}" alt="ক্রুজ বুকিং">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>ক্রুজ বুকিং</h1>
+                <p>আমাদের ক্রুজ বুকিং পরিষেবার মাধ্যমে একটি স্মরণীয় সমুদ্র যাত্রায় অংশ নিন। শীর্ষস্থানীয় ক্রুজ লাইনের
+                    বিলাসবহুল সুবিধাগুলিসহ আকর্ষণীয় গন্তব্য ঘুরে দেখুন।</p>
+            </div>
+        </div>
+    </section>
+    <!-- ক্রুজ বুকিং ব্যানার সেকশন শেষ -->
+
+    <!-- কর্পোরেট ট্রাভেল ব্যানার সেকশন শুরু -->
+    <section id="Corporate_Travel" class="max-width-site-1 category-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="banner-service-container" data-aos="zoom-in" data-aos-delay="200">
+            <div class="banner-service-header font-poppins" data-aos="fade-right" data-aos-delay="400">
+                <img class="banner-service-image" src="{% static 'assets/services/Corporate_Travel.jpg' %}" alt="কর্পোরেট ট্রাভেল">
+            </div>
+            <div class="banner-service-body" data-aos="fade-left" data-aos-delay="600">
+                <h1>কর্পোরেট ভ্রমণ</h1>
+                <p>আমাদের কর্পোরেট ভ্রমণ সমাধানের মাধ্যমে আপনার ব্যবসায়িক সফর সহজ করুন। আমরা দক্ষ বুকিং পরিষেবা,
+                    ট্র্যাভেল ম্যানেজমেন্ট টুলস এবং আপনার প্রতিষ্ঠানের জন্য কাস্টমাইজড পরিকল্পনা প্রদান করি।</p>
+            </div>
+        </div>
+    </section> {% endcomment %}
+    <!-- কর্পোরেট ট্রাভেল ব্যানার সেকশন শেষ -->
+
+    <!-- floating menu -->
+    <div class="mobile_float_menu">
+      {% if user.is_authenticated %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active">
+          <i class="fas fa-house"></i> Home
+        </a>
+
+        <a class="float_menu" href="{% url 'index' %}">
+          <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="float_menu">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </button>
+        </form>
+
+      {% else %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+        <a href="{% url 'guest_register' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Register</a>
+        <a href="{% url 'guest_login' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Login</a>
+      {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+   <!-- aos script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+     <!-- custom js -->
+    <script src="{% static 'custom/script.js' %}"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        let swiper = new Swiper(".mySwiper", {
+            spaceBetween: 30,
+            centeredSlides: true,
+            autoplay: {
+                delay: 2000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+
+        });
+    </script>
+</body>
+
+</html>

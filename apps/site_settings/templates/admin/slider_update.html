@@ -1,0 +1,102 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}
+Sliders
+{% endblock %}
+
+{% block content %}
+<div class="">
+  <h4 class="mb-4">স্লাইডার কনফিগারেশন</h4>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="card p-4">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <!-- Slide 1 -->
+    <h5 class="mt-4">স্লাইড ১</h5>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="id_carousel_1">ইমেজ</label><br>
+        {% if form.carousel_1.value %}
+          <img src="{{ form.carousel_1.value.url }}" alt="Slide 1" class="mb-2 rounded" width="100"><br>
+        {% endif %}
+        {{ form.carousel_1 }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_1_heading.label_tag }}<br>
+        {{ form.carousel_1_heading }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_1_text.label_tag }}<br>
+        {{ form.carousel_1_text }}
+      </div>
+      <div class="col-md-12 mb-3">
+        {{ form.carousel_1_button_link.label_tag }}<br>
+        {{ form.carousel_1_button_link }}
+      </div>
+    </div>
+    <hr>
+
+    <!-- Slide 2 -->
+    <h5 class="mt-4">স্লাইড ২</h5>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="id_carousel_2">ইমেজ</label><br>
+        {% if form.carousel_2.value %}
+          <img src="{{ form.carousel_2.value.url }}" alt="Slide 2" class="mb-2 rounded" width="100"><br>
+        {% endif %}
+        {{ form.carousel_2 }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_2_heading.label_tag }}<br>
+        {{ form.carousel_2_heading }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_2_text.label_tag }}<br>
+        {{ form.carousel_2_text }}
+      </div>
+      <div class="col-md-12 mb-3">
+        {{ form.carousel_2_button_link.label_tag }}<br>
+        {{ form.carousel_2_button_link }}
+      </div>
+    </div>
+    <hr>
+
+    <!-- Slide 3 -->
+    <h5 class="mt-4">স্লাইড ৩</h5>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="id_carousel_3">ইমেজ</label><br>
+        {% if form.carousel_3.value %}
+          <img src="{{ form.carousel_3.value.url }}" alt="Slide 3" class="mb-2 rounded" width="100"><br>
+        {% endif %}
+        {{ form.carousel_3 }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_3_heading.label_tag }}<br>
+        {{ form.carousel_3_heading }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.carousel_3_text.label_tag }}<br>
+        {{ form.carousel_3_text }}
+      </div>
+      <div class="col-md-12 mb-3">
+        {{ form.carousel_3_button_link.label_tag }}<br>
+        {{ form.carousel_3_button_link }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">সংরক্ষণ করুন</button>
+  </form>
+</div>
+{% endblock %}

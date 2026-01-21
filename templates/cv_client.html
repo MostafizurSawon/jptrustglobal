@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cv.full_name }} - Resume</title>
+    <style>
+        /* --- General Setup & Font --- */
+        /* Using a common system font stack to avoid external dependencies */
+        body.cv-body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Background for the page behind the resume */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: #374151; /* Default text color */
+        }
+
+        /* --- Main Resume Container --- */
+        .cv-container {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            min-height: 1100px;
+            margin: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* --- Left Sidebar --- */
+        .cv-sidebar {
+            background-color: #1f2937;
+            color: #ffffff;
+            width: 35%;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Yellow banner at the top of the sidebar */
+        .cv-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 160px;
+            background-color: #facc15;
+            z-index: 0;
+        }
+
+        /* Profile Picture Styling */
+        .cv-profile-image-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            margin-top: 40px;
+        }
+
+        .cv-profile-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid #facc15;
+            object-fit: cover;
+        }
+
+        .cv-sidebar-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .cv-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #facc15;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .cv-title {
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-top: 0.25rem;
+        }
+
+        /* Sidebar Section Styling */
+        .cv-sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .cv-sidebar-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .cv-sidebar-section-title h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #facc15;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid #facc15;
+        }
+
+        .cv-sidebar-icon {
+            width: 24px;
+            height: 24px;
+            fill: #facc15;
+        }
+
+        /* Contact Info */
+        .cv-contact-info p {
+            margin: 0.5rem 0;
+        }
+        .cv-contact-info span {
+            display: block;
+            color: #d1d5db; /* Lighter text for labels */
+            font-size: 0.8rem;
+        }
+
+        /* Unordered list styling (for Languages) */
+        .cv-sidebar-list {
+            list-style: none; /* Remove default bullets */
+            padding: 0;
+            margin: 0;
+        }
+        .cv-sidebar-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Right Main Content Area --- */
+        .cv-main {
+            background-color: #ffffff;
+            width: 65%;
+            padding: 3rem;
+        }
+
+        .cv-main-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .cv-main-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .cv-main-section-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+        }
+
+        .cv-main-section-title h2,
+        .cv-main-section-title h3 { /* Allow h3 for consistency */
+            margin: 0;
+            font-size: 1.5rem;
+            color: #111827;
+        }
+
+        .cv-main-icon-wrapper {
+            background-color: #facc15;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cv-main-icon {
+            width: 20px;
+            height: 20px;
+            fill: #1f2937;
+        }
+
+        .cv-profile-summary, .cv-main-paragraph {
+            color: #4b5563;
+        }
+
+        /* Skills List */
+        .cv-main-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .cv-main-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .cv-main-list li::before {
+            content: '▪';
+            position: absolute;
+            left: 0;
+            color: #facc15;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* --- TABLE STYLING (FIXED) --- */
+        .cv-table {
+            width: 100%;
+            margin-top: 1.5rem;
+            border-collapse: collapse; /* Merges cell borders for a clean grid */
+            font-size: 13px;
+        }
+
+        .cv-table td {
+            border: 1px solid #e5e7eb; /* Light grey border for each cell */
+            padding: 0.75rem;
+            vertical-align: top;
+        }
+
+        /* Style the label cells (1st and 3rd column) for better readability */
+        .cv-table td:nth-child(odd) {
+            font-weight: 500;
+            background-color: #f9fafb; /* Very light grey for label columns */
+            width: 25%; /* Give a bit of structure to the layout */
+        }
+
+        /* Style the value cells (2nd and 4th column) */
+        .cv-table td:nth-child(even) {
+            color: #4b5563;
+        }
+
+    </style>
+</head>
+<body class="cv-body">
+  <div class="cv-container">
+    <aside class="cv-sidebar">
+      <div class="cv-profile-image-wrapper">
+        {% if cv.profile_picture %}
+          <img src="{{ cv.profile_picture.url }}" alt="Photo of {{ cv.full_name }}" class="cv-profile-image">
+        {% endif %}
+      </div>
+      <header class="cv-sidebar-header">
+        <h1 class="cv-name">{{ cv.full_name }}</h1>
+        <p class="cv-title">{{ cv.current_job_status }}</p>
+      </header>
+
+      <section class="cv-sidebar-section">
+        <div class="cv-sidebar-section-title">
+          <svg class="cv-sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+          <h3>Contact</h3>
+        </div>
+        <div class="cv-contact-info">
+          <p><span>Email</span>{{ cv.email }}</p>
+          <p><span>Phone</span>{{ cv.fathers_mobile }}</p>
+        </div>
+      </section>
+
+      <section class="cv-sidebar-section">
+        <div class="cv-sidebar-section-title">
+          <svg class="cv-sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.87,15.43L11,13.56L9.13,15.43L8,14.3L9.87,12.43L8,10.56L9.13,9.43L11,11.3L12.87,9.43L14,10.56L12.13,12.43L14,14.3M19.34,12.43C19.34,12.43 19.34,12.43 19.34,12.43C19.34,16.57 15.75,20 11.5,20C7.25,20 3.66,16.57 3.66,12.43C3.66,8.28 7.25,4.86 11.5,4.86C12.7,4.86 13.85,5.16 14.88,5.7C15.3,5.92 15.6,6.44 15.39,6.88L14.5,8.5C14.3,8.91 13.79,9.08 13.38,8.87C12.78,8.56 12.16,8.36 11.5,8.36C9.18,8.36 7.16,10.19 7.16,12.43C7.16,14.67 9.18,16.5 11.5,16.5C13.82,16.5 15.84,14.67 15.84,12.43C15.84,11.77 15.64,11.16 15.33,10.62C15.12,10.21 15.29,9.7 15.7,9.5L17.33,8.61C17.77,8.39 18.29,8.59 18.5,9C19.04,9.95 19.34,11.14 19.34,12.43Z" /></svg>
+          <h3>Languages</h3>
+        </div>
+        <ul class="cv-sidebar-list">
+          <li>{{ cv.language }}</li>
+        </ul>
+      </section>
+
+      <section class="cv-sidebar-section">
+        <div class="cv-sidebar-section-title">
+          <<svg class="cv-sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
+          <h3>Present Address</h3>
+        </div>
+        <div class="cv-contact-info">
+          <p><span>Current</span>{{ cv.current_address }}</p>
+        </div>
+      </section>
+
+      <section class="cv-sidebar-section">
+        <div class="cv-sidebar-section-title">
+          <svg class="cv-sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
+          <h3>Permanent Address</h3>
+        </div>
+        <div class="cv-contact-info">
+          <p><span>Permanent</span>{{ cv.permanent_address }}</p>
+        </div>
+      </section>
+    </aside>
+
+    <main class="cv-main">
+      <section class="cv-main-section">
+        <div class="cv-main-section-title">
+          <div class="cv-main-icon-wrapper"><svg class="cv-main-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg></div>
+          <h3>About Me</h3>
+        </div>
+        <p class="cv-main-paragraph">{{ cv.bio|linebreaksbr }}</p>
+        <table class="cv-table">
+          <tr><td>Full Name (BN):</td><td>{{ cv.full_name_bn }}</td><td>Blood Group:</td><td>{{ cv.blood_group }}</td></tr>
+          <tr><td>Date of Birth:</td><td>{{ cv.date_of_birth }}</td><td>Nationality:</td><td>{{ cv.nationality }}</td></tr>
+          <tr><td>NID:</td><td>{{ cv.national_id }}</td><td>Marital Status:</td><td>{{ cv.married }}</td></tr>
+        </table>
+      </section>
+
+      <section class="cv-main-section">
+        <div class="cv-main-section-title">
+          <div class="cv-main-icon-wrapper"><svg class="cv-main-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,17V14H9V17H16M12.5,12A2.5,2.5 0 0,0 15,9.5A2.5,2.5 0 0,0 12.5,7A2.5,2.5 0 0,0 10,9.5A2.5,2.5 0 0,0 12.5,12M18,3H7A2,2 0 0,0 5,5V19A2,2 0 0,0 7,21H18A2,2 0 0,0 20,19V5A2,2 0 0,0 18,3Z" /></svg></div>
+          <h3>Parents Information</h3>
+        </div>
+        <table class="cv-table">
+          <tr><td>Father's Name:</td><td>{{ cv.fathers_name }}</td><td>Mother's Name:</td><td>{{ cv.mothers_name }}</td></tr>
+          <tr><td>Father's Mobile:</td><td>{{ cv.fathers_mobile }}</td><td>Mother's Mobile:</td><td>{{ cv.mothers_mobile }}</td></tr>
+          <tr><td>Father's NID:</td><td>{{ cv.fathers_nid }}</td><td>Mother's NID:</td><td>{{ cv.mothers_nid }}</td></tr>
+        </table>
+      </section>
+
+      <section class="cv-main-section">
+        <div class="cv-main-section-title">
+          <div class="cv-main-icon-wrapper"><svg class="cv-main-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.36,3L12,3.3C10.7,4.35 9.85,5.22 9.2,6C8.55,6.78 8,7.5 8,8.5C8,9.04 8.2,9.5 8.53,9.88C8.87,10.26 9.35,10.5 10,10.5C10.7,10.5 11.2,10.23 11.6,9.7L12,9.26L12.4,9.7C12.8,10.23 13.3,10.5 14,10.5C14.65,10.5 15.13,10.26 15.47,9.88C15.8,9.5 16,9.04 16,8.5C16,7.5 15.45,6.78 14.8,6C14.15,5.22 13.3,4.35 12,3.3L11.64,3H12.36M12,2A1,1 0 0,1 13,3C14.27,4.03 15.15,4.87 15.77,5.64C16.4,6.4 17,7.3 17,8.5A2.5,2.5 0 0,1 14.5,11A2.5,2.5 0 0,1 12,8.5A2.5,2.5 0 0,1 9.5,11A2.5,2.5 0 0,1 7,8.5C7,7.3 7.6,6.4 8.23,5.64C8.85,4.87 9.73,4.03 11,3A1,1 0 0,1 12,2M5,13L8,16L11.5,12.5L13,14L18,9L21,12V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V13A2,2 0 0,1 5,13Z" /></svg></div>
+          <h3>Skills</h3>
+        </div>
+        <ul class="cv-main-list">
+          {{ cv.skills }}
+        </ul>
+      </section>
+
+      <section class="cv-main-section">
+        <div class="cv-main-section-title">
+          <div class="cv-main-icon-wrapper"><svg class="cv-main-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.36,3L12,3.3C10.7,4.35 9.85,5.22 9.2,6C8.55,6.78 8,7.5 8,8.5C8,9.04 8.2,9.5 8.53,9.88C8.87,10.26 9.35,10.5 10,10.5C10.7,10.5 11.2,10.23 11.6,9.7L12,9.26L12.4,9.7C12.8,10.23 13.3,10.5 14,10.5C14.65,10.5 15.13,10.26 15.47,9.88C15.8,9.5 16,9.04 16,8.5C16,7.5 15.45,6.78 14.8,6C14.15,5.22 13.3,4.35 12,3.3L11.64,3H12.36M12,2A1,1 0 0,1 13,3C14.27,4.03 15.15,4.87 15.77,5.64C16.4,6.4 17,7.3 17,8.5A2.5,2.5 0 0,1 14.5,11A2.5,2.5 0 0,1 12,8.5A2.5,2.5 0 0,1 9.5,11A2.5,2.5 0 0,1 7,8.5C7,7.3 7.6,6.4 8.23,5.64C8.85,4.87 9.73,4.03 11,3A1,1 0 0,1 12,2M5,13L8,16L11.5,12.5L13,14L18,9L21,12V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V13A2,2 0 0,1 5,13Z" /></svg></div>
+          <h3>Special Skills</h3>
+        </div>
+        <ul class="cv-main-list">
+          {{ cv.special_skills }}
+        </ul>
+      </section>
+
+      <section class="cv-main-section">
+        <div class="cv-main-section-title">
+          <div class="cv-main-icon-wrapper"><svg class="cv-main-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" /></svg></div>
+          <h3>Educational Info</h3>
+        </div>
+        <table class="cv-table">
+          <tr><td>Last Education:</td><td>{{ cv.last_education }}</td><td>Result:</td><td>{{ cv.last_education_result }}</td></tr>
+          <tr><td>Passing Year:</td><td>{{ cv.last_education_passing_year }}</td><td>Job Status:</td><td>{{ cv.current_job_status }}</td></tr>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

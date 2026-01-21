@@ -1,0 +1,266 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Learn more about JP Trust Global, your trusted travel agency for expert tour packages, flight and hotel bookings, and personalized travel solutions. Discover our mission, values, and why travelers choose us for seamless journeys." />
+    <meta name="keywords" content="about JP Trust Global, travel agency, travel services, tour packages, flight booking, hotel booking, business travel, leisure travel, personalized travel, travel solutions, vacation, tourism, travel deals, about us" />
+    <meta name="author" content="JP Trust Global" />
+    <meta name="robots" content="index, follow" />
+    <title>{{site_settings.name|default:""}} | Contact Us</title>
+    <link rel="shortcut icon" href="{{ site_settings.favicon.url }}" type="image/x-icon" />
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/8d42debf19.js" crossorigin="anonymous"></script>
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+    <!-- swipper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- aos cdn -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header id="topNav" class="navbar-all max-width-site">
+      <!-- header html start -->
+
+      <div class="bottom-header">
+        <button class="menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="মেনু" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="logo-container">
+          <a href="{% url 'home' %}"><img class="logo" src="{{ site_settings.logo.url }}" alt="logo" /></a>
+        </div>
+        <nav class="menu-container font-poppins">
+          <ul>
+            <li>
+              <a class="menu-item" href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+              <a class="menu-item" href="{% url 'services' %}">Services</a>
+            </li>
+
+            <li>
+              <a class="menu-item nav_link_active" href="{% url 'about' %}">About Us</a>
+            </li>
+
+            <li>
+              <a class="menu-item" href="{% url 'contact-home' %}">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="header-btn">
+          {% if user.is_authenticated %}
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'index' %}">Dashboard</a>
+            <form method="POST" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav_custom_btn_1 d-flex align-items-center">
+                <span class="align-middle">Log Out</span>
+                <i class="ti ti-logout ms-2 ti-14px"></i>
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'guest_login' %}" class="nav_custom_btn_1 d-flex align-items-center">Client Login</a>
+            <a href="{% url 'guest_register' %}" class="nav_custom_btn_1 d-flex align-items-center">Sign Up</a>
+            <a class="nav_custom_btn_1 d-flex align-items-center" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="collapse mobile-menu navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'services' %}">Services</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link nav_link_active" href="{% url 'about' %}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact-home' %}">Contact</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'cv-form-wizard' %}">Create Your CV</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav_custom_btn_1 w-full" href="{% url 'index' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav_custom_btn_1 w-full">
+                  <span class="align-middle">Log Out</span>
+                  <i class="ti ti-logout ms-2 ti-14px"></i>
+                </button>
+              </form>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_login' %}"><button class="nav_custom_btn_1 w-full">Client Login</button></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'guest_register' %}"><button class="nav_custom_btn_1 w-full">Sign Up</button></a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </header>
+
+    <section class="max-width-site-1 py-5">
+      <!-- Django Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Contact Section Container -->
+      <div class="contact-container row justify-content-md-center g-4">
+        <!-- Left Content -->
+        <div class="left col-lg-6" data-aos="fade-right" data-aos-delay="200" data-aos-duration="800">
+          <h1 class="mb-3" data-aos="fade-up" data-aos-delay="300">Contact Us</h1>
+          <p class="fw-light mb-4" data-aos="fade-up" data-aos-delay="400">To contact, fillup the form.</p>
+
+          <div class="info">
+            {% if site_settings.address %}
+              {% for line in site_settings.address.splitlines %}
+                <p class="d-flex align-items-center gap-2" data-aos="zoom-in" data-aos-delay="500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                  </svg>
+                  {{ line }}
+                </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if site_settings.phone %}
+              <p class="d-flex align-items-center gap-2" data-aos="zoom-in" data-aos-delay="600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
+              </p>
+            {% endif %}
+
+            {% if site_settings.email %}
+              <p class="d-flex align-items-center gap-2" data-aos="zoom-in" data-aos-delay="700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+                <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+              </p>
+            {% endif %}
+          </div>
+          <div class="map-container" style="margin-top: 24px;">
+            <iframe src="{{ site_settings.map_link }}" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            {% comment %} {{ site_settings.map_link }} {% endcomment %}
+          </div>
+        </div>
+
+        <!-- Right Form -->
+        <div class="right col-lg-6" data-aos="fade-left" data-aos-delay="200" data-aos-duration="800">
+          <form method="post" class="text-sm-contact-form" data-aos="fade-up" data-aos-delay="400">
+            {% csrf_token %}
+
+            <!-- Name -->
+            <div class="mb-3" data-aos="fade-up" data-aos-delay="500">
+              <label for="id_name" class="form-label">Your Full Name</label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="alert alert-danger mt-1">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3" data-aos="fade-up" data-aos-delay="600">
+              <label for="id_email" class="form-label">Your Email</label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="alert alert-danger mt-1">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3" data-aos="fade-up" data-aos-delay="700">
+              <label for="id_phone" class="form-label">Your Phone Number</label>
+              {{ form.phone }}
+              {% if form.phone.errors %}
+                <div class="alert alert-danger mt-1">{{ form.phone.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Purpose -->
+            <div class="mb-3" data-aos="fade-up" data-aos-delay="800">
+              <label for="id_purpose" class="form-label">Contact Reason</label>
+              {{ form.purpose }}
+              {% if form.purpose.errors %}
+                <div class="alert alert-danger mt-1">{{ form.purpose.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Message -->
+            <div class="mb-3" data-aos="fade-up" data-aos-delay="900">
+              <label for="id_message" class="form-label">Your Message</label>
+              {{ form.message }}
+              {% if form.message.errors %}
+                <div class="alert alert-danger mt-1">{{ form.message.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-banner w-100" data-aos="fade-up" data-aos-delay="900">Submit</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <!-- floating menu -->
+    <div class="mobile_float_menu">
+      {% if user.is_authenticated %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+
+        <a class="float_menu" href="{% url 'index' %}"><i class="fas fa-chart-line"></i> Dashboard</a>
+
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="float_menu"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+        </form>
+      {% else %}
+        <a href="{% url 'home' %}" class="float_menu float_menu_active"><i class="fas fa-house"></i> Home</a>
+        <a href="{% url 'guest_register' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Sign up</a>
+        <a href="{% url 'guest_login' %}" class="float_menu"><i class="fas fa-sign-in-alt"></i> Login</a>
+      {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- aos script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- custom js -->
+    <script src="{% static 'custom/script.js' %}"></script>
+
+    <!-- custom js -->
+    <script>
+      AOS.init({
+        once: true,
+        easing: 'ease-in-out',
+        mirror: false
+      });
+    </script>
+    <script src="{% static 'script/script.js' %}"></script>
+  </body>
+</html>

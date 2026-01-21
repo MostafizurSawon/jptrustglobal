@@ -1,0 +1,68 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Service Details{% endblock %}
+
+{% block content %}
+
+<section class="bsb-author-2 py-3">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8 col-xxl-7">
+        <div class="card border-light-subtle p-4">
+          <div class="row gy-3 align-items-center">
+
+            <!-- Service Image -->
+            <div class="col-md-4">
+              {% if service.image %}
+                <div class="bsb-hover-image d-block rounded overflow-hidden">
+                  <img class="img-fluid author-avatar bsb-scale bsb-hover-scale-up" loading="lazy" src="{{ service.image.url }}" alt="{{ service.name }}">
+                </div>
+              {% else %}
+                <div class="bg-label-secondary text-center py-5">
+                  <img src="{% static 'img/illustrations/girl-with-laptop.png' %}" height="120" alt="Placeholder">
+                  <p class="text-muted mt-2">No image available</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Service Details -->
+            <div class="col-md-8">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-body-secondary">Service Details</h6>
+                <h3 class="card-title mb-2">{{ service.name }}</h3>
+                <p class="card-text mb-3">{{ service.description }}</p>
+
+                <div class="row mb-3 g-3">
+                  <div class="col-sm-6 d-flex align-items-start">
+                    <span class="me-3 text-primary"><i class="ti ti-currency-dollar ti-lg"></i></span>
+                    <div>
+                      <h6 class="mb-0">${{ service.price }}</h6>
+                      <small class="text-muted">Price</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 d-flex align-items-start">
+                    <span class="me-3 text-{{ service.status|yesno:'success,danger' }}"><i class="ti ti-circle ti-lg"></i></span>
+                    <div>
+                      <h6 class="mb-0 text-capitalize">{{ service.status }}</h6>
+                      <small class="text-muted">Status</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="text-end mt-4">
+                  <a href="{% url 'client_services_list' %}" class="btn btn-primary btn-sm">
+                    <i class="ti ti-arrow-left me-1"></i> Back to Services
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,126 @@
+{
+  "menu": [
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "Dashboard",
+      "slug": "index"
+    },
+    {
+      "name": "CV and Passport",
+      "icon": "menu-icon tf-icons ti ti-id",
+      "slug": "guest-section",
+      "submenu": [
+        {
+          "url": "cv-form-wizard",
+          "name": "Add/Edit Cv",
+          "slug": "cv-form-wizard"
+        },
+        {
+          "url": "guest_cv_detail",
+          "name": "Cv info and print",
+          "slug": "guest_cv_detail"
+        },
+        {
+          "url": "passport_info_create",
+          "name": "Add/Edit Passport Info",
+          "slug": "passport_info_create"
+        },
+        {
+          "url": "passport_info_detail",
+          "name": "Passport Info",
+          "slug": "passport_info_detail"
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "icon": "menu-icon tf-icons ti ti-users-group",
+      "slug": "services",
+      "submenu": [
+        {
+          "url": "service_apply",
+          "name": "Apply Services",
+          "slug": "service_apply"
+        },
+        {
+          "url": "applied_service_apply",
+          "name": "My Apply",
+          "slug": "applied_service_apply"
+        }
+      ]
+    }
+
+  ]
+}
+
+
+
+
+
+
+
+
+{% comment %} {
+  "menu": [
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "Dashboard",
+      "slug": "index"
+    },
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "Do Apply",
+      "slug": "index"
+    },
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "My Applications",
+      "slug": "index"
+    },
+    {
+      "name": "Passport Section",
+      "icon": "menu-icon tf-icons ti ti-id",
+      "slug": "passport-section",
+      "submenu": [
+        {
+          "url": "passport_info_create",
+          "name": "Add Passport Info",
+          "slug": "passport_info_create"
+        },
+        {
+          "url": "passport_info_detail",
+          "name": "See and Edit",
+          "slug": "passport_info_detail"
+        }
+      ]
+    },
+    {
+      "name": "CV Section",
+      "icon": "menu-icon tf-icons ti ti-id",
+      "slug": "guest-section",
+      "submenu": [
+        {
+          "url": "cv-form-wizard",
+          "name": "Add Cv",
+          "slug": "cv-form-wizard"
+        },
+        {
+          "url": "guest_cv_detail",
+          "name": "Cv Print/Edit",
+          "slug": "guest_cv_detail"
+        }
+      ]
+    },
+    {
+      "url": "index",
+      "icon": "menu-icon tf-icons ti ti-home",
+      "name": "My Payments",
+      "slug": "index"
+    }
+
+  ]
+} {% endcomment %}

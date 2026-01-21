@@ -1,0 +1,151 @@
+{% extends layout_path %}
+
+{% load static %}
+
+{% block title %}Create or Update CV{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/bs-stepper/bs-stepper.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
+{% endblock %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
+<script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h4 class="mb-3">Create or Update Your CV</h4>
+
+  <div class="bs-stepper wizard-numbered">
+    <div class="bs-stepper-header">
+      <div class="step{% if current_step == 'step-personal' %} active{% endif %}" data-target="#step-personal">
+        <button type="button" class="step-trigger" id="step-personal-trigger">
+          <span class="bs-stepper-circle">1</span>
+          <span class="bs-stepper-label">Personal Info</span>
+        </button>
+      </div>
+      <div class="line"><i class="ti ti-chevron-right"></i></div>
+      <div class="step{% if current_step == 'step-family' %} active{% endif %}" data-target="#step-family">
+        <button type="button" class="step-trigger" id="step-family-trigger">
+          <span class="bs-stepper-circle">2</span>
+          <span class="bs-stepper-label">Family & Job Info</span>
+        </button>
+      </div>
+      <div class="line"><i class="ti ti-chevron-right"></i></div>
+      <div class="step{% if current_step == 'step-other' %} active{% endif %}" data-target="#step-other">
+        <button type="button" class="step-trigger" id="step-other-trigger">
+          <span class="bs-stepper-circle">3</span>
+          <span class="bs-stepper-label">Skills & Final</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="bs-stepper-content">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="current_step" id="current_step" value="{{ current_step|default:'step-personal' }}" />
+
+        <!-- Step 1: Personal -->
+        <div id="step-personal" class="content stepper-pane{% if current_step == 'step-personal' %} active{% endif %}" role="tabpanel" aria-labelledby="step-personal-trigger">
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.full_name.label_tag }} {{ form.full_name }}</div>
+            <div class="col-md-6">{{ form.full_name_bn.label_tag }} {{ form.full_name_bn }}</div>
+            <div class="col-md-6">{{ form.gender.label_tag }} {{ form.gender }}</div>
+            <div class="col-md-6">{{ form.married.label_tag }} {{ form.married }}</div>
+            <div class="col-md-4">{{ form.email.label_tag }} {{ form.email }}</div>
+            <div class="col-md-4">{{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}</div>
+            <div class="col-md-4">{{ form.national_id.label_tag }} {{ form.national_id }}</div>
+            <div class="col-md-6">{{ form.nationality.label_tag }} {{ form.nationality }}</div>
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-primary btn-next">Next <i class="ti ti-arrow-right ms-1"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 2: Family & Job Info -->
+        <div id="step-family" class="content stepper-pane{% if current_step == 'step-family' %} active{% endif %}" role="tabpanel" aria-labelledby="step-family-trigger">
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.fathers_name.label_tag }} {{ form.fathers_name }}</div>
+            <div class="col-md-6">{{ form.fathers_mobile.label_tag }} {{ form.fathers_mobile }}</div>
+            <div class="col-md-6">{{ form.fathers_nid.label_tag }} {{ form.fathers_nid }}</div>
+            <div class="col-md-6">{{ form.mothers_name.label_tag }} {{ form.mothers_name }}</div>
+            <div class="col-md-6">{{ form.mothers_mobile.label_tag }} {{ form.mothers_mobile }}</div>
+            <div class="col-md-6">{{ form.mothers_nid.label_tag }} {{ form.mothers_nid }}</div>
+            <div class="col-md-6">{{ form.current_address.label_tag }} {{ form.current_address }}</div>
+            <div class="col-md-6">{{ form.is_permanent_same_as_current.label_tag }} {{ form.is_permanent_same_as_current }}</div>
+            <div class="col-md-6">{{ form.permanent_address.label_tag }} {{ form.permanent_address }}</div>
+            <div class="col-md-4">{{ form.last_education.label_tag }} {{ form.last_education }}</div>
+            <div class="col-md-4">{{ form.last_education_result.label_tag }} {{ form.last_education_result }}</div>
+            <div class="col-md-4">{{ form.last_education_passing_year.label_tag }} {{ form.last_education_passing_year }}</div>
+            <div class="col-md-6">{{ form.current_job_status.label_tag }} {{ form.current_job_status }}</div>
+            <div class="col-md-6">{{ form.current_job_title.label_tag }} {{ form.current_job_title }}</div>
+            <div class="col-md-6">{{ form.last_education_other.label_tag }} {{ form.last_education_other }}</div>
+            <div class="col-md-6">{{ form.current_job_status_other.label_tag }} {{ form.current_job_status_other }}</div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary btn-prev"><i class="ti ti-arrow-left me-1"></i> Previous</button>
+            <button type="button" class="btn btn-primary btn-next">Next <i class="ti ti-arrow-right ms-1"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 3: Skills & Final -->
+        <div id="step-other" class="content stepper-pane{% if current_step == 'step-other' %} active{% endif %}" role="tabpanel" aria-labelledby="step-other-trigger">
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.skills.label_tag }} {{ form.skills }}</div>
+            <div class="col-md-6">{{ form.special_skills.label_tag }} {{ form.special_skills }}</div>
+            <div class="col-md-6">{{ form.languages.label_tag }} {{ form.languages }}</div>
+            <div class="col-md-6">{{ form.language_other.label_tag }} {{ form.language_other }}</div>
+            <div class="col-md-12">{{ form.bio.label_tag }} {{ form.bio }}</div>
+            <div class="col-md-6">{{ form.blood_group.label_tag }} {{ form.blood_group }}</div>
+            <div class="col-md-6">{{ form.blood_group_other.label_tag }} {{ form.blood_group_other }}</div>
+            <div class="col-md-6">{{ form.profile_picture.label_tag }} {{ form.profile_picture }}</div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary btn-prev"><i class="ti ti-arrow-left me-1"></i> Previous</button>
+            <button type="submit" class="btn btn-success">Submit CV</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js_customs %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const stepperElement = document.querySelector('.bs-stepper');
+  const stepper = new Stepper(stepperElement);
+  const currentStepInput = document.getElementById('current_step');
+
+  const stepId = currentStepInput.value;
+  const stepIndex = Array.from(document.querySelectorAll('.bs-stepper .content')).findIndex(c => c.id === stepId);
+  if (stepIndex >= 0) stepper.to(stepIndex + 1);
+  else stepper.to(1);
+
+  function updateStep() {
+    const index = stepper._currentIndex;
+    const currentId = document.querySelectorAll('.bs-stepper .content')[index].id;
+    currentStepInput.value = currentId;
+  }
+
+  document.querySelectorAll('.btn-next').forEach(btn =>
+    btn.addEventListener('click', () => {
+      stepper.next();
+      setTimeout(updateStep, 150);
+    })
+  );
+
+  document.querySelectorAll('.btn-prev').forEach(btn =>
+    btn.addEventListener('click', () => {
+      stepper.previous();
+      setTimeout(updateStep, 150);
+    })
+  );
+});
+</script>
+{% endblock %}

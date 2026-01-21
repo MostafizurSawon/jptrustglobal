@@ -1,0 +1,157 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Why Choose Us{% endblock %}
+
+{% block content %}
+
+<div class="card p-4">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <h5 class="mb-4">Why Choose Us - Configuration</h5>
+
+  <form method="POST" enctype="multipart/form-data" class="row g-3">
+  {% csrf_token %}
+
+
+
+  <!-- Description 1 -->
+  <div class="col-md-6">
+    <label for="id_des1" class="form-label">Description 1</label>
+    {{ form.des1 }}
+    {% if form.des1.errors %}
+      <div class="text-danger small">{{ form.des1.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Image 1 -->
+  <div class="col-md-6">
+    <label for="id_img1" class="form-label">Image 1</label>
+    {{ form.img1 }}
+    {% if form.img1.value %}
+      <div class="mt-2">
+        <img src="{{ form.img1.value.url }}" alt="Image 1 Preview" height="60" class="border rounded">
+      </div>
+    {% endif %}
+    {% if form.img1.errors %}
+      <div class="text-danger small">{{ form.img1.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Description 2 -->
+  <div class="col-md-6">
+    <label for="id_des2" class="form-label">Description 2</label>
+    {{ form.des2 }}
+    {% if form.des2.errors %}
+      <div class="text-danger small">{{ form.des2.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Image 2 -->
+  <div class="col-md-6">
+    <label for="id_img2" class="form-label">Image 2</label>
+    {{ form.img2 }}
+    {% if form.img2.value %}
+      <div class="mt-2">
+        <img src="{{ form.img2.value.url }}" alt="Image 2 Preview" height="60" class="border rounded">
+      </div>
+    {% endif %}
+    {% if form.img2.errors %}
+      <div class="text-danger small">{{ form.img2.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Description 3 -->
+  <div class="col-md-6">
+    <label for="id_des3" class="form-label">Description 3</label>
+    {{ form.des3 }}
+    {% if form.des3.errors %}
+      <div class="text-danger small">{{ form.des3.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Image 3 -->
+  <div class="col-md-6">
+    <label for="id_img3" class="form-label">Image 3</label>
+    {{ form.img3 }}
+    {% if form.img3.value %}
+      <div class="mt-2">
+        <img src="{{ form.img3.value.url }}" alt="Image 3 Preview" height="60" class="border rounded">
+      </div>
+    {% endif %}
+    {% if form.img3.errors %}
+      <div class="text-danger small">{{ form.img3.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Description 4 -->
+  <div class="col-md-6">
+    <label for="id_des4" class="form-label">Description 4</label>
+    {{ form.des4 }}
+    {% if form.des4.errors %}
+      <div class="text-danger small">{{ form.des4.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Image 4 -->
+  <div class="col-md-6">
+    <label for="id_img4" class="form-label">Image 4</label>
+    {{ form.img4 }}
+    {% if form.img4.value %}
+      <div class="mt-2">
+        <img src="{{ form.img4.value.url }}" alt="Image 4 Preview" height="60" class="border rounded">
+      </div>
+    {% endif %}
+    {% if form.img4.errors %}
+      <div class="text-danger small">{{ form.img4.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Main Image -->
+  <div class="col-md-6">
+    <label for="id_image" class="form-label">Main Image</label>
+    {{ form.image }}
+    {% if form.image.value %}
+      <div class="mt-2">
+        <img src="{{ form.image.value.url }}" alt="Image Preview" height="200" class="border rounded">
+      </div>
+    {% endif %}
+    {% if form.image.errors %}
+      <div class="text-danger small">{{ form.image.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Submit -->
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fields = ['des1', 'des2', 'des3', 'des4', 'des5'];
+
+    fields.forEach(function (field) {
+      const textarea = document.getElementById('id_' + field);
+      if (textarea) {
+        textarea.setAttribute('style', 'height:' + (textarea.scrollHeight) + 'px;overflow-y:hidden;resize: vertical;');
+        textarea.addEventListener('input', function () {
+          this.style.height = 'auto';
+          this.style.height = (this.scrollHeight) + 'px';
+        });
+      }
+    });
+  });
+</script>
+
+
+{% endblock %}

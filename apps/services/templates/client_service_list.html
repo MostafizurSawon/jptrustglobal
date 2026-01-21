@@ -1,0 +1,152 @@
+{% extends layout_path %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}All Client Services{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize DataTable
+    $('.datatables-basic').DataTable({
+      pageLength: 5
+    });
+  });
+</script>
+{% endblock page_js %}
+
+{% block content %}
+<!-- Service Cards Section -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+<div class="row d-flex justify-content-between my-4 py-4 ">
+  <div class="col-md-8">
+    <h4 class="">সব সার্ভিসসমূহ</h4>
+  </div>
+  <div class="col-md-4 ">
+    <form method="get" class="d-flex justify-content-end">
+    <input type="text" name="search" class="form-control w-50" placeholder="সেবা অনুসন্ধান করুন..." value="{{ search_query }}">
+    <button type="submit" class="btn btn-primary ms-2">অনুসন্ধান</button>
+  </form>
+  </div>
+
+</div>
+
+<!-- Services Grid -->
+<div class="row mb-4">
+  {% for service in services %}
+
+    <div class="col-md-6 col-xxl-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="rounded text-center mb-4 pt-4">
+            {% if service.image %}
+              <img class="img-fluid" src="{{ service.image.url }}" alt="{{ service.name }}" style="max-height: 160px;" />
+            {% else %}
+              <span class="text-muted">কোনো ছবি পাওয়া যায়নি</span>
+            {% endif %}
+          </div>
+          <h5 class="card-title">{{ service.name }}</h5>
+          <p class="card-text">{{ service.description }}</p>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="card-dark">মূল্য: {{ service.price|intcomma }} ৳</span>
+            {% comment %} <span class="badge bg-success">{{ service.status|capfirst }}</span> {% endcomment %}
+          </div>
+
+          {% if request.user.role == "guest" %}
+            {% if service.id in applied_services %}
+              <button class="btn btn-success w-100" disabled>
+                <i class="bi bi-check-circle"></i> ইতিমধ্যে আবেদন করেছেন
+              </button>
+            {% elif has_passport_info %}
+              <button class="btn btn-primary w-100" data-bs-toggle="offcanvas" data-bs-target="#applyServiceModal{{ service.id }}">
+                আবেদন করুন
+              </button>
+            {% else %}
+              <a href="{% url 'passport_info_create' %}" class="btn btn-danger w-100">
+                প্রথমে পাসপোর্ট তথ্য দিন
+              </a>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Offcanvas Modal -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="applyServiceModal{{ service.id }}">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title">{{ service.name }} এর জন্য আবেদন</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="service_id" value="{{ service.id }}">
+          <div class="mb-3">
+            <label class="form-label">আপনার বার্তা</label>
+            <textarea name="message" class="form-control" rows="3" placeholder="আপনি কেন আবেদন করতে চান?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">আবেদন জমা দিন</button>
+          <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">বাতিল</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+
+  <!-- Pagination -->
+  {% if services.has_other_pages %}
+  <nav class="my-5">
+    <ul class="pagination justify-content-center">
+      {% if services.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ services.previous_page_number }}&search={{ search_query }}">«</a>
+        </li>
+      {% endif %}
+
+      {% for num in services.paginator.page_range %}
+        {% if services.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > services.number|add:'-3' and num < services.number|add:'3' %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}&search={{ search_query }}">{{ num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if services.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ services.next_page_number }}&search={{ search_query }}">»</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+
+
+</div>
+
+
+
+{% endblock %}

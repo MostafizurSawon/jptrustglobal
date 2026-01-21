@@ -1,0 +1,246 @@
+{% extends layout_path %}
+{% load static %}
+
+{% block title %}Expense Management{% endblock %}
+
+{% block content %}
+<style>
+.table thead th,
+.table tbody td {
+  border-right: 1px solid #dee2e6;
+}
+.table thead th:last-child,
+.table tbody td:last-child {
+  border-right: 1px solid #dee2e6 !important;
+}
+.table-bordered {
+  border-collapse: collapse;
+  border: 1px solid #dee2e6;
+}
+.custom-pagination .page-link {
+  border-radius: 50% !important;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  line-height: 38px;
+  text-align: center;
+  display: inline-block;
+  transition: all 0.2s;
+}
+.custom-pagination .page-item.active .page-link {
+  background-color: #7367f0;
+  border-color: #7367f0;
+  color: #fff;
+}
+.custom-pagination .page-item.disabled .page-link {
+  background-color: #f1f1f1;
+  color: #999;
+  border-color: #dee2e6;
+}
+.custom-pagination .page-link:hover {
+  background-color: #e1e1e1;
+  color: #000;
+}
+</style>
+
+<div class="py-4 container card">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="d-flex justify-content-between mb-3">
+    <h4 class="mb-0">Expense Dashboard</h4>
+    <div>
+      <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="offcanvas" data-bs-target="#categoryModal">+ Category</button>
+      <button class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#expenseModal">+ Expense</button>
+    </div>
+  </div>
+
+  <form method="get" class="row g-3 mb-4 align-items-end">
+  <div class="col-md-3">
+    <label class="form-label">Search</label>
+    <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Search name, note, or date...">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Category</label>
+    <select name="category" class="form-select">
+      <option value="">All</option>
+      {% for cat in expense_categories %}
+        <option value="{{ cat.id }}" {% if category_filter == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">From Date</label>
+    <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">To Date</label>
+    <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+  </div>
+  <div class="col-md-2 d-flex align-items-end">
+    <button type="submit" class="btn btn-primary">Apply</button>
+    <a href="{% url 'create_expense' %}" class="btn btn-outline-secondary ms-2">Reset</a>
+  </div>
+</form>
+
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Note</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exp in expenses %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ exp.category.name }}</td>
+          <td>{{ exp.ex_name }}</td>
+          <td>{{ exp.amount }} ৳</td>
+          <td>{{ exp.date|date:"d M Y" }}</td>
+          <td>{{ exp.note|default:"—" }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary btn-edit-expense"
+                  data-id="{{ exp.id }}"
+                  data-name="{{ exp.ex_name|escapejs }}"
+                  data-category="{{ exp.category.id }}"
+                  data-amount="{{ exp.amount }}"
+                  data-date="{{ exp.date|date:'Y-m-d' }}"
+                  data-note="{{ exp.note|default_if_none:''|escapejs }}">
+              Edit
+            </button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center">No expenses found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if expenses.has_other_pages %}
+  <nav aria-label="pagination">
+    <ul class="pagination justify-content-center custom-pagination">
+      {% if expenses.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ expenses.previous_page_number }}&search={{ search_query }}&category={{ category_filter }}">&laquo;</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %}
+
+      {% for num in expenses.paginator.page_range %}
+        {% if num == expenses.number %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num >= expenses.number|add:'-2' and num <= expenses.number|add:'2' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&category={{ category_filter }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if expenses.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ expenses.next_page_number }}&search={{ search_query }}&category={{ category_filter }}">&raquo;</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Offcanvas: Add Category -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="categoryModal">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">নতুন খরচ বিভাগ</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ category_form.name.label_tag }} {{ category_form.name }}
+      </div>
+      <div class="d-flex justify-content-between">
+        <button type="submit" name="category_submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Offcanvas: Add/Edit Expense -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="expenseModal">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">Add New Expense Type</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="expense_id" id="edit_expense_id" >
+      <div class="mb-3">
+        {{ expense_form.category.label_tag }} {{ expense_form.category }}
+      </div>
+      <div class="mb-3">
+        {{ expense_form.ex_name.label_tag }} {{ expense_form.ex_name }}
+      </div>
+      <div class="mb-3">
+        {{ expense_form.amount.label_tag }} {{ expense_form.amount }}
+      </div>
+      <div class="mb-3">
+        {{ expense_form.date.label_tag }} {{ expense_form.date }}
+      </div>
+      <div class="mb-3">
+        {{ expense_form.note.label_tag }} {{ expense_form.note }}
+      </div>
+      <div class="d-flex justify-content-between">
+        <button type="submit" name="expense_submit" class="btn btn-success">Add Expense</button>
+        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const expenseModalEl = document.getElementById('expenseModal');
+  const expenseModal = new bootstrap.Offcanvas(expenseModalEl);
+
+  document.querySelectorAll('.btn-edit-expense').forEach(btn => {
+    btn.addEventListener('click', function () {
+      expenseModal.show();
+      setTimeout(() => {
+        document.querySelector('#expenseModal form').action = `/dashboard/expenses/edit/${this.dataset.id}/`;
+
+        const nameInput = document.getElementById('id_ex_name');
+        const categorySelect = document.getElementById('id_category');
+        const amountInput = document.getElementById('id_amount');
+        const dateInput = document.getElementById('id_date');
+        const noteInput = document.getElementById('id_note');
+
+        if (nameInput) nameInput.value = this.dataset.name;
+        if (categorySelect) categorySelect.value = this.dataset.category;
+        if (amountInput) amountInput.value = this.dataset.amount;
+        if (dateInput) dateInput.value = this.dataset.date;
+        if (noteInput) noteInput.value = this.dataset.note;
+      }, 100);
+    });
+  });
+});
+</script>
+
+{% endblock %}

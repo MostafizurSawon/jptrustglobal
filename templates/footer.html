@@ -1,0 +1,62 @@
+<footer class="light-bg-2">
+  <div class="footer-main max-width-site">
+    <div class="footer-menu-container">
+      <a class="mb-3" href="{% url 'home' %}"><img class="logo" src="{{ site_settings.logo.url }}" alt="logo" /></a>
+      <div class="footer-article">
+        <p>{{ site_settings.footer }}</p>
+      </div>
+    </div>
+
+    <div class="footer-menu-container">
+      <h1>Other Pages</h1>
+      <div class="menu-footer">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'about' %}">About Us</a>
+        <a href="{% url 'services' %}">Services</a>
+        <a href="{% url 'contact-home' %}">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-menu-container">
+      <h1>Social Media</h1>
+      <div class="menu-footer-social">
+        <a href="{{ site_settings.facebook }}"><i class="fa-brands fa-facebook facebook-icon"></i></a>
+        <a href="{{ site_settings.youtube }}"><i class="fa-brands fa-youtube youtube-icon"></i></a>
+        <a href="{{ site_settings.instagram }}"><i class="fa-brands fa-square-instagram instagram-icon"></i></a>
+        <a href="{{ site_settings.x }}"><i class="fa-brands fa-square-x-twitter twitter-icon"></i></a>
+      </div>
+
+      <div class="menu-footer">
+        <a href="{% url 'appointment_public' %}">Office Appointment</a>
+        {% if request.user.role == 'guest' %}
+        <a href="{% url 'support_list' %}">Support</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer-menu-container">
+      <h1>Contact</h1>
+      <div class="menu-footer">
+        {% if site_settings.email %}
+          <a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+        {% endif %}
+        {% if site_settings.phone %}
+          <a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
+        {% endif %}
+        {% if site_settings.address %}
+          {% for line in site_settings.address.splitlines %}
+            <a>{{ line }}</a>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-footer max-width-site">
+    <div class="footer footer-center text-white py-2 text-center px-3 px-sm-4 py-sm-3">
+      <aside>
+        <p>{{ site_settings.footer_description }}</p>
+      </aside>
+    </div>
+  </div>
+</footer>
