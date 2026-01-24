@@ -104,9 +104,8 @@ class ClientCVDeleteView(View):
     def post(self, request, pk, *args, **kwargs):
         cv = get_object_or_404(GuestCV, pk=pk)
         cv.delete()
-        messages.success(request, "CV সফলভাবে মুছে ফেলা হয়েছে।")
-        return redirect('client_cv_list')  # Use your correct URL name
-
+        messages.success(request, "CV deleted successfully.")
+        return redirect('client_cv_list')
 
 
 # Clients Passport All
@@ -642,16 +641,48 @@ from django.db.models import Max
 #     ("flight_date_confirmed", "ফ্লাইট বুকিং সম্পন্ন", "আপনার ফ্লাইট বুকিং নিশ্চিত করা হয়েছে। শুভ যাত্রা!"),
 # ]
 TIMELINE_STEPS = [
-    ("applied", "আবেদন করা হয়েছে", "আপনার আবেদন সফলভাবে জমা দেওয়া হয়েছে।"),
-    ("payment_pending", "পেমেন্ট পেন্ডিং রয়েছে", "পেমেন্ট এখনও সম্পন্ন হয়নি। অনুগ্রহ করে পেমেন্ট করুন।"),
-    ("full_payment", "পেমেন্ট পরিষদ হয়েছে", "আপনার পেমেন্ট সম্পন্ন হয়েছে। পরবর্তী ধাপে প্রক্রিয়া চলবে।"),
-    ("processing_job_permit", "জবঃ জব কন্টাক্ট/ওয়ার্ক পারমিট প্রক্রিয়াধীন/ \nস্টাডিঃ অ্যাডমিশন টেস্ট/ইন্টারভিউ / \nভিসিটঃ ইনভাইটেশন এবং সাপোট্রিং ডকুমেন্ট", "প্রক্রিয়াধীন রয়েছে।"),
-    ("job_permit_received", "জবঃ জব কন্টাক্ট/ওয়ার্ক পারমিট রিসিভ/ \nস্টাডিঃ অ্যাডমিশন রেজাল্ট / অফার লেটার \nভিসিটঃ ডকুমেন্টশন কমপ্লিটেড", ""),
-    ("visa_processing_third_country", "তৃতীয় দেশের ভিসা প্রক্রিয়া", "তৃতীয় দেশের ভিসা আবেদন প্রক্রিয়াধীন রয়েছে।"),
-    ("embassy_approval_pending", "এম্বাসি এপয়েন্টমেন্ট এবং ডকুমেন্টশন প্রক্রিয়াধীন", " "),
-    ("visa_application_submitted", "ভিসা অ্যাপ্লিকেশন জমা", "আপনার ভিসা আবেদন জমা দেওয়া হয়েছে।"),
-    ("visa_decision", "ভিসা এপ্রুভ / রিজেক্ট", "আপনার ভিসার চূড়ান্ত সিদ্ধান্ত পাওয়া গেছে।"),
-    ("flight_date_confirmed", "ফ্লাইট বুকিং সম্পন্ন", "আপনার ফ্লাইট বুকিং নিশ্চিত করা হয়েছে। শুভ যাত্রা!"),
+    ("applied", "Applied", "Your application has been successfully submitted."),
+    ("payment_pending", "Payment Pending", "Payment is still pending. Please make the payment."),
+    ("full_payment", "Paid", "Your payment has been completed. The process will continue to the next step."),
+    (
+        "processing_job_permit",
+        "Job: Job Contract / Work Permit Processing\n"
+        "Study: Admission Test / Interview Stage\n"
+        "Visit: Invitation & Supporting Documents in Progress",
+        "Your application is currently being processed."
+    ),
+    (
+        "job_permit_received",
+        "Job: Job Contract / Work Permit Received\n"
+        "Study: Admission Result / Offer Letter Received\n"
+        "Visit: All Documentation Completed",
+        ""
+    ),
+    (
+        "visa_processing_third_country",
+        "Third Country Visa Application",
+        "Your visa application for the third country is under process."
+    ),
+    (
+        "embassy_approval_pending",
+        "Embassy Appointment & Documentation Pending",
+        ""
+    ),
+    (
+        "visa_application_submitted",
+        "Visa Application Submitted",
+        "Your visa application has been submitted successfully."
+    ),
+    (
+        "visa_decision",
+        "Visa Decision (Approved / Rejected)",
+        "The final decision on your visa has been received."
+    ),
+    (
+        "flight_date_confirmed",
+        "Flight Booking Confirmed",
+        "Your flight has been successfully booked. Have a safe and wonderful journey!"
+    ),
 ]
 
 # Status → Progress %

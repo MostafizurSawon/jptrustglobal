@@ -50,7 +50,7 @@
 </style>
 
 <div class="container py-4 card">
-  <h4 class="mb-4">সকল ক্লায়েন্ট পাসপোর্ট</h4>
+  <h4 class="mb-4">All Client Passports</h4>
 
   <!-- Flash messages -->
   {% if messages %}
@@ -65,8 +65,8 @@
   <!-- Search Form -->
   <form method="get" class="row g-3 align-items-end mb-4">
     <div class="col-md-4">
-      <label for="search" class="form-label">অনুসন্ধান</label>
-      <input type="text" id="search" name="search" class="form-control" value="{{ search_query }}" placeholder="নাম / পাসপোর্ট নম্বর / ফোন ...">
+      <label for="search" class="form-label">Search</label>
+      <input type="text" id="search" name="search" class="form-control" value="{{ search_query }}" placeholder="Name / Passport Number / Phone ...">
     </div>
     <div class="col-auto">
       <button type="submit" class="btn btn-primary">Search</button>
@@ -114,7 +114,7 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="text-center">কোনো পাসপোর্ট রেকর্ড পাওয়া যায়নি।</td>
+          <td colspan="6" class="text-center">No passport record found.</td>
         </tr>
         {% endfor %}
       </tbody>

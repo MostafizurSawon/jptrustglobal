@@ -1,5 +1,5 @@
 {% extends layout_path %}
-{% block title %}সাপোর্ট চ্যাট{% endblock %}
+{% block title %}Support Chat{% endblock %}
 
 {% block content %}
 <div class="flex-grow-1 container-p-y">
@@ -12,10 +12,10 @@
     {% endfor %}
   {% endif %}
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold mb-0">চ্যাট - টিকিট #{{ support.id }}</h4>
+    <h4 class="fw-bold mb-0">Chat - Ticket #{{ support.id }}</h4>
 
     <a href="{% url 'support_list' %}" class="btn btn-primary btn-sm">
-      ← ফিরে যান
+      ← Back
     </a>
   </div>
 
@@ -27,7 +27,7 @@
           <div class="mb-3 p-2 rounded {% if reply.sender.is_staff %}bg-success text-white{% else %}bg-primary text-white{% endif %}" style="max-width: 70%;">
             {% if reply.attachment %}
               <div class="mt-2">
-                <a href="{{ reply.attachment.url }}" class="btn btn-sm btn-secondary" target="_blank">সংযুক্তি দেখুন</a>
+                <a href="{{ reply.attachment.url }}" class="btn btn-sm btn-secondary" target="_blank">See attachment</a>
               </div>
             {% endif %}
 
@@ -38,7 +38,7 @@
         </div>
 
       {% empty %}
-        <p class="text-muted">কোনো মেসেজ নেই।</p>
+        <p class="text-muted">No messages yet.</p>
       {% endfor %}
     </div>
 
@@ -47,13 +47,13 @@
         {% csrf_token %}
         <div class="row g-2 align-items-center">
           <div class="col-md-8 col-12">
-            <textarea name="message" rows="1" class="form-control" placeholder="মেসেজ লিখুন..."></textarea>
+            <textarea name="message" rows="1" class="form-control" placeholder="Write a message..."></textarea>
           </div>
           <div class="col-md-2 col-8">
             <input type="file" name="attachment" class="form-control">
           </div>
           <div class="col-md-2 col-4">
-            <button class="btn btn-primary w-100" type="submit">পাঠান</button>
+            <button class="btn btn-primary w-100" type="submit">Send</button>
           </div>
         </div>
       </form>

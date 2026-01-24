@@ -14,17 +14,17 @@
     {% endfor %}
   {% endif %}
 
-  <h4 class="fw-bold mb-3">আমার সাপোর্ট রিকুয়েস্টসমূহ</h4>
+  <h4 class="fw-bold mb-3">My Support Requests</h4>
 
   <div class="card mb-4">
     <div class="card-body">
       <form method="get" class="row g-3">
         <div class="col-md-4">
-          <input type="text" name="search" class="form-control" placeholder="কি খুঁজছেন?" value="{{ search_query }}">
+          <input type="text" name="search" class="form-control" placeholder="What are you searching for?" value="{{ search_query }}">
         </div>
         <div class="col-md-3">
           <select name="status" class="form-select">
-            <option value="">সকল স্ট্যাটাস</option>
+            <option value="">All Statuses</option>
             <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
             <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
             <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
@@ -32,11 +32,11 @@
           </select>
         </div>
         <div class="col-md-2">
-          <button type="submit" class="btn btn-primary w-100">ফিল্টার</button>
+          <button type="submit" class="btn btn-primary w-100">Filter</button>
         </div>
         <div class="col-md-3">
           <button onclick="openSupportCreateModal()" type="button" class="btn btn-success w-100">
-            নতুন রিকুয়েস্ট করুন
+            Create New Request
           </button>
         </div>
 
@@ -50,11 +50,11 @@
         <thead class="table-light">
           <tr>
             <th>#</th>
-            <th>মেসেজ স্ট্যাটাস</th>
-            <th>মেসেজ</th>
-            <th>স্ট্যাটাস</th>
-            <th>তারিখ</th>
-            <th>অ্যাকশন</th>
+            <th>Message Status</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -64,9 +64,9 @@
             <td>
               {% comment %} <small>{{ item.user.phone_number }}</small> {% endcomment %}
               {% if item.user_unread %}
-                <span class="badge bg-success">নতুন</span>
+                <span class="badge bg-success">New</span>
               {% else %}
-                <span class="badge bg-secondary">আপডেট নাই</span>
+                <span class="badge bg-secondary">No Update</span>
               {% endif %}
             </td>
 
@@ -84,16 +84,16 @@
             </td>
             <td>{{ item.created_at|date:"Y-m-d h:i A" }}</td>
             <td>
-              <a href="{% url 'support_detail' item.pk %}" class="btn btn-sm btn-outline-primary">ডিটেইলস</a>
+              <a href="{% url 'support_detail' item.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
               {% if item.status == 'in_progress' %}
-                <a href="{% url 'support_chat' item.pk %}" class="btn btn-sm btn-outline-success">চ্যাট করুন</a>
+                <a href="{% url 'support_chat' item.pk %}" class="btn btn-sm btn-outline-success">Chat</a>
               {% endif %}
             </td>
 
           </tr>
           {% empty %}
           <tr>
-            <td colspan="5" class="text-center text-muted">কোনো রিকুয়েস্ট পাওয়া যায়নি।</td>
+            <td colspan="5" class="text-center text-muted">No support request found.</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -130,7 +130,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">নতুন সাপোর্ট রিকুয়েস্ট</h5>
+        <h5 class="modal-title">New Support Request</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="supportCreateModalBody">

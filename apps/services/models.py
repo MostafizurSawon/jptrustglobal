@@ -58,31 +58,29 @@ from django.utils import timezone
 class ServiceApplication(models.Model):
 
     STATUS_CHOICES = [
-        ('payment_pending', 'পেমেন্ট যাচাই চলমান'),
-        ('partial_payment', 'আংশিক পেমেন্ট সম্পন্ন'),
-        ('full_payment', 'পেমেন্ট পরিশোধ হয়েছে'),
-        ('rejected', 'পেমেন্ট বাতিল হয়েছে'),
+        ('payment_pending', 'Payment Pending'),
+        ('partial_payment', 'Partial Payment Completed'),
+        ('full_payment', 'Payment Completed'),
+        ('rejected', 'Payment Rejected'),
     ]
 
 
     service = models.ForeignKey('ClientServices', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     passport_info = models.ForeignKey('form_wizard.PassportInfo', on_delete=models.CASCADE, null=True, blank=True)  # Link to PassportInfo
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="applied", verbose_name="স্ট্যাটাস", null=True, blank=True)
-    message = models.TextField(null=True, blank=True, verbose_name="বার্তা")  # For application message
-    applied_at = models.DateTimeField(auto_now_add=True, verbose_name="আবেদনের তারিখ")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="আপডেটের তারিখ")
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="applied", verbose_name="Status", null=True, blank=True)
+    message = models.TextField(null=True, blank=True, verbose_name="Message")
+    applied_at = models.DateTimeField(auto_now_add=True, verbose_name="Applied Date")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated Date")
 
     # Payment tracking fields
-    amount_paid = models.IntegerField(default=0, verbose_name="পেমেন্ট পরিমাণ")
-    payment_message = models.TextField(null=True, blank=True, verbose_name="পেমেন্ট বার্তা")  # Message regarding the payment or transaction
-
-    # Discount and discount tracking (Fixed amount)
-    discount = models.IntegerField(default=0, help_text="Fixed discount amount on service price", verbose_name="ডিসকাউন্ট")
-    discount_used = models.BooleanField(default=False, help_text="Indicates if discount has been used", verbose_name="ডিসকাউন্ট ব্যবহৃত")
+    amount_paid = models.IntegerField(default=0, verbose_name="Payment Amount")
+    payment_message = models.TextField(null=True, blank=True, verbose_name="Payment Message")
+    discount = models.IntegerField(default=0, help_text="Fixed discount amount on service price", verbose_name="Discount")
+    discount_used = models.BooleanField(default=False, help_text="Indicates if discount has been used", verbose_name="Discount Used")
 
     # Payment Due Date (new field to track due date)
-    payment_due_date = models.DateField(null=True, blank=True, help_text="The date by which the full payment should be made", verbose_name="পেমেন্ট Due তারিখ")
+    payment_due_date = models.DateField(null=True, blank=True, help_text="The date by which the full payment should be made", verbose_name="Payment Due Date")
 
     def __str__(self):
         return f"{self.user.phone_number} - {self.service.name} ({self.status})"
@@ -179,16 +177,16 @@ class ServiceApplicationProgress(models.Model):
         unique_together = ('application', 'status')
 
     STATUS_CHOICES = [
-        ("applied", "আবেদন করা হয়েছে"),
-        ("payment_pending", "পেমেন্ট পেন্ডিং রয়েছে"),
-        ("full_payment", "পেমেন্ট পরিষদ হয়েছে"),
-        ("processing_job_permit", "জব কন্টাক্ট/ওয়ার্ক পারমিট কাজটি প্রক্রিয়াধীন"),
-        ("job_permit_received", "জব কন্টাক্ট/ওয়ার্ক পারমিট রিসিভ করা হয়েছে"),
-        ("visa_processing_third_country", "তৃতীয় দেশের ভিসা আবেদন প্রক্রিয়াধীন"),
-        ("embassy_approval_pending", "এম্বাসি অ্যাপ্রুভ প্রক্রিয়াধীন"),
-        ("visa_application_submitted", "ভিসা অ্যাপ্লিকেশন জমা দেওয়া হয়েছে"),
-        ("visa_decision", "ভিসা এপ্রুভ / রিজেক্ট"),
-        ("flight_date_confirmed", "ফ্লাইট বুকিং ডেট সম্পন্ন"),
+        ("applied", "Applied"),
+        ("payment_pending", "Payment Pending"),
+        ("full_payment", "Payment Completed"),
+        ("processing_job_permit", "Processing Job Permit"),
+        ("job_permit_received", "Job Permit Received"),
+        ("visa_processing_third_country", "Visa Processing in Third Country"),
+        ("embassy_approval_pending", "Embassy Approval Pending"),
+        ("visa_application_submitted", "Visa Application Submitted"),
+        ("visa_decision", "Visa Approved / Rejected"),
+        ("flight_date_confirmed", "Flight Booking Date Confirmed"),
     ]
 
     application = models.ForeignKey(
@@ -197,10 +195,10 @@ class ServiceApplicationProgress(models.Model):
         related_name='progress_logs',
         verbose_name="Service Application"
     )
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='applied', verbose_name="অবস্থা")
-    message = models.TextField(blank=True, null=True, verbose_name="মেসেজ")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="তৈরির তারিখ")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="আপডেটের তারিখ")
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='applied', verbose_name="Status")
+    message = models.TextField(blank=True, null=True, verbose_name="Message")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created Date")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated Date")
 
     def save_or_update_progress(application, status, message):
         """
@@ -228,10 +226,10 @@ class PaymentLog(models.Model):
     payment_message = models.TextField(null=True, blank=True)
     action_taken = models.CharField(
         max_length=255,
-        choices=[('payment_pending', 'পেমেন্ট যাচাই চলমান'),
-        ('partial_payment', 'আংশিক পেমেন্ট সম্পন্ন'),
-        ('full_payment', 'পেমেন্ট পরিশোধ হয়েছে'),
-        ('rejected', 'পেমেন্ট বাতিল হয়েছে')],
+        choices=[('payment_pending', 'Payment Pending'),
+        ('partial_payment', 'Partial Payment Completed'),
+        ('full_payment', 'Payment Completed'),
+        ('rejected', 'Payment Rejected')],
     )
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -262,9 +260,9 @@ class ClientPayment(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('pending', 'পেন্ডিং'),
-        ('approved', 'অনুমোদিত'),
-        ('rejected', 'বাতিল'),
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -280,14 +278,14 @@ class ClientPayment(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='pending',  # Default to 'pending'
+        default='pending',
         blank=True,
         null=True
     )
     admin_message = models.TextField(
         blank=True,
         null=True,
-        verbose_name='অ্যাডমিন বার্তা'
+        verbose_name='Admin Message'
     )
 
     def __str__(self):

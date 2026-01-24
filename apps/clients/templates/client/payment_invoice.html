@@ -2,7 +2,7 @@
 {% load humanize %}
 {% load static %}
 {% block title %}
-  পেমেন্ট চালান
+  Payment Invoice
 {% endblock %}
 {% block content %}
   <!-- QR Code & PDF Libraries -->
@@ -267,7 +267,7 @@
   <!-- JS -->
   <script>
     const fixedId = '{{ payment.id }}';
-    const url = `https://goontraveldesk.com/dashboard/invoice/search/?payment_id=${fixedId}`;
+    const url = `https://jptrustglobal.com/dashboard/invoice/search/?payment_id=${fixedId}`;
 
     window.onload = function () {
       new QRCode(document.getElementById('qrcode1'), { text: url, width: 100, height: 100 });

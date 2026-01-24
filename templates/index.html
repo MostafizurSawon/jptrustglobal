@@ -20,7 +20,9 @@
     <meta property="og:site_name" content="JP Trust Global" />
 
     <!-- favicon -->
+    {% if site_settings.favicon %}
     <link rel="shortcut icon" href="{{ site_settings.favicon.url }}" type="image/x-icon" />
+    {% endif %}
 
     <!-- custom css -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -256,69 +258,6 @@
         <p>{{ site_settings.trending }}</p>
       </div>
       <div class="container py-5">
-        {% comment %} <div class="row g-4">
-          <!-- Video Card 1 -->
-          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="800">
-            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
-                <g>
-                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
-                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
-                </g>
-              </svg>
-              <div class="card-body">
-                <p class="video-title">ফ্লাইট বুকিং সহজ পদ্ধতি</p>
-              </div>
-            </div>
-          </a>
-
-          <!-- Video Card 2 -->
-          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="800">
-            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
-                <g>
-                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
-                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
-                </g>
-              </svg>
-              <div class="card-body">
-                <p class="video-title">ভিসা সহায়তা ও প্রয়োজনীয় তথ্য</p>
-              </div>
-            </div>
-          </a>
-
-          <!-- Video Card 3 -->
-          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="800">
-            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
-                <g>
-                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
-                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
-                </g>
-              </svg>
-              <div class="card-body">
-                <p class="video-title">সেরা ট্যুর প্যাকেজ বাছাই করুন</p>
-              </div>
-            </div>
-          </a>
-
-          <!-- Video Card 4 -->
-          <a href="#" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800">
-            <div class="card video-card" style="background-image: url('http://goontraveldesk.com/static/assets/services/Hotel_Booking.jpg');">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="video-icon">
-                <g>
-                  <path d="M30 12a5.71 5.71 0 0 0-5.31-5.7C18.92 6 13.06 6 7.33 6.28 4.51 6.28 2 9 2 12a43.69 43.69 0 0 0 0 8.72 5.32 5.32 0 0 0 5.28 5.33q4.35.24 8.72.24t8.67-.23A5.34 5.34 0 0 0 30 20.8a31.67 31.67 0 0 0 0-8.8Zm-2 8.63a.49.49 0 0 0 0 .12 3.36 3.36 0 0 1-3.39 3.34 166 166 0 0 1-17.28 0A3.36 3.36 0 0 1 4 20.65a42 42 0 0 1 0-8.47.45.45 0 0 0 0-.11 3.78 3.78 0 0 1 3.38-3.79c2.86-.13 5.74-.19 8.62-.19s5.76.06 8.62.19h.05c1.71 0 3.33 1.84 3.33 3.79a.76.76 0 0 0 0 .15 30.11 30.11 0 0 1 0 8.39Z"></path>
-                  <path d="m20.79 15.51-7.14-3.68a1 1 0 1 0-.92 1.78l5.43 2.79-4 2.07V16.4a1 1 0 0 0-2 0v3.72a1 1 0 0 0 1 1 1 1 0 0 0 .46-.11l7.14-3.72a1 1 0 0 0 .54-.89 1 1 0 0 0-.51-.89Z"></path>
-                </g>
-              </svg>
-              <div class="card-body">
-                <p class="video-title">হোটেল বুকিং টিপস ও ট্রিকস</p>
-              </div>
-            </div>
-          </a>
-        </div> {% endcomment %}
-
-        {% comment %}Dynamic{% endcomment %}
         <div class="row g-4">
           {% for trending in global_trending|slice:':4' %}
             <a href="{{ trending.link }}" target="_blank" class="col-md-3 video-card-container" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00" data-aos-duration="800">

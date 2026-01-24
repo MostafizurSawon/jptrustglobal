@@ -13,7 +13,7 @@
 
 .table thead th:last-child,
 .table tbody td:last-child {
-  border-right: 1px solid #dee2e6 !important; /* Ensure rightmost column keeps border */
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .table-bordered {
@@ -70,13 +70,13 @@
         <div class="col-md-3">
           <label for="purposeFilter" class="form-label">Filter by Purpose</label>
             <select class="form-select" id="purposeFilter" name="purpose">
-              <option value="all" {% if purpose_filter == 'all' %}selected{% endif %}>সকল সার্ভিস</option>
-              <option value="study_visa" {% if purpose_filter == 'study_visa' %}selected{% endif %}>স্টাডি ভিসা</option>
-              <option value="work_visa" {% if purpose_filter == 'work_visa' %}selected{% endif %}>ওয়ার্ক পারমিট ভিসা</option>
-              <option value="tourist_visa" {% if purpose_filter == 'tourist_visa' %}selected{% endif %}>ট্যুরিস্ট ভিসা</option>
-              <option value="agent_interest" {% if purpose_filter == 'agent_interest' %}selected{% endif %}>এজেন্ট হতে আগ্রহী</option>
-              <option value="general" {% if purpose_filter == 'general' %}selected{% endif %}>সাধারণ প্রশ্ন</option>
-              <option value="other" {% if purpose_filter == 'other' %}selected{% endif %}>অন্যান্য</option>
+              <option value="all" {% if purpose_filter == 'all' %}selected{% endif %}>All Services</option>
+              <option value="study_visa" {% if purpose_filter == 'study_visa' %}selected{% endif %}>Study Visa</option>
+              <option value="work_visa" {% if purpose_filter == 'work_visa' %}selected{% endif %}>Work Permit Visa</option>
+              <option value="tourist_visa" {% if purpose_filter == 'tourist_visa' %}selected{% endif %}>Tourist Visa</option>
+              <option value="agent_interest" {% if purpose_filter == 'agent_interest' %}selected{% endif %}>Agent Interest</option>
+              <option value="general" {% if purpose_filter == 'general' %}selected{% endif %}>General Inquiry</option>
+              <option value="other" {% if purpose_filter == 'other' %}selected{% endif %}>Other</option>
             </select>
 
           </div>
@@ -215,7 +215,7 @@
         <form id="noteForm">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">নোট আপডেট করুন</h5>
+              <h5 class="modal-title">Update note</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -226,7 +226,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+              <button type="submit" class="btn btn-primary">Save</button>
             </div>
           </div>
         </form>
@@ -275,12 +275,12 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        location.reload(); // Reload to update note in table
+        location.reload();
       } else {
-        alert("আপডেট ব্যর্থ হয়েছে।");
+        alert("Update failed.");
       }
     })
-    .catch(() => alert("সার্ভারে সমস্যা হয়েছে!"));
+    .catch(() => alert("Server problem!"));
   });
 
   document.querySelectorAll(".delete-note-link").forEach(link => {
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     const contactId = this.dataset.id;
 
-    if (confirm("আপনি কি নিশ্চিতভাবে এই বার্তাটি মুছতে চান?")) {
+    if (confirm("Are you sure you want to delete this message?")) {
       fetch("{% url 'delete_contact_row' %}", {
         method: "POST",
         headers: {
@@ -300,12 +300,12 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          location.reload();  // Now the whole row is removed
+          location.reload();
         } else {
-          alert("ডিলিট ব্যর্থ হয়েছে।");
+          alert("Delete failed.");
         }
       })
-      .catch(() => alert("সার্ভারে সমস্যা হয়েছে!"));
+      .catch(() => alert("Server problem!"));
     }
   });
 });

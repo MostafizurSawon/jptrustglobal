@@ -83,7 +83,7 @@
       {% endfor %}
     {% endif %}
 
-    <h2 class="mb-4">সকল সার্ভিস আবেদন</h2>
+    <h2 class="mb-4">All Service Applications</h2>
 
     <form method="get" class="row g-3 align-items-end mb-4">
       <div class="col-md-3">
@@ -108,7 +108,7 @@
 
       <div class="col-md-3">
         <label class="form-label">Search</label>
-        <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="নাম, বার্তা, ফোন...">
+        <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Name, Message, Phone...">
       </div>
 
       <div class="col-12">
@@ -179,13 +179,13 @@
                               data-app-id="{{ application.id }}"
                               data-status="{{ application.admin_status_raw }}"
                               data-message="{{ application.admin_message|escapejs }}">
-                        আবেদন স্ট্যাটাস
+                        Application Status
                       </button>
 
                       <button class="btn btn-sm btn-primary btn-edit-discount m-2"
                               data-app-id="{{ application.id }}"
                               data-discount="{{ application.discount }}">
-                        ডিসকাউন্ট
+                        Discount
                       </button>
 
               </td>

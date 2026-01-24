@@ -1,13 +1,12 @@
 {% extends layout_path %}
-{% block title %}সাপোর্ট বিস্তারিত{% endblock %}
+{% block title %}Support Details{% endblock %}
 
 {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
-  <h4 class="fw-bold mb-3">সাপোর্ট বিস্তারিত</h4>
-
+  <h4 class="fw-bold mb-3">Support Details</h4>
   <div class="card">
     <div class="card-body">
-      <p><strong>স্ট্যাটাস:</strong>
+      <p><strong>Status:</strong>
         <span class="badge
           {% if support.status == 'pending' %}bg-warning
           {% elif support.status == 'in_progress' %}bg-info
@@ -18,19 +17,19 @@
         </span>
       </p>
 
-      <p><strong>মেসেজ:</strong><br>{{ support.message }}</p>
+      <p><strong>Message:</strong><br>{{ support.message }}</p>
 
       {% if support.reply %}
         <hr>
-        <p><strong>অ্যাডমিনের উত্তর:</strong><br>{{ support.reply }}</p>
+        <p><strong>Admin's Reply:</strong><br>{{ support.reply }}</p>
       {% endif %}
 
       <hr>
-      <p><strong>তারিখ:</strong> {{ support.created_at|date:"Y-m-d H:i" }}</p>
+      <p><strong>Date:</strong> {{ support.created_at|date:"Y-m-d H:i" }}</p>
     </div>
     <div class="card-footer d-flex justify-content-between">
-      <a href="{% url 'support_list' %}" class="btn btn-secondary">← ফিরে যান</a>
-      <a href="{% url 'support_chat' support.pk %}" class="btn btn-success">চ্যাট করুন</a>
+      <a href="{% url 'support_list' %}" class="btn btn-secondary">← Back</a>
+      <a href="{% url 'support_chat' support.pk %}" class="btn btn-success">Chat</a>
     </div>
   </div>
 </div>

@@ -270,3 +270,24 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'jptrust',
+#         'USER': 'jptrustsawon',
+#         'PASSWORD': 'csh4XVj9aDqxTU5kl4Gc',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }

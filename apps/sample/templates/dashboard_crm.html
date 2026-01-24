@@ -52,7 +52,7 @@
 {% if latest_notice %}
   <div class="alert alert-info d-flex justify-content-between align-items-center">
     <div>
-      <strong>সর্বশেষ নোটিশ:</strong> {{ latest_notice.title|default:"Untitled" }}
+      <strong>Last notice:</strong> {{ latest_notice.title|default:"Untitled" }}
     </div>
     <a href="{{ notice_create_url }}" class="btn btn-sm btn-primary">View All Notices</a>
   </div>
@@ -61,12 +61,12 @@
 
 <div class="row d-flex justify-content-between my-4 py-4 ">
   <div class="col-md-8">
-    <h4 class="">সব সার্ভিসসমূহ</h4>
+    <h4 class="">All Services</h4>
   </div>
   <div class="col-md-4 ">
     <form method="get" class="d-flex justify-content-end">
-    <input type="text" name="search" class="form-control w-50" placeholder="সেবা অনুসন্ধান করুন..." value="{{ search_query }}">
-    <button type="submit" class="btn btn-primary ms-2">অনুসন্ধান</button>
+    <input type="text" name="search" class="form-control w-50" placeholder="Search service..." value="{{ search_query }}">
+    <button type="submit" class="btn btn-primary ms-2">Search</button>
   </form>
   </div>
 
@@ -82,33 +82,33 @@
             {% if service.image %}
               <img class="img-fluid" src="{{ service.image.url }}" alt="{{ service.name }}" style="height: auto; width: 100%; object-fit: 'contain';" />
             {% else %}
-              <span class="text-muted">কোনো ছবি পাওয়া যায়নি</span>
+              <span class="text-muted">No Photos found!</span>
             {% endif %}
           </div>
-  
+
           <h5 class="card-title">{{ service.name }}</h5>
           <p class="card-text">{{ service.description }}</p>
           <div class="mb-3">
-            <span class="card-dark">মূল্য: {{ service.price|intcomma }} ৳</span>
+            <span class="card-dark">Price: {{ service.price|intcomma }} ৳</span>
           </div>
 
           {% if request.user.role == "guest" %}
             {% if service.id in applied_services %}
               <button class="btn btn-success w-100" disabled>
-                <i class="bi bi-check-circle"></i> ইতিমধ্যে আবেদন করেছেন
+                <i class="bi bi-check-circle"></i> Already Applied
               </button>
             {% elif has_passport_info %}
               <button class="btn btn-primary w-100" data-bs-toggle="offcanvas" data-bs-target="#applyServiceModal{{ service.id }}">
-                আবেদন করুন
+                Apply
               </button>
             {% else %}
               <a href="{% url 'passport_info_create' %}" class="btn btn-danger w-100">
-                প্রথমে পাসপোর্ট তথ্য দিন
+                First, provide passport information
               </a>
             {% endif %}
           {% else %}
             <button class="btn btn-secondary w-100" disabled>
-              <i class="bi bi-lock"></i> শুধুমাত্র ক্লায়েন্টদের জন্য
+              <i class="bi bi-lock"></i> Only for clients
             </button>
           {% endif %}
         </div>
@@ -118,7 +118,7 @@
     <!-- Offcanvas Modal -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="applyServiceModal{{ service.id }}">
       <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title">{{ service.name }} এর জন্য আবেদন</h5>
+        <h5 class="offcanvas-title">Apply for {{ service.name }}</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
       </div>
       <div class="offcanvas-body">
@@ -126,11 +126,11 @@
           {% csrf_token %}
           <input type="hidden" name="service_id" value="{{ service.id }}">
           <div class="mb-3">
-            <label class="form-label">আপনার বার্তা</label>
-            <textarea name="message" class="form-control" rows="3" placeholder="আপনি কেন আবেদন করতে চান?"></textarea>
+            <label class="form-label">Your Message</label>
+            <textarea name="message" class="form-control" rows="3" placeholder="Why do you want to apply?"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">আবেদন জমা দিন</button>
-          <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">বাতিল</button>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+          <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
         </form>
       </div>
     </div>
